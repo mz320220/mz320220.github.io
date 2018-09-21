@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="博客搭好一段时间了，一直也没有写点东西、总结下搭建过程。隔了一段时间基本指令都快忘了。 常用指令Front-matter即文章开头预设可设置参数，具体如下：    参数 描述 默认值     layout 布局    title 标题    date 建立日期 文件建立日期   updated 更新日期 文件更新日期   comments 开启文章的评论功能 true   tags 标签（不适用于">
+<meta name="description" content="博客搭好一段时间了，一直也没有写点东西，目前网上已经有很完整的Github + Hexo搭建博客的教程，本文仅列出基本指令和搭建过程中参考的指南以作备忘。">
 <meta name="keywords" content="Github,hexo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Github+hexo搭建博客指南">
 <meta property="og:url" content="http://yoursite.com/2018/03/19/Github-hexo搭建博客指南/index.html">
 <meta property="og:site_name" content="Martin&#39;s Blog">
-<meta property="og:description" content="博客搭好一段时间了，一直也没有写点东西、总结下搭建过程。隔了一段时间基本指令都快忘了。 常用指令Front-matter即文章开头预设可设置参数，具体如下：    参数 描述 默认值     layout 布局    title 标题    date 建立日期 文件建立日期   updated 更新日期 文件更新日期   comments 开启文章的评论功能 true   tags 标签（不适用于">
+<meta property="og:description" content="博客搭好一段时间了，一直也没有写点东西，目前网上已经有很完整的Github + Hexo搭建博客的教程，本文仅列出基本指令和搭建过程中参考的指南以作备忘。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-19T17:01:48.682Z">
+<meta property="og:updated_time" content="2018-09-21T02:38:40.177Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Github+hexo搭建博客指南">
-<meta name="twitter:description" content="博客搭好一段时间了，一直也没有写点东西、总结下搭建过程。隔了一段时间基本指令都快忘了。 常用指令Front-matter即文章开头预设可设置参数，具体如下：    参数 描述 默认值     layout 布局    title 标题    date 建立日期 文件建立日期   updated 更新日期 文件更新日期   comments 开启文章的评论功能 true   tags 标签（不适用于">
+<meta name="twitter:description" content="博客搭好一段时间了，一直也没有写点东西，目前网上已经有很完整的Github + Hexo搭建博客的教程，本文仅列出基本指令和搭建过程中参考的指南以作备忘。">
 
 
 
@@ -378,7 +378,8 @@
       
 
       
-        <p>博客搭好一段时间了，一直也没有写点东西、总结下搭建过程。隔了一段时间基本指令都快忘了。</p>
+        <p>博客搭好一段时间了，一直也没有写点东西，目前网上已经有很完整的Github + Hexo搭建博客的教程，本文仅列出基本指令和搭建过程中参考的指南以作备忘。</p>
+<a id="more"></a>
 <h1 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h1><h2 id="Front-matter"><a href="#Front-matter" class="headerlink" title="Front-matter"></a>Front-matter</h2><p>即文章开头预设可设置参数，具体如下：</p>
 <table>
 <thead>
@@ -431,12 +432,15 @@
 </tr>
 </tbody>
 </table>
-<h2 id="发表博文"><a href="#发表博文" class="headerlink" title="发表博文"></a>发表博文</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">hexo n &quot;postTitle&quot; == hexo new &quot;我的博客&quot; //新建文章(默认为post模式)</div><div class="line">hexo p == hexo publish  //草稿发布(draft类型)</div><div class="line">hexo g == hexo generate //生成</div><div class="line">hexo d == hexo deploy   //部署</div><div class="line">hexo d -g == hexo deploy --generate //生成 + 部署</div></pre></td></tr></table></figure>
-<h2 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">hexo s == hexo server   //本地启动服务预览，hexo会监听文件变更无需重启</div><div class="line">hexo server -s          //静态模式</div><div class="line">hexo server -p 5000     //更改端口</div><div class="line">hexo server -i 192.168.1.1  //自定义 IP</div></pre></td></tr></table></figure>
+<h2 id="发表博文"><a href="#发表博文" class="headerlink" title="发表博文"></a>发表博文</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hexo n &quot;postTitle&quot; == hexo new &quot;我的博客&quot; //新建文章(默认为post模式)</span><br><span class="line">hexo p == hexo publish  //草稿发布(draft类型)</span><br><span class="line">hexo g == hexo generate //生成</span><br><span class="line">hexo d == hexo deploy   //部署</span><br><span class="line">hexo d -g == hexo deploy --generate //生成 + 部署</span><br></pre></td></tr></table></figure>
+<h2 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo s == hexo server   //本地启动服务预览，hexo会监听文件变更无需重启</span><br><span class="line">hexo server -s          //静态模式</span><br><span class="line">hexo server -p 5000     //更改端口</span><br><span class="line">hexo server -i 192.168.1.1  //自定义 IP</span><br></pre></td></tr></table></figure>
+<p>在写完博客以后，可以先本地验证一下：<code>hexo s</code></p>
+<p>发现问题修改保存后，静态内容可以直接生效，否则需要重新生成启动服务：<code>hexo s -g</code></p>
+<p>验证完毕后即可推送到线上：<code>hexo d -g</code></p>
 <h1 id="框架具体搭建过程"><a href="#框架具体搭建过程" class="headerlink" title="框架具体搭建过程"></a>框架具体搭建过程</h1><blockquote>
 <p>参考文档<br></p>
 </blockquote>
-<p><a href="https://hexo.io/zh-cn/docs/front-matter.html" target="_blank" rel="external">hexo官方文档</a><br><br><a href="http://cherryblog.site/Use-Gitpagehexo-to-develop-their-own-blog.html" target="_blank" rel="external">利用 hexo + Gitpage 开发自己的博客</a></p>
+<p><a href="https://hexo.io/zh-cn/docs/front-matter.html" target="_blank" rel="noopener">hexo官方文档</a><br><br><a href="http://cherryblog.site/Use-Gitpagehexo-to-develop-their-own-blog.html" target="_blank" rel="noopener">利用 hexo + Gitpage 开发自己的博客</a></p>
 
       
     </div>

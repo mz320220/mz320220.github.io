@@ -272,7 +272,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/19/Markdown基本语法/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/21/Markdown基本语法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Martin">
@@ -291,7 +291,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/19/Markdown基本语法/" itemprop="url">Markdown基本语法</a></h1>
+                <a class="post-title-link" href="/2018/09/21/Markdown基本语法/" itemprop="url">Markdown入门 & Typora编辑器</a></h1>
         
 
         <div class="post-meta">
@@ -303,8 +303,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-19T23:50:04+08:00">
-                2018-09-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-21T10:14:05+08:00">
+                2018-09-21
               </time>
             
 
@@ -343,7 +343,7 @@
 
           
           
-             <span id="/2018/09/19/Markdown基本语法/" class="leancloud_visitors" data-flag-title="Markdown基本语法">
+             <span id="/2018/09/21/Markdown基本语法/" class="leancloud_visitors" data-flag-title="Markdown入门 & Typora编辑器">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -375,213 +375,17 @@
 
       
         
-          
-            <h1 id="Markdown基本语法"><a href="#Markdown基本语法" class="headerlink" title="Markdown基本语法"></a>Markdown基本语法</h1><blockquote>
-<p><a href="#jumpTypora">发现了一个超级好用的markdown编辑软件-Typora</a></p>
-<p><span id="jumpTop">开始</span></p>
+          <blockquote>
+<p><a href="#jumpTypora">从发现了一个超级好用的markdown编辑软件-Typora</a> <span id="jumpTop">开始</span></p>
 </blockquote>
-<h2 id="1-块元素"><a href="#1-块元素" class="headerlink" title="1.块元素"></a>1.块元素</h2><h3 id="1-1标题"><a href="#1-1标题" class="headerlink" title="1.1标题"></a>1.1标题</h3><p>markdown中使用1-6个<code>#</code>符号来表示不同层级的标题，例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># 一级标题</div><div class="line">## 二级标题</div><div class="line">###### 六级标题</div></pre></td></tr></table></figure>
-<h3 id="1-2-引用"><a href="#1-2-引用" class="headerlink" title="1.2 引用"></a>1.2 引用</h3><p>markdown使用<code>&gt;</code>符号来引用问题，多个<code>&gt;</code>符号表示不同的引用的嵌套，例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; 这是一个引用</div><div class="line">&gt; </div><div class="line">&gt;&gt; 这是嵌套的引用语句</div></pre></td></tr></table></figure>
-<h3 id="1-3-列表"><a href="#1-3-列表" class="headerlink" title="1.3 列表"></a>1.3 列表</h3><p>输入<code>*</code>可以表示一个无序列表，使用<code>+</code>或<code>-</code>可以实现同样的功能；</p>
-<p>输入<code>1.</code>可以生成一个有序列表，例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">* 无序节点</div><div class="line">* 无序节点</div><div class="line">	- 子无序节点</div><div class="line">	- 子无序节点</div><div class="line"></div><div class="line">1. 有序节点</div><div class="line">2. 有序节点</div></pre></td></tr></table></figure>
-<h3 id="1-4-代办事项"><a href="#1-4-代办事项" class="headerlink" title="1.4 代办事项"></a>1.4 代办事项</h3><p>代办事项可以通过<code>- [ ]</code>或<code>- [X]</code>分别表示未完成或已完成事项，书写的使用注意空格：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">- [ ] 未完成任务</div><div class="line">- [X] 已完成任务</div></pre></td></tr></table></figure>
-<h3 id="1-5-代码块"><a href="#1-5-代码块" class="headerlink" title="1.5 代码块"></a>1.5 代码块</h3><p>markdown使用```来表示代码块，可以通过制定代码类型来显示不同的高亮风格，针对不同类型的代码只需要在```后面加上java、python等描述即可。例如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</div><div class="line">    System.out.println(<span class="string">"这是一个Java风格的代码块"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="1-6-表格"><a href="#1-6-表格" class="headerlink" title="1.6 表格"></a>1.6 表格</h3><p>输入<code>| firse header | second header |</code>可以生成一个两列的表格；<br>表格的对齐方式如下，详细代码如示例：</p>
-<p><code>:----</code> ：左对齐</p>
-<p><code>:----:</code>：居中对齐</p>
-<p><code>----:</code>：右对齐</p>
-<p><code>----</code>：默认为居中对齐</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">| Left-Aligned  | Center Aligned  | Right Aligned |</div><div class="line">| :------------ |:---------------:| -----:|</div><div class="line">| col 3 is      | some wordy text | $1600 |</div><div class="line">| col 2 is      | centered        |   $12 |</div><div class="line">| zebra stripes | are neat        |    $1 |</div></pre></td></tr></table></figure>
-<p>以上代码在markdown中表现的表格为：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Left-Aligned</th>
-<th style="text-align:center">Center Aligned</th>
-<th style="text-align:right">Right Aligned</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">col 3 is</td>
-<td style="text-align:center">some wordy text</td>
-<td style="text-align:right">$1600</td>
-</tr>
-<tr>
-<td style="text-align:left">col 2 is</td>
-<td style="text-align:center">centered</td>
-<td style="text-align:right">$12</td>
-</tr>
-<tr>
-<td style="text-align:left">zebra stripes</td>
-<td style="text-align:center">are neat</td>
-<td style="text-align:right">$1</td>
-</tr>
-</tbody>
-</table>
-<h3 id="1-7-注脚"><a href="#1-7-注脚" class="headerlink" title="1.7 注脚"></a>1.7 注脚</h3><p>注脚通常用于在需要解释名词、书名、人名等时使用，markdown中注脚的表示如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">创建一个注脚测试[^footnote].</div><div class="line">[^footnote]: 这是一个针对注脚的测试。</div></pre></td></tr></table></figure>
-<p>以上代码在markdown中的表现为：</p>
-<p>创建一个注脚测试<a href="这是一个针对注脚的测试。">^footnote</a>.</p>
-<h3 id="1-8-分割线"><a href="#1-8-分割线" class="headerlink" title="1.8 分割线"></a>1.8 分割线</h3><p>使用<code>***</code> 或 <code>---</code> <code>+++</code> 创建一条分割线</p>
-<p>在使用这些符号是大于三个即可组成一条平行线，注意在使用<code>---</code>时前后空格，避免被当做题记的标记。</p>
-<h3 id="1-9-生成目录"><a href="#1-9-生成目录" class="headerlink" title="1.9 生成目录"></a>1.9 生成目录</h3><p>输入<code>[toc]</code>即可在需要的位置生成一个目录，该目录自动抓取所有标题，且会自动更新。</p>
-<h2 id="2-行内元素"><a href="#2-行内元素" class="headerlink" title="2. 行内元素"></a>2. 行内元素</h2><h3 id="2-1-链接"><a href="#2-1-链接" class="headerlink" title="2.1 链接"></a>2.1 链接</h3><p>Markdown中提供两个形式的链接方式：行内链接和参考式链接，以行内链接语法做详细说明。</p>
-<p>使用<code>[text](link &quot;Optional title&quot;)</code> 表示行内链接，其中：</p>
-<ul>
-<li><code>[text]</code>：text为需要添加链接的文字；</li>
-<li><code>link</code>：link为链接的完整地址；</li>
-<li><code>Optional title</code>：为链接显示标题，鼠标放在链接上时会弹出小框表示；</li>
-</ul>
-<p>例1.行内链接：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">这是一个搜索引擎主页：[Baidu](www.baidu.com &quot;百度一下，你就知道&quot;)</div></pre></td></tr></table></figure></p>
-<p>例2.参考式链接：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">这是一个搜索引擎主页：[Baidu][1]</div><div class="line">[1]:www.baidu.com &quot;百度一下，你就知道&quot;</div></pre></td></tr></table></figure>
-<p>Markdown中样式：这是一个搜索引擎主页：<a href="https://www.baidu.com/" title="百度一下，你就知道" target="_blank" rel="external">Baidu</a></p>
-<p>在编辑状态下，行内链接更加直观可以直接看到链接网址，但是不便于多次重复使用。参考式链接可以将链接统一放在文末进行处理，可以重复利用，但对应链接地址稍微麻烦一点。</p>
-<h3 id="2-2-URLs"><a href="#2-2-URLs" class="headerlink" title="2.2 URLs"></a>2.2 URLs</h3><p>Markdown语法中使用<code>&lt;&gt;</code>符号表示URLs。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;www.baidu.com&gt;</div></pre></td></tr></table></figure>
-<p>Markdown中的样式：<www.baidu.com></www.baidu.com></p>
-<h3 id="2-3-图片"><a href="#2-3-图片" class="headerlink" title="2.3 图片"></a>2.3 图片</h3><p>在Markdown中插入图片类似链接的语法，多了一个<code>!</code></p>
-<p><code>![Alt text](/path/to/img.jpg &quot;Optional title&quot;)</code>：导入图片，其中：</p>
-<ul>
-<li><code>Alt text</code>：图片无法显示时显示的问题；</li>
-<li><code>/path/to/img.jpg</code>：图片的路径；</li>
-<li><code>Optional title</code>：图片的标题，鼠标放在图片上会显示小框提示；</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">![GitHub](http:<span class="comment">//martintop-image.oss-cn-shenzhen.aliyuncs.com/18-9-19/7391339.jpg "GitHub")</span></div></pre></td></tr></table></figure>
-<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-9-19/7391339.jpg" alt="GitHub" title="GitHub"></p>
-<ol>
-<li>图片路径可以使用绝对路径，也可以使用相对路径。</li>
-<li>通常可以在Markdown文档同级目录下建立picture文件夹，统一放置需要的图片，也可以在其中建立子文件夹针对不同图片进行分类管理。</li>
-<li>使用Hexo + GitHub搭建博客，为了减少GitHub空间占用，最好使用第三方图床工具进行图片管理。</li>
-</ol>
-<h3 id="2-4-斜体-amp-加粗"><a href="#2-4-斜体-amp-加粗" class="headerlink" title="2.4 斜体 &amp; 加粗"></a>2.4 斜体 &amp; 加粗</h3><p>使用<code>**</code>或<code>__</code>表示粗体；</p>
-<p>使用<code>*</code>或<code>_</code>表示斜体；</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">**粗体1**    __粗体2__</div><div class="line">*斜体1*    _斜体2_</div></pre></td></tr></table></figure>
-<p><strong>粗体1</strong>    <strong>粗体2</strong><br><em>斜体1</em>    <em>斜体2</em></p>
-<ol>
-<li>在使用引用<code>&gt;</code>符号时，会忽略<code>_</code>下划线的作用；</li>
-<li>推荐使用<code>*</code>或<code>**</code>进行文字强调工作；</li>
-<li>如果想要显示<code>*</code>等符号，需要使用转义字符<code>\</code>;</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">\* : 在Markdown中显示一个 *</div></pre></td></tr></table></figure>
-<h3 id="2-5-代码"><a href="#2-5-代码" class="headerlink" title="2.5 代码"></a>2.5 代码</h3><p>使用<code>` </code>符表示行内代码。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Use `printf()` function.</div></pre></td></tr></table></figure>
-<p>Use <code>printf()</code> function.</p>
-<h3 id="2-6-删除线-amp-下划线"><a href="#2-6-删除线-amp-下划线" class="headerlink" title="2.6 删除线 &amp; 下划线"></a>2.6 删除线 &amp; 下划线</h3><p><code>~~</code>：表示删除线</p>
-<p><code>&lt;u&gt;</code>：原生的html标签实现下划线</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">~~删除文本~~</div><div class="line">&lt;u&gt;添加下划线&lt;/u&gt;</div></pre></td></tr></table></figure>
-<p><del>删除文本</del><br><u>添加下划线</u></p>
-<h3 id="2-7-高亮"><a href="#2-7-高亮" class="headerlink" title="2.7 高亮"></a>2.7 高亮</h3><p><code>==</code>：表示高亮文本，属于Markdown的扩展语法，不一定支持，请谨慎使用。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">==高亮文本==</div></pre></td></tr></table></figure>
-<p>==高亮文本==</p>
-<h3 id="2-8-Emoji"><a href="#2-8-Emoji" class="headerlink" title="2.8 Emoji"></a>2.8 Emoji</h3><p>在Markdown中支持丰富的Emoji表情，通常格式为<code>:smile:</code>，冒号中为表情描述。</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">:smile: :cry: :rose: :dog: :pig: :mouse: :telephone: :airplane:</div></pre></td></tr></table></figure>
-<p>:smile: :cry: :rose: :dog: :pig: :mouse: :telephone: :airplane:</p>
-<h2 id="3-HTML-amp-高级用法"><a href="#3-HTML-amp-高级用法" class="headerlink" title="3.HTML &amp; 高级用法"></a>3.HTML &amp; 高级用法</h2><p>在Markdown中可以使用html的标签等来实现Markdown本身不支持的一下属性，例如使用下面的语句展示一条红色文本。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">"color:red"</span>&gt;</span>this text is red<span class="tag">&lt;/<span class="name">span</span>&gt;</span></div></pre></td></tr></table></figure>
-<p><span style="color:red">this text is red</span> </p>
-<h3 id="3-1-页内跳转"><a href="#3-1-页内跳转" class="headerlink" title="3.1 页内跳转"></a>3.1 页内跳转</h3><p>使用HTML代码实现页内跳转。</p>
-<p>在待跳转的位置定义跳转指令：<code>[返回开头](#jumpTop)</code></p>
-<p>在要跳转到的目标位置定义锚：<code>&lt;span id = &quot;jumpTop&quot;&gt;hehe&lt;/span&gt;</code></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[返回开头](#jumpTop)</div><div class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span> = <span class="string">"jumpTop"</span>&gt;</span>开始<span class="tag">&lt;/<span class="name">span</span>&gt;</span></div></pre></td></tr></table></figure>
-<p><a href="#jumpTop">返回开头</a></p>
-<h3 id="3-2-视频"><a href="#3-2-视频" class="headerlink" title="3.2 视频"></a>3.2 视频</h3><p>使用<code>&lt;video&gt;</code>HTML的标签来添加视频，例如：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">src</span>=<span class="string">"xxx.mp4"</span> /&gt;</span></div></pre></td></tr></table></figure>
-<h3 id="3-3-其他HTML支持"><a href="#3-3-其他HTML支持" class="headerlink" title="3.3 其他HTML支持"></a>3.3 其他HTML支持</h3><p>其他HTML标签的支持，请参考文档：<a href="https://support.typora.io/HTML/" target="_blank" rel="external">官方文档</a></p>
-<h3 id="3-4-流程图"><a href="#3-4-流程图" class="headerlink" title="3.4 流程图"></a>3.4 流程图</h3><p>流程图目前使用较少，参考文档：<a href="https://support.typora.io/Draw-Diagrams-With-Markdown/" target="_blank" rel="external">Markdown中绘制流程图</a></p>
-<h3 id="3-5-数学公式"><a href="#3-5-数学公式" class="headerlink" title="3.5 数学公式"></a>3.5 数学公式</h3><p>数学公式目前使用较少，参考文档：<a href="https://support.typora.io/Math/" target="_blank" rel="external">Markdown中数学公式</a></p>
-<h1 id="Typora工具"><a href="#Typora工具" class="headerlink" title="Typora工具"></a>Typora工具</h1><h2 id="1-Typora工具介绍"><a href="#1-Typora工具介绍" class="headerlink" title="1. Typora工具介绍"></a>1. Typora工具介绍</h2><p><span id="jumpTypora">Typora是一款轻便简洁的Markdown编辑器</span>，支持即时渲染技术，这也是与其他Markdown编辑器最显著的区别。即时渲染使得你写Markdown就想是写Word文档一样流畅自如，不像其他编辑器的有编辑栏和显示栏。</p>
-<ul>
-<li><p>在Typora工具中，使用列表时可以通过Tab功能键增加子列表节点。</p>
-</li>
-<li><p>在Typora工具中，URLs会自动链接到目标网址。</p>
-</li>
-<li>在Typora工具中，可以图形化的创建、使用表格工具。</li>
-</ul>
-<p>还有更换主题、Emoji自动带出、支持YAML Front Matter等等特性。</p>
-<h2 id="2-Typora常用快捷键"><a href="#2-Typora常用快捷键" class="headerlink" title="2. Typora常用快捷键"></a>2. Typora常用快捷键</h2><h3 id="2-1-块元素操作"><a href="#2-1-块元素操作" class="headerlink" title="2.1 块元素操作"></a>2.1 块元素操作</h3><table>
-<thead>
-<tr>
-<th>快捷键</th>
-<th>作用</th>
-<th>快捷键</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Ctrl+1~6</td>
-<td>1~6阶标题</td>
-<td>Ctrl+Shift+Q</td>
-<td>引用</td>
-</tr>
-<tr>
-<td>Ctrl+Shift+[</td>
-<td>有序列表</td>
-<td>Ctrl+Shift+]</td>
-<td>无序列表</td>
-</tr>
-<tr>
-<td>Ctrl+Shift+K</td>
-<td>代码块</td>
-<td>Ctrl+Shift+M</td>
-<td>公式块</td>
-</tr>
-<tr>
-<td>Ctrl+T</td>
-<td>创建表格</td>
-<td>Ctrl+Shift+Q</td>
-<td>引用</td>
-</tr>
-</tbody>
-</table>
-<p>以上列大部分还没有直接使用Markdown语法来的方便，除了生成表格外：<code>Ctrl+T</code></p>
-<h3 id="2-2-行内元素操作"><a href="#2-2-行内元素操作" class="headerlink" title="2.2 行内元素操作"></a>2.2 行内元素操作</h3><table>
-<thead>
-<tr>
-<th>快捷键</th>
-<th>作用</th>
-<th>快捷键</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Ctrl+K</td>
-<td>创建超链接</td>
-<td>Ctrl+Shift+I</td>
-<td>插入图片</td>
-</tr>
-<tr>
-<td>Ctrl+B</td>
-<td>字体加粗</td>
-<td>Ctrl+I</td>
-<td>字体倾斜</td>
-</tr>
-<tr>
-<td>Ctrl+U</td>
-<td>下划线</td>
-<td>Alt+Shift+5</td>
-<td>删除线</td>
-</tr>
-</tbody>
-</table>
-<p>以上即为学习Markdown并结合Typora工具的总结，可以满足绝大部分的使用需要了。</p>
-<blockquote>
-<p>本文参考文章</p>
-<p><a href="https://support.typora.io/Markdown-Reference/#span-elements" target="_blank" rel="external">Markdown Reference(Typora官方文档)</a></p>
-<p><a href="http://www.cnblogs.com/crazyant007/p/4220066.html#fnref1" target="_blank" rel="external">Markdown，你只需要掌握这几个</a></p>
-<p><a href="https://blog.csdn.net/qq_41648756/article/details/81057290#%E7%BC%96%E8%BE%91%E5%99%A8typora" target="_blank" rel="external">编辑器：Typora</a></p>
-</blockquote>
-<hr>
-
-          
+<p>Markdown是一种可以使用普通文本编辑器编写的标记语言，通过简单的标记语法，它可以使普通文本内容具有一定的格式。Markdown的语法简洁明了、学习容易，而且功能比纯文本更强，因此有很多人用它写博客。世界上最流行的博客平台<a href="https://baike.baidu.com/item/WordPress" target="_blank" rel="noopener">WordPress</a>和大型CMS如<a href="https://baike.baidu.com/item/Joomla" target="_blank" rel="noopener">Joomla</a>、<a href="https://baike.baidu.com/item/Drupal" target="_blank" rel="noopener">Drupal</a>都能很好的支持Markdown。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/21/Markdown基本语法/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -861,68 +665,14 @@
 
       
         
-          
-            <p>博客搭好一段时间了，一直也没有写点东西、总结下搭建过程。隔了一段时间基本指令都快忘了。</p>
-<h1 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h1><h2 id="Front-matter"><a href="#Front-matter" class="headerlink" title="Front-matter"></a>Front-matter</h2><p>即文章开头预设可设置参数，具体如下：</p>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>描述</th>
-<th>默认值</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>layout</td>
-<td>布局</td>
-<td></td>
-</tr>
-<tr>
-<td>title</td>
-<td>标题</td>
-<td></td>
-</tr>
-<tr>
-<td>date</td>
-<td>建立日期</td>
-<td>文件建立日期</td>
-</tr>
-<tr>
-<td>updated</td>
-<td>更新日期</td>
-<td>文件更新日期</td>
-</tr>
-<tr>
-<td>comments</td>
-<td>开启文章的评论功能</td>
-<td>true</td>
-</tr>
-<tr>
-<td>tags</td>
-<td>标签（不适用于分页）</td>
-<td></td>
-</tr>
-<tr>
-<td>categories</td>
-<td>分类（不适用于分页）</td>
-<td></td>
-</tr>
-<tr>
-<td>permalink</td>
-<td>覆盖文章网址</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="发表博文"><a href="#发表博文" class="headerlink" title="发表博文"></a>发表博文</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">hexo n &quot;postTitle&quot; == hexo new &quot;我的博客&quot; //新建文章(默认为post模式)</div><div class="line">hexo p == hexo publish  //草稿发布(draft类型)</div><div class="line">hexo g == hexo generate //生成</div><div class="line">hexo d == hexo deploy   //部署</div><div class="line">hexo d -g == hexo deploy --generate //生成 + 部署</div></pre></td></tr></table></figure>
-<h2 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">hexo s == hexo server   //本地启动服务预览，hexo会监听文件变更无需重启</div><div class="line">hexo server -s          //静态模式</div><div class="line">hexo server -p 5000     //更改端口</div><div class="line">hexo server -i 192.168.1.1  //自定义 IP</div></pre></td></tr></table></figure>
-<h1 id="框架具体搭建过程"><a href="#框架具体搭建过程" class="headerlink" title="框架具体搭建过程"></a>框架具体搭建过程</h1><blockquote>
-<p>参考文档<br></p>
-</blockquote>
-<p><a href="https://hexo.io/zh-cn/docs/front-matter.html" target="_blank" rel="external">hexo官方文档</a><br><br><a href="http://cherryblog.site/Use-Gitpagehexo-to-develop-their-own-blog.html" target="_blank" rel="external">利用 hexo + Gitpage 开发自己的博客</a></p>
-
-          
+          <p>博客搭好一段时间了，一直也没有写点东西，目前网上已经有很完整的Github + Hexo搭建博客的教程，本文仅列出基本指令和搭建过程中参考的指南以作备忘。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/19/Github-hexo搭建博客指南/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
