@@ -120,10 +120,12 @@
 <meta property="og:site_name" content="Martin&#39;s Blog">
 <meta property="og:description" content="博客搭好一段时间了，一直也没有写点东西，目前网上已经有很完整的Github + Hexo搭建博客的教程，本文仅列出基本指令和搭建过程中参考的指南以作备忘。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-09-21T02:38:40.177Z">
+<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-9-22/51716129.jpg">
+<meta property="og:updated_time" content="2018-09-21T18:48:50.249Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Github+hexo搭建博客指南">
 <meta name="twitter:description" content="博客搭好一段时间了，一直也没有写点东西，目前网上已经有很完整的Github + Hexo搭建博客的教程，本文仅列出基本指令和搭建过程中参考的指南以作备忘。">
+<meta name="twitter:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-9-22/51716129.jpg">
 
 
 
@@ -382,7 +384,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-09-21 10:38:40" itemprop="dateModified" datetime="2018-09-21T10:38:40+08:00">2018-09-21</time>
+                <time title="修改时间：2018-09-22 02:48:50" itemprop="dateModified" datetime="2018-09-22T02:48:50+08:00">2018-09-22</time>
               
             
           </span>
@@ -438,7 +440,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">808</span>
+                <span title="本文字数">820</span>
               
 
               
@@ -472,9 +474,12 @@
       
 
       
-        <p>博客搭好一段时间了，一直也没有写点东西，目前网上已经有很完整的Github + Hexo搭建博客的教程，本文仅列出基本指令和搭建过程中参考的指南以作备忘。</p>
+        <p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-9-22/51716129.jpg" alt="17.11.27-花莲"></p>
+<p>博客搭好一段时间了，一直也没有写点东西，目前网上已经有很完整的Github + Hexo搭建博客的教程，本文仅列出基本指令和搭建过程中参考的指南以作备忘。</p>
 <a id="more"></a>
-<h1 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h1><h2 id="Front-matter"><a href="#Front-matter" class="headerlink" title="Front-matter"></a>Front-matter</h2><p>即文章开头预设可设置参数，具体如下：</p>
+<h1 id="常用指令"><a class="markdownIt-Anchor" href="#常用指令"></a> 常用指令</h1>
+<h2 id="front-matter"><a class="markdownIt-Anchor" href="#front-matter"></a> Front-matter</h2>
+<p>即文章开头预设可设置参数，具体如下：</p>
 <table>
 <thead>
 <tr>
@@ -526,15 +531,19 @@
 </tr>
 </tbody>
 </table>
-<h2 id="发表博文"><a href="#发表博文" class="headerlink" title="发表博文"></a>发表博文</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hexo n &quot;postTitle&quot; == hexo new &quot;我的博客&quot; //新建文章(默认为post模式)</span><br><span class="line">hexo p == hexo publish  //草稿发布(draft类型)</span><br><span class="line">hexo g == hexo generate //生成</span><br><span class="line">hexo d == hexo deploy   //部署</span><br><span class="line">hexo d -g == hexo deploy --generate //生成 + 部署</span><br></pre></td></tr></table></figure>
-<h2 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo s == hexo server   //本地启动服务预览，hexo会监听文件变更无需重启</span><br><span class="line">hexo server -s          //静态模式</span><br><span class="line">hexo server -p 5000     //更改端口</span><br><span class="line">hexo server -i 192.168.1.1  //自定义 IP</span><br></pre></td></tr></table></figure>
+<h2 id="发表博文"><a class="markdownIt-Anchor" href="#发表博文"></a> 发表博文</h2>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hexo n &quot;postTitle&quot; == hexo new &quot;我的博客&quot; //新建文章(默认为post模式)</span><br><span class="line">hexo p == hexo publish  //草稿发布(draft类型)</span><br><span class="line">hexo g == hexo generate //生成</span><br><span class="line">hexo d == hexo deploy   //部署</span><br><span class="line">hexo d -g == hexo deploy --generate //生成 + 部署</span><br></pre></td></tr></table></figure>
+<h2 id="服务器"><a class="markdownIt-Anchor" href="#服务器"></a> 服务器</h2>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo s == hexo server   //本地启动服务预览，hexo会监听文件变更无需重启</span><br><span class="line">hexo server -s          //静态模式</span><br><span class="line">hexo server -p 5000     //更改端口</span><br><span class="line">hexo server -i 192.168.1.1  //自定义 IP</span><br></pre></td></tr></table></figure>
 <p>在写完博客以后，可以先本地验证一下：<code>hexo s</code></p>
 <p>发现问题修改保存后，静态内容可以直接生效，否则需要重新生成启动服务：<code>hexo s -g</code></p>
 <p>验证完毕后即可推送到线上：<code>hexo d -g</code></p>
-<h1 id="框架具体搭建过程"><a href="#框架具体搭建过程" class="headerlink" title="框架具体搭建过程"></a>框架具体搭建过程</h1><blockquote>
+<h1 id="框架具体搭建过程"><a class="markdownIt-Anchor" href="#框架具体搭建过程"></a> 框架具体搭建过程</h1>
+<blockquote>
 <p>参考文档<br></p>
 </blockquote>
-<p><a href="https://hexo.io/zh-cn/docs/front-matter.html" target="_blank" rel="noopener">hexo官方文档</a><br><br><a href="http://cherryblog.site/Use-Gitpagehexo-to-develop-their-own-blog.html" target="_blank" rel="noopener">利用 hexo + Gitpage 开发自己的博客</a></p>
+<p><a href="https://hexo.io/zh-cn/docs/front-matter.html" target="_blank" rel="noopener">hexo官方文档</a><br><br>
+<a href="http://cherryblog.site/Use-Gitpagehexo-to-develop-their-own-blog.html" target="_blank" rel="noopener">利用 hexo + Gitpage 开发自己的博客</a></p>
 
       
     </div>
@@ -681,7 +690,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -698,7 +707,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -715,7 +726,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -760,7 +773,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#常用指令"><span class="nav-text">常用指令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Front-matter"><span class="nav-text">Front-matter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发表博文"><span class="nav-text">发表博文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器"><span class="nav-text">服务器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#框架具体搭建过程"><span class="nav-text">框架具体搭建过程</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#常用指令"><span class="nav-text"> 常用指令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#front-matter"><span class="nav-text"> Front-matter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发表博文"><span class="nav-text"> 发表博文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器"><span class="nav-text"> 服务器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#框架具体搭建过程"><span class="nav-text"> 框架具体搭建过程</span></a></li></ol></div>
             
 
           </div>
@@ -794,7 +807,7 @@
     
       <span class="post-meta-item-text">站点总字数：</span>
     
-    <span title="站点总字数">5k</span>
+    <span title="站点总字数">12k</span>
   
 
   
@@ -805,7 +818,7 @@
     
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
     
-    <span title="站点阅读时长">5 分钟</span>
+    <span title="站点阅读时长">11 分钟</span>
   
 </div>
 
