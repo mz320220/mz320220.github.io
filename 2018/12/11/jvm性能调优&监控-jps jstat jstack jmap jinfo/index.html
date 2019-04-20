@@ -112,27 +112,27 @@
 
 
 
-  <meta name="description" content="博客搭好一段时间了，一直也没有写点东西，目前网上已经有很完整的Github + Hexo搭建博客的教程，本文仅列出基本指令和搭建过程中参考的指南以作备忘。">
-<meta name="keywords" content="Github,hexo">
+  <meta name="description" content="jvm性能调优&amp;amp;监控-jps jstat jstack jmap jinfo 上一份工作其实几乎不怎么接触这些，生产环境的权限控制严格，大部分是由运维来做的。这段时间看了一些jvm性能调优、内存异常监控排查的blog，大部分也是东抄西抄，是时候系统的小结一波，大概归纳下jdk自带的常用命令，本文只简单介绍各个命令基本语法和最常用的功能，详细内容再单独开篇学习吧。 ps：除了标题列举的命">
+<meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Github+hexo搭建博客指南">
-<meta property="og:url" content="http://yoursite.com/2018/03/19/Github-hexo搭建博客指南/index.html">
+<meta property="og:title" content="jvm性能调优&amp;监控-jps jstat jstack jmap jinfo">
+<meta property="og:url" content="http://yoursite.com/2018/12/11/jvm性能调优&监控-jps jstat jstack jmap jinfo/index.html">
 <meta property="og:site_name" content="Martin&#39;s Blog">
-<meta property="og:description" content="博客搭好一段时间了，一直也没有写点东西，目前网上已经有很完整的Github + Hexo搭建博客的教程，本文仅列出基本指令和搭建过程中参考的指南以作备忘。">
+<meta property="og:description" content="jvm性能调优&amp;amp;监控-jps jstat jstack jmap jinfo 上一份工作其实几乎不怎么接触这些，生产环境的权限控制严格，大部分是由运维来做的。这段时间看了一些jvm性能调优、内存异常监控排查的blog，大部分也是东抄西抄，是时候系统的小结一波，大概归纳下jdk自带的常用命令，本文只简单介绍各个命令基本语法和最常用的功能，详细内容再单独开篇学习吧。 ps：除了标题列举的命">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-9-22/51716129.jpg">
-<meta property="og:updated_time" content="2018-09-21T18:48:50.249Z">
+<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-11/28660764.jpg">
+<meta property="og:updated_time" content="2018-12-12T02:50:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Github+hexo搭建博客指南">
-<meta name="twitter:description" content="博客搭好一段时间了，一直也没有写点东西，目前网上已经有很完整的Github + Hexo搭建博客的教程，本文仅列出基本指令和搭建过程中参考的指南以作备忘。">
-<meta name="twitter:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-9-22/51716129.jpg">
+<meta name="twitter:title" content="jvm性能调优&amp;监控-jps jstat jstack jmap jinfo">
+<meta name="twitter:description" content="jvm性能调优&amp;amp;监控-jps jstat jstack jmap jinfo 上一份工作其实几乎不怎么接触这些，生产环境的权限控制严格，大部分是由运维来做的。这段时间看了一些jvm性能调优、内存异常监控排查的blog，大部分也是东抄西抄，是时候系统的小结一波，大概归纳下jdk自带的常用命令，本文只简单介绍各个命令基本语法和最常用的功能，详细内容再单独开篇学习吧。 ps：除了标题列举的命">
+<meta name="twitter:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-11/28660764.jpg">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/03/19/Github-hexo搭建博客指南/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/12/11/jvm性能调优&监控-jps jstat jstack jmap jinfo/"/>
 
 
 
@@ -142,7 +142,7 @@
   };
 </script>
 
-  <title>Github+hexo搭建博客指南 | Martin's Blog</title>
+  <title>jvm性能调优&监控-jps jstat jstack jmap jinfo | Martin's Blog</title>
   
 
 
@@ -325,7 +325,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/19/Github-hexo搭建博客指南/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/11/jvm性能调优&监控-jps jstat jstack jmap jinfo/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Martin">
@@ -342,7 +342,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Github+hexo搭建博客指南
+          <h1 class="post-title" itemprop="name headline">jvm性能调优&监控-jps jstat jstack jmap jinfo
               
             
           </h1>
@@ -367,7 +367,7 @@
                 
               
 
-              <time title="创建时间：2018-03-19 20:12:05" itemprop="dateCreated datePublished" datetime="2018-03-19T20:12:05+08:00">2018-03-19</time>
+              <time title="创建时间：2018-12-11 16:14:05" itemprop="dateCreated datePublished" datetime="2018-12-11T16:14:05+08:00">2018-12-11</time>
             
 
             
@@ -384,7 +384,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-09-22 02:48:50" itemprop="dateModified" datetime="2018-09-22T02:48:50+08:00">2018-09-22</time>
+                <time title="修改时间：2018-12-12 10:50:11" itemprop="dateModified" datetime="2018-12-12T10:50:11+08:00">2018-12-12</time>
               
             
           </span>
@@ -401,7 +401,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/hexo建站/" itemprop="url" rel="index"><span itemprop="name">hexo建站</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux-Learning/" itemprop="url" rel="index"><span itemprop="name">Linux Learning</span></a></span>
 
                 
                 
@@ -415,7 +415,7 @@
 
           
           
-             <span id="/2018/03/19/Github-hexo搭建博客指南/" class="leancloud_visitors" data-flag-title="Github+hexo搭建博客指南">
+             <span id="/2018/12/11/jvm性能调优&监控-jps jstat jstack jmap jinfo/" class="leancloud_visitors" data-flag-title="jvm性能调优&监控-jps jstat jstack jmap jinfo">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -440,7 +440,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">820</span>
+                <span title="本文字数">3.8k</span>
               
 
               
@@ -454,7 +454,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">1 分钟</span>
+                <span title="阅读时长">3 分钟</span>
               
             </div>
           
@@ -474,76 +474,61 @@
       
 
       
-        <p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-9-22/51716129.jpg" alt="17.11.27-花莲"></p>
-<p>博客搭好一段时间了，一直也没有写点东西，目前网上已经有很完整的Github + Hexo搭建博客的教程，本文仅列出基本指令和搭建过程中参考的指南以作备忘。</p>
+        <p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-11/28660764.jpg" alt=""></p>
+<h1 id="jvm性能调优监控-jps-jstat-jstack-jmap-jinfo"><a class="markdownIt-Anchor" href="#jvm性能调优监控-jps-jstat-jstack-jmap-jinfo"></a> jvm性能调优&amp;监控-jps jstat jstack jmap jinfo</h1>
+<p>上一份工作其实几乎不怎么接触这些，生产环境的权限控制严格，大部分是由运维来做的。这段时间看了一些jvm性能调优、内存异常监控排查的blog，大部分也是东抄西抄，是时候系统的小结一波，大概归纳下jdk自带的常用命令，本文只简单介绍各个命令基本语法和最常用的功能，详细内容再单独开篇学习吧。</p>
+<p>ps：除了标题列举的命令之外其实还有jhat、jconsole等命令，只不过jhat对比mat工具实在不够直观，jconsole图形化界面在服务器上也不一定能用。</p>
 <a id="more"></a>
-<h1 id="常用指令"><a class="markdownIt-Anchor" href="#常用指令"></a> 常用指令</h1>
-<h2 id="front-matter"><a class="markdownIt-Anchor" href="#front-matter"></a> Front-matter</h2>
-<p>即文章开头预设可设置参数，具体如下：</p>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>描述</th>
-<th>默认值</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>layout</td>
-<td>布局</td>
-<td></td>
-</tr>
-<tr>
-<td>title</td>
-<td>标题</td>
-<td></td>
-</tr>
-<tr>
-<td>date</td>
-<td>建立日期</td>
-<td>文件建立日期</td>
-</tr>
-<tr>
-<td>updated</td>
-<td>更新日期</td>
-<td>文件更新日期</td>
-</tr>
-<tr>
-<td>comments</td>
-<td>开启文章的评论功能</td>
-<td>true</td>
-</tr>
-<tr>
-<td>tags</td>
-<td>标签（不适用于分页）</td>
-<td></td>
-</tr>
-<tr>
-<td>categories</td>
-<td>分类（不适用于分页）</td>
-<td></td>
-</tr>
-<tr>
-<td>permalink</td>
-<td>覆盖文章网址</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="发表博文"><a class="markdownIt-Anchor" href="#发表博文"></a> 发表博文</h2>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hexo n &quot;postTitle&quot; == hexo new &quot;我的博客&quot; //新建文章(默认为post模式)</span><br><span class="line">hexo p == hexo publish  //草稿发布(draft类型)</span><br><span class="line">hexo g == hexo generate //生成</span><br><span class="line">hexo d == hexo deploy   //部署</span><br><span class="line">hexo d -g == hexo deploy --generate //生成 + 部署</span><br></pre></td></tr></table></figure>
-<h2 id="服务器"><a class="markdownIt-Anchor" href="#服务器"></a> 服务器</h2>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo s == hexo server   //本地启动服务预览，hexo会监听文件变更无需重启</span><br><span class="line">hexo server -s          //静态模式</span><br><span class="line">hexo server -p 5000     //更改端口</span><br><span class="line">hexo server -i 192.168.1.1  //自定义 IP</span><br></pre></td></tr></table></figure>
-<p>在写完博客以后，可以先本地验证一下：<code>hexo s</code></p>
-<p>发现问题修改保存后，静态内容可以直接生效，否则需要重新生成启动服务：<code>hexo s -g</code></p>
-<p>验证完毕后即可推送到线上：<code>hexo d -g</code></p>
-<h1 id="框架具体搭建过程"><a class="markdownIt-Anchor" href="#框架具体搭建过程"></a> 框架具体搭建过程</h1>
+<h2 id="1jps"><a class="markdownIt-Anchor" href="#1jps"></a> 1.jps</h2>
+<p>jps=JVM Process Status Tool，用于显示当前系统(未指定hostid时)内HotSpot虚拟机中的进程情况。常用命令：</p>
+<ul>
+<li>
+<p>jps -m：输出传递给main方法的参数。</p>
+</li>
+<li>
+<p>jps -v：输出传递给JVM的参数。举例如下：</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[app@VM_104_20_centos irps-chs]$ jps -m</span><br><span class="line">216635 JMap -histo 125676</span><br><span class="line">81530 JMap -dump:format=b,file=/tmp/irps-chs.hprof</span><br><span class="line">215688 Jps -m</span><br><span class="line">216765 JConsole</span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jps -v</span><br><span class="line">215744 Jps -Dapplication.home=/nemo/jdk1.8.0_152 -Xms8m</span><br><span class="line">216635 JMap -Dapplication.home=/nemo/jdk1.8.0_152 -Xms8m -Dsun.jvm.hotspot.debugger.useProcDebugger -Dsun.jvm.hotspot.debugger.useWindbgDebugger</span><br><span class="line">81530 JMap -Dapplication.home=/nemo/jdk1.8.0_152 -Xms8m -Dsun.jvm.hotspot.debugger.useProcDebugger -Dsun.jvm.hotspot.debugger.useWindbgDebugger</span><br></pre></td></tr></table></figure>
+<p>Oracle官方文档：<a href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jps.html" target="_blank" rel="noopener">jps说明</a></p>
+<h2 id="2jstat"><a class="markdownIt-Anchor" href="#2jstat"></a> 2.jstat</h2>
+<p>jstat=JVM statistics Monitoring，用于监视虚拟机运行时状态信息的命令，它可以显示出虚拟机进程中的类装载、内存、垃圾收集、JIT编译等运行数据。注意使用时需要加上进程id、所选参数。</p>
+<p>语法结构为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">jstat [option] LVMID [interval] [count]</span><br><span class="line"><span class="meta">#</span><span class="bash">option:可选操作参数</span></span><br><span class="line"><span class="meta">#</span><span class="bash">LVMID：本地虚拟机进程ID</span></span><br><span class="line"><span class="meta">#</span><span class="bash">interval：输出间隔，默认单位ms</span></span><br><span class="line"><span class="meta">#</span><span class="bash">count：输出次数</span></span><br></pre></td></tr></table></figure>
+<p>常用命令：</p>
+<ul>
+<li>jstat -class LVMID：监视类装载数量、消耗空间，时间等。</li>
+<li>jstat -compiler LVMID：输入JIT编译的方法数量、失败数量、耗时、编译失败类型及方法等。</li>
+<li>jstat -gcutil LVMID interval count：统计程序gc情况(已用空间占总空间百分比)</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[app@VM_104_20_centos irps-chs]$ jstat -class 125676</span><br><span class="line">Loaded  Bytes  Unloaded  Bytes     Time   </span><br><span class="line"> 11825 22520.2        0     0.0    2509.31</span><br><span class="line"> </span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jstat -compiler 125676</span><br><span class="line">Compiled Failed Invalid   Time   FailedType FailedMethod</span><br><span class="line">   14442      4       0   103.53          1 com/alibaba/druid/filter/FilterChainImpl connection_prepareStatement</span><br><span class="line">   </span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jstat -gcutil 125676 3000 2 #每3s输出，一共输出两次</span><br><span class="line">  S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT   </span><br><span class="line">  0.37   0.00   7.33  45.04  98.17  96.25  11884  110.109     4    0.382  110.492</span><br><span class="line">  0.37   0.00   7.33  45.04  98.17  96.25  11884  110.109     4    0.382  110.492</span><br></pre></td></tr></table></figure>
+<p>Oracle官方文档：<a href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jstat.html" target="_blank" rel="noopener">jstat说明</a></p>
+<h2 id="3jstack"><a class="markdownIt-Anchor" href="#3jstack"></a> 3.jstack</h2>
+<p>jstack用于生成java虚拟机当前时刻的线程快照，即当前java虚拟机内<strong>所有线程</strong>正在执行的方法堆栈的集合。</p>
+<p>所以jstack可以用于观察jvm中当前所有线程的运行情况和线程当前状态，定位线程出现长时间停顿的原因，如<strong>线程间死锁、死循环、请求外部资源导致的长时间等待</strong>等。</p>
 <blockquote>
-<p>参考文档<br></p>
+<p>系统崩溃了？如果java程序崩溃生成core文件，jstack工具可以用来获得core文件的java stack和native stack的信息，从而可以轻松地知道java程序是如何崩溃和在程序何处发生问题。</p>
+<p>系统hung住了？jstack工具还可以附属到正在运行的java程序中，看到当时运行的java程序的java stack和native stack的信息, 如果现在运行的java程序呈现hung的状态。</p>
 </blockquote>
-<p><a href="https://hexo.io/zh-cn/docs/front-matter.html" target="_blank" rel="noopener">hexo官方文档</a><br><br>
-<a href="http://cherryblog.site/Use-Gitpagehexo-to-develop-their-own-blog.html" target="_blank" rel="noopener">利用 hexo + Gitpage 开发自己的博客</a></p>
+<p>语法格式及说明：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">jstack [option] LVMID</span><br><span class="line"><span class="meta">#</span><span class="bash">option可选参数有：</span></span><br><span class="line">-F : 当正常输出请求不被响应时，强制输出线程堆栈</span><br><span class="line">-l : 除堆栈外，显示关于锁的附加信息</span><br><span class="line">-m : 如果调用到本地方法的话，可以显示C/C++的堆栈</span><br></pre></td></tr></table></figure>
+<p>Oracle官方文档：<a href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jstack.html" target="_blank" rel="noopener">jstack说明</a></p>
+<h2 id="4jmap"><a class="markdownIt-Anchor" href="#4jmap"></a> 4.jmap</h2>
+<p>jmap=JVM Memory Map，用于生成dump文件、查询finalize执行队列、Java堆和永久代的详细信息，如当前使用率、当前使用的是哪种收集器等。</p>
+<p>语法格式如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">jmap [option] LVMID</span><br><span class="line"><span class="meta">#</span><span class="bash">option参数：</span></span><br><span class="line">-dump : 生成堆转储快照</span><br><span class="line">-finalizerinfo : 显示在F-Queue队列等待Finalizer线程执行finalizer方法的对象</span><br><span class="line">-heap : 显示Java堆详细信息</span><br><span class="line">-histo : 显示堆中对象的统计信息</span><br><span class="line">-permstat : to print permanent generation statistics</span><br><span class="line">-F : 当-dump没有响应时，强制生成dump快照</span><br></pre></td></tr></table></figure>
+<p>Oracle官方文档：<a href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jmap.html" target="_blank" rel="noopener">jmap说明</a></p>
+<h2 id="5jinfo"><a class="markdownIt-Anchor" href="#5jinfo"></a> 5.jinfo</h2>
+<p>jinfo=Java Configuration Info，相比于其他命令jinfo用法比较简单，主要用于实时查看或调整当前JVM配置的系统属性。常用命令如下：</p>
+<ul>
+<li>jinfo pid：打印指定process id的系统属性、jvm配置</li>
+<li>jinfo -flag [MaxHeapSize] pid：查看pid具体的参数值。举例如下：</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[app@VM_104_20_centos irps-chs]$ jinfo 62316</span><br><span class="line">Attaching to process ID 62316, please wait...</span><br><span class="line">Debugger attached successfully.</span><br><span class="line"><span class="meta">#</span><span class="bash">先展示系统相关属性</span></span><br><span class="line">Server compiler detected.</span><br><span class="line">JVM version is 25.152-b16</span><br><span class="line">Java System Properties:</span><br><span class="line"></span><br><span class="line">java.vendor = Oracle Corporation</span><br><span class="line">sun.java.launcher = SUN_STANDARD</span><br><span class="line">catalina.base = /irps-chs</span><br><span class="line">......</span><br><span class="line"><span class="meta">#</span><span class="bash">然后是jvm相关参数</span></span><br><span class="line">VM Flags:</span><br><span class="line">Non-default VM flags: -XX:+AlwaysPreTouch -XX:AutoBoxCacheMax=20000 -XX:CICompilerCount=3 -XX:CMSInitiatingOccupancyFraction=75 -XX:ErrorFile=null -XX:+ExplicitGCInvokesConcurrent</span><br><span class="line">......</span><br><span class="line"><span class="meta">#</span><span class="bash">指定查看MaxHeapSize大小</span></span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jinfo -flag MaxHeapSize  62316</span><br><span class="line">-XX:MaxHeapSize=2147483648</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>jinfo命令也可以实时配置一些jvm参数，使用的不太多，具体可参考：</p>
+<p><a href="https://www.jianshu.com/p/c321d0808a1b" target="_blank" rel="noopener">jinfo调整jvm参数</a></p>
+</blockquote>
 
       
     </div>
@@ -593,9 +578,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Github/" rel="tag"># Github</a>
-          
-            <a href="/tags/hexo/" rel="tag"># hexo</a>
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
           
         </div>
       
@@ -608,14 +591,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/12/07/jmap命令配合MAT工具分析java内存泄露情况/" rel="next" title="jmap命令配合MAT工具分析java内存泄露情况">
+                <i class="fa fa-chevron-left"></i> jmap命令配合MAT工具分析java内存泄露情况
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/03/20/Java动态代理机制/" rel="prev" title="Java动态代理机制">
-                Java动态代理机制 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/04/18/Git及intellij-idea设置代理/" rel="prev" title="git及intellij idea设置代理">
+                git及intellij idea设置代理 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -783,7 +770,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#常用指令"><span class="nav-text"> 常用指令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#front-matter"><span class="nav-text"> Front-matter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发表博文"><span class="nav-text"> 发表博文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器"><span class="nav-text"> 服务器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#框架具体搭建过程"><span class="nav-text"> 框架具体搭建过程</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#jvm性能调优监控-jps-jstat-jstack-jmap-jinfo"><span class="nav-text"> jvm性能调优&amp;监控-jps jstat jstack jmap jinfo</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1jps"><span class="nav-text"> 1.jps</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2jstat"><span class="nav-text"> 2.jstat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3jstack"><span class="nav-text"> 3.jstack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4jmap"><span class="nav-text"> 4.jmap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5jinfo"><span class="nav-text"> 5.jinfo</span></a></li></ol></li></ol></div>
             
 
           </div>

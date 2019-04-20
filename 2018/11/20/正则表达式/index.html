@@ -121,7 +121,7 @@
 <meta property="og:description" content="Q：正则表达式是什么？ A：在编写处理字符串，经常会有查找符合某些复杂规则的字符串的需要。正则表达式就是用于描述这些规则的工具，也即记录文本规则的代码。例如：匹配符合规则的邮箱地址、手机号码等等。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-11-20/7400407.jpg">
-<meta property="og:updated_time" content="2018-11-19T16:33:42.335Z">
+<meta property="og:updated_time" content="2018-11-20T02:22:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="正则表达式">
 <meta name="twitter:description" content="Q：正则表达式是什么？ A：在编写处理字符串，经常会有查找符合某些复杂规则的字符串的需要。正则表达式就是用于描述这些规则的工具，也即记录文本规则的代码。例如：匹配符合规则的邮箱地址、手机号码等等。">
@@ -367,7 +367,7 @@
                 
               
 
-              <time title="创建时间：2018-11-20 00:14:05 / 修改时间：00:33:42" itemprop="dateCreated datePublished" datetime="2018-11-20T00:14:05+08:00">2018-11-20</time>
+              <time title="创建时间：2018-11-20 00:14:05 / 修改时间：10:22:51" itemprop="dateCreated datePublished" datetime="2018-11-20T00:14:05+08:00">2018-11-20</time>
             
 
             
@@ -467,11 +467,11 @@
 <p>A：在编写处理字符串，经常会有查找符合某些复杂规则的字符串的需要。正则表达式就是用于描述这些规则的工具，也即记录文本规则的代码。例如：匹配符合规则的邮箱地址、手机号码等等。</p>
 <a id="more"></a>
 <h2 id="1从例子开始"><a class="markdownIt-Anchor" href="#1从例子开始"></a> 1.从例子开始</h2>
-<p>假设你在一篇英文小说里查找hi，你可以使用正则表达式hi。但是很多单词里包含hi这两个连续的字符，比如him,history,high等等。用hi来查找的话，这里边的hi也会被找出来。如果要精确地查找hi这个单词的话，我们应该使用**\bhi\b**</p>
+<p>假设你在一篇英文小说里查找hi，你可以使用正则表达式hi。但是很多单词里包含hi这两个连续的字符，比如him,history,high等等。用hi来查找的话，这里边的hi也会被找出来。如果要精确地查找hi这个单词的话，我们应该使用<code>\bhi\b</code></p>
 <ul>
 <li><code>\b</code> 是正则表达式规定的一个特殊代码（元字符）,代表着单词的开头或结尾，也就是单词的分界处。通常英文的单词是由空格，标点符号或者换行来分隔的，但是\b并不匹配这些分隔字符，它<strong>只匹配一个位置</strong>。</li>
 </ul>
-<p>假如你要找的是hi后面不远处跟着一个Lucy，应该用**\bhi\b.*\bLucy\b**</p>
+<p>假如你要找的是hi后面不远处跟着一个Lucy，应该用<code>\bhi\b.*\bLucy\b</code></p>
 <ul>
 <li><code>.</code>是另一个元字符，匹配除了换行符以外的任意字符。</li>
 <li><code>*</code>也是元字符，它代表数量：*前边的内容可以连续重复使用任意次以使整个表达式得到匹配。</li>
@@ -494,7 +494,7 @@
 </ul>
 <h2 id="2正则表达式的语法"><a class="markdownIt-Anchor" href="#2正则表达式的语法"></a> 2.正则表达式的语法</h2>
 <h3 id="21普通字符"><a class="markdownIt-Anchor" href="#21普通字符"></a> 2.1普通字符</h3>
-<p>普通字符也就是一般的字符类，包括没有显式指定为元字符的所有可打印和不可打印字符。这包括**所有大写和小写字母、所有数字、所有标点符号和一些其他符号。**举例如下：</p>
+<p>普通字符也就是一般的字符类，包括没有显式指定为元字符的所有可打印和不可打印字符。这包括<strong>所有大写和小写字母、所有数字、所有标点符号和一些其他符号</strong> .举例如下：</p>
 <ul>
 <li>[aeiou]就匹配任何一个英文元音字母，[.?!]匹配标点符号(.或?或!)。</li>
 <li>[0-9]代表的含意与\d就是完全一致的：一位数字；(用来指定范围)</li>
@@ -729,7 +729,7 @@
 <p>同样的，<strong>这些也只表示一个字符</strong>。如果要匹配一个由一个小写字母和一位数字组成的字符串，比如&quot;z2&quot;、“t6&quot;或&quot;g7”，但不是&quot;ab2&quot;、“r2d3” 或&quot;b52&quot;的话，用这个模式：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[a-z][0-9]$</span><br></pre></td></tr></table></figure>
 <p>尽管[a-z]代表26个字母的范围，但在这里它只能与第一个字符是小写字母的字符串匹配。</p>
-<p>前面曾经提到<sup>表示字符串的开头，但它还有另外一个含义。**当在一组方括号里使用</sup>是，它表示&quot;非&quot;或&quot;排除&quot;**的意思，常常用来剔除某个字符。前面的例子中，如果我们要求第一个字符不能是数字：</p>
+<p>前面曾经提到<code>^</code>表示字符串的开头，但它还有另外一个含义。**当在一组方括号里使用^，它表示&quot;非&quot;或&quot;排除&quot;**的意思，常常用来剔除某个字符。前面的例子中，如果我们要求第一个字符不能是数字：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[^0-9][0-9]$</span><br></pre></td></tr></table></figure>
 <p>这个模式与&quot;&amp;5&quot;、“g7&quot;及”-2&quot;是匹配的，但与&quot;12&quot;、&quot;66&quot;是不匹配的。下面是几个排除特定字符的例子：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[^a-z] //除了小写字母以外的所有字符 </span><br><span class="line">[^\\\/\^] //除了(\)(/)(^)之外的所有字符 </span><br><span class="line">[^\&quot;\&apos;] //除了双引号(&quot;)和单引号(&apos;)之外的所有字符</span><br></pre></td></tr></table></figure>
@@ -887,6 +887,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/11/22/Linux环境内存分析和问题排查/" rel="prev" title="Linux环境性能优化和问题排查">
+                Linux环境性能优化和问题排查 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -959,7 +963,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -978,7 +982,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -997,7 +1007,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1062,7 +1076,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
@@ -1076,7 +1090,7 @@
     
       <span class="post-meta-item-text">站点总字数：</span>
     
-    <span title="站点总字数">12k</span>
+    <span title="站点总字数">35k</span>
   
 
   
@@ -1087,7 +1101,7 @@
     
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
     
-    <span title="站点阅读时长">11 分钟</span>
+    <span title="站点阅读时长">32 分钟</span>
   
 </div>
 

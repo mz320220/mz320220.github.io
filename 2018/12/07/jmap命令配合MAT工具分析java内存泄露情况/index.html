@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="jmap命令配合MAT工具分析java内存泄露情况 今天测试同学压测的时候又反馈内存有0.4%个百分点的上浮，其实之前用top命令观察了一段时间没什么问题。如果存在内存泄露的问题内存使用率应该会持续增加，而不是压了一个晚上也可以保持稳定。 😓 不过两台服务器上一个项目的进程内存占用的确有一点点差别，保险起见dump堆转储文件分析看看，也学习一下。">
+<meta name="keywords" content="Linux,tools">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jmap命令配合MAT工具分析java内存泄露情况">
+<meta property="og:url" content="http://yoursite.com/2018/12/07/jmap命令配合MAT工具分析java内存泄露情况/index.html">
+<meta property="og:site_name" content="Martin&#39;s Blog">
+<meta property="og:description" content="jmap命令配合MAT工具分析java内存泄露情况 今天测试同学压测的时候又反馈内存有0.4%个百分点的上浮，其实之前用top命令观察了一段时间没什么问题。如果存在内存泄露的问题内存使用率应该会持续增加，而不是压了一个晚上也可以保持稳定。 😓 不过两台服务器上一个项目的进程内存占用的确有一点点差别，保险起见dump堆转储文件分析看看，也学习一下。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/93522148.jpg">
+<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/223989.jpg">
+<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/53428060.jpg">
+<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/58536573.jpg">
+<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/37832446.jpg">
+<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/40088292.jpg">
+<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/76005603.jpg">
+<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/81909733.jpg">
+<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/29004956.jpg">
+<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/97387390.jpg">
+<meta property="og:updated_time" content="2018-12-12T02:08:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jmap命令配合MAT工具分析java内存泄露情况">
+<meta name="twitter:description" content="jmap命令配合MAT工具分析java内存泄露情况 今天测试同学压测的时候又反馈内存有0.4%个百分点的上浮，其实之前用top命令观察了一段时间没什么问题。如果存在内存泄露的问题内存使用率应该会持续增加，而不是压了一个晚上也可以保持稳定。 😓 不过两台服务器上一个项目的进程内存占用的确有一点点差别，保险起见dump堆转储文件分析看看，也学习一下。">
+<meta name="twitter:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/93522148.jpg">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/07/jmap命令配合MAT工具分析java内存泄露情况/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>jmap命令配合MAT工具分析java内存泄露情况 | Martin's Blog</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?59458f30de7753dfe18291111bfe4417";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Martin's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Hello World</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/07/jmap命令配合MAT工具分析java内存泄露情况/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin">
+      <meta itemprop="description" content="每天进步一点点">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Martin's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">jmap命令配合MAT工具分析java内存泄露情况
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-12-07 11:14:05" itemprop="dateCreated datePublished" datetime="2018-12-07T11:14:05+08:00">2018-12-07</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-12-12 10:08:57" itemprop="dateModified" datetime="2018-12-12T10:08:57+08:00">2018-12-12</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux-Learning/" itemprop="url" rel="index"><span itemprop="name">Linux Learning</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/12/07/jmap命令配合MAT工具分析java内存泄露情况/" class="leancloud_visitors" data-flag-title="jmap命令配合MAT工具分析java内存泄露情况">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">8.2k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">7 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="jmap命令配合mat工具分析java内存泄露情况"><a class="markdownIt-Anchor" href="#jmap命令配合mat工具分析java内存泄露情况"></a> jmap命令配合MAT工具分析java内存泄露情况</h1>
+<p>今天测试同学压测的时候又反馈内存有0.4%个百分点的上浮，其实之前用top命令观察了一段时间没什么问题。如果存在内存泄露的问题内存使用率应该会持续增加，而不是压了一个晚上也可以保持稳定。 😓 不过两台服务器上一个项目的进程内存占用的确有一点点差别，保险起见dump堆转储文件分析看看，也学习一下。</p>
+<a id="more"></a>
+<h2 id="一-内存监控检视"><a class="markdownIt-Anchor" href="#一-内存监控检视"></a> 一. 内存监控检视</h2>
+<p>目前系统在测试环境压测时内存检测如下图，这种比较稳定的一般不存在内存泄露的问题：</p>
+<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/93522148.jpg" alt="uws"></p>
+<p>典型的可能存在内存泄露的监控图如下：</p>
+<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/223989.jpg" alt="内存泄漏"></p>
+<h2 id="二-jmap命令"><a class="markdownIt-Anchor" href="#二-jmap命令"></a> 二、jmap命令</h2>
+<p>jmap命令是jdk自带的小工具，可以打印分析java进程的共享对象内存映射、堆内存的细节等。</p>
+<p>jmap命令可以获得运行中的jvm的堆的快照，从而可以：</p>
+<ul>
+<li>离线分析堆，以检查内存泄漏，检查一些严重影响性能的大对象的创建；</li>
+<li>检查系统中什么对象最多，各种对象所占内存的大小等等；</li>
+<li>可以使用jmap生成Heap Dump文件后抓取到本地进一步分析。</li>
+</ul>
+<blockquote>
+<p><strong>什么是堆Dump</strong></p>
+<p>堆Dump是反应Java堆使用情况的内存镜像，其中主要包括系统信息、虚拟机属性、完整的线程Dump、所有类和对象的状态等。 一般，在内存不足、GC异常等情况下，我们就会怀疑有内存泄露。这个时候我们就可以制作堆Dump来查看具体情况。</p>
+</blockquote>
+<h3 id="1命令概述"><a class="markdownIt-Anchor" href="#1命令概述"></a> 1.命令概述</h3>
+<p>在shell中输入jmap有很完整的命令介绍：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">[app@VM_101_178_centos irps-uws]$ jmap</span><br><span class="line">Usage:</span><br><span class="line">    jmap [option] &lt;pid&gt;</span><br><span class="line">        (to connect to running process)</span><br><span class="line">    jmap [option] &lt;executable &lt;core&gt;</span><br><span class="line">        (to connect to a core file)</span><br><span class="line">    jmap [option] [server_id@]&lt;remote server IP or hostname&gt;</span><br><span class="line">        (to connect to remote debug server)</span><br><span class="line"></span><br><span class="line">where &lt;option&gt; is one of:</span><br><span class="line">    &lt;none&gt;               to print same info as Solaris pmap</span><br><span class="line">    #打印jvm的heap情况</span><br><span class="line">    -heap                to print java heap summary</span><br><span class="line">    #打印jvm的heap直方图：类型、对象数量、占用大小等，:live-可选是打印存活对象</span><br><span class="line">    -histo[:live]        to print histogram of java object heap; if the "live"</span><br><span class="line">                         suboption is specified, only count live objects</span><br><span class="line">    -clstats             to print class loader statistics</span><br><span class="line">    #显示在 F-Queue 队列等待 Finalizer 线程执行 finalize 方法的对象 </span><br><span class="line">    -finalizerinfo       to print information on objects awaiting finalization</span><br><span class="line">    #输出jvm堆内存信息到文件</span><br><span class="line">    -dump:&lt;dump-options&gt; to dump java heap in hprof binary format</span><br><span class="line">                         dump-options:</span><br><span class="line">                           live         dump only live objects; if not specified,</span><br><span class="line">                                        all objects in the heap are dumped.</span><br><span class="line">                           format=b     binary format	#dump命令可选参数，以二进制输出</span><br><span class="line">                           file=&lt;file&gt;  dump heap to &lt;file&gt; #命名输出文件</span><br><span class="line">                         Example: jmap -dump:live,format=b,file=heap.bin &lt;pid&gt;</span><br><span class="line">    -F                   force. Use with -dump:&lt;dump-options&gt; &lt;pid&gt; or -histo</span><br><span class="line">                         to force a heap dump or histogram when &lt;pid&gt; does not</span><br><span class="line">                         respond. The "live" suboption is not supported</span><br><span class="line">                         in this mode.</span><br><span class="line">    -h | -help           to print this help message</span><br><span class="line">    -J&lt;flag&gt;             to pass &lt;flag&gt; directly to the runtime system</span><br></pre></td></tr></table></figure>
+<h3 id="2详细说明"><a class="markdownIt-Anchor" href="#2详细说明"></a> 2.详细说明</h3>
+<h4 id="21-jmap-heap-pid"><a class="markdownIt-Anchor" href="#21-jmap-heap-pid"></a> 2.1 jmap -heap pid</h4>
+<p>打印pid的整体堆栈信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">一般先使用top命令查看内存占用情况</span></span><br><span class="line"><span class="meta">#</span><span class="bash">然后按大写字母M，以mem占用排序pid，再使用jmp进一步分析</span></span><br><span class="line">[app@VM_101_178_centos irps-uws]$ jmap -heap 65067</span><br><span class="line">Attaching to process ID 65067, please wait...</span><br><span class="line">Debugger attached successfully.</span><br><span class="line">Server compiler detected.</span><br><span class="line">JVM version is 25.152-b16</span><br><span class="line"></span><br><span class="line">using parallel threads in the new generation.#新生代采用的是并行线程处理方式</span><br><span class="line">using thread-local object allocation.</span><br><span class="line">Concurrent Mark-Sweep GC#同步并行垃圾回收方式</span><br><span class="line"></span><br><span class="line">Heap Configuration:#堆配置情况</span><br><span class="line">   MinHeapFreeRatio         = 40 #最小堆使用比例</span><br><span class="line">   MaxHeapFreeRatio         = 70 #最大堆使用比例</span><br><span class="line">   MaxHeapSize              = 2147483648 (2048.0MB) #最大堆空间大小</span><br><span class="line">   NewSize                  = 805306368 (768.0MB)	#新生代分配大小</span><br><span class="line">   MaxNewSize               = 805306368 (768.0MB)	#最大可新生代分配大小</span><br><span class="line">   OldSize                  = 1342177280 (1280.0MB)	#老生代大小</span><br><span class="line">   NewRatio                 = 2	#新生代比例</span><br><span class="line">   SurvivorRatio            = 8	#新生代与suvivor的比例</span><br><span class="line">   MetaspaceSize            = 21807104 (20.796875MB)</span><br><span class="line">   CompressedClassSpaceSize = 1073741824 (1024.0MB)</span><br><span class="line">   MaxMetaspaceSize         = 134217728 (128.0MB)</span><br><span class="line">   G1HeapRegionSize         = 0 (0.0MB)</span><br><span class="line"></span><br><span class="line">Heap Usage:#堆使用情况</span><br><span class="line">New Generation (Eden + 1 Survivor Space):#新生代（伊甸区 + survior空间）</span><br><span class="line">   capacity = 724828160 (691.25MB)</span><br><span class="line">   used     = 283548752 (270.4131622314453MB)</span><br><span class="line">   free     = 441279408 (420.8368377685547MB)</span><br><span class="line">   39.11944480744236% used</span><br><span class="line">Eden Space:#伊甸区</span><br><span class="line">   capacity = 644349952 (614.5MB)</span><br><span class="line">   used     = 283111232 (269.99591064453125MB)</span><br><span class="line">   free     = 361238720 (344.50408935546875MB)</span><br><span class="line">   43.937495629704024% used</span><br><span class="line">From Space:#survior1区</span><br><span class="line">   capacity = 80478208 (76.75MB)</span><br><span class="line">   used     = 437520 (0.4172515869140625MB)</span><br><span class="line">   free     = 80040688 (76.33274841308594MB)</span><br><span class="line">   0.5436502761095277% used</span><br><span class="line">To Space:#survior2 区</span><br><span class="line">   capacity = 80478208 (76.75MB)</span><br><span class="line">   used     = 0 (0.0MB)</span><br><span class="line">   free     = 80478208 (76.75MB)</span><br><span class="line">   0.0% used</span><br><span class="line">concurrent mark-sweep generation:#老生代使用情况</span><br><span class="line">   capacity = 1342177280 (1280.0MB)</span><br><span class="line">   used     = 97188168 (92.68585968017578MB)</span><br><span class="line">   free     = 1244989112 (1187.3141403198242MB)</span><br><span class="line">   7.241082787513733% used</span><br><span class="line"></span><br><span class="line">33675 interned Strings occupying 4006736 bytes.</span><br></pre></td></tr></table></figure>
+<h4 id="22-jmap-finalizerinfo-pid"><a class="markdownIt-Anchor" href="#22-jmap-finalizerinfo-pid"></a> 2.2 jmap -finalizerinfo pid</h4>
+<p>打印等候回收的对象的信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[app@VM_101_178_centos irps-uws]$ jmap -finalizerinfo 65067</span><br><span class="line">Attaching to process ID 65067, please wait...</span><br><span class="line">Debugger attached successfully.</span><br><span class="line">Server compiler detected.</span><br><span class="line">JVM version is 25.152-b16</span><br><span class="line">Number of objects pending for finalization: 0	#0个对象在等候被回收</span><br></pre></td></tr></table></figure>
+<h4 id="23-jmap-histo-pid"><a class="markdownIt-Anchor" href="#23-jmap-histo-pid"></a> 2.3 jmap -histo pid</h4>
+<p>打印每个class的实例数目,内存占用,类全名信息. VM的内部类名字开头会加上前缀<code>*</code>. 如果live子参数加上后,只统计活的对象数量.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"> #</span><span class="bash">-histo命令会打印大量实例，最好和less配合使用</span></span><br><span class="line"> [app@VM_101_178_centos irps-uws]$ jmap -histo 65067|less</span><br><span class="line"> num     #instances         #bytes  class name</span><br><span class="line">----------------------------------------------</span><br><span class="line">   1:       1915748      208902184  [C</span><br><span class="line">   2:        729935       86852936  [B</span><br><span class="line">   3:        491930       51925552  [Ljava.lang.Object;</span><br><span class="line">   4:        670703       32193744  java.util.HashMap</span><br><span class="line">   5:        349710       30774480  java.lang.reflect.Method</span><br><span class="line">   6:        139541       20728016  [I</span><br><span class="line">   7:        242339       20377456  [Ljava.util.HashMap$Node;</span><br><span class="line">   8:        800805       19219320  java.lang.String</span><br><span class="line">   9:        551565       17650080  java.util.HashMap$Node</span><br><span class="line">  10:        931898       16330024  [Ljava.lang.Class;</span><br><span class="line">  11:        348377       13935080  java.util.HashMap$KeyIterator</span><br><span class="line">  12:        175761       12654792  java.lang.reflect.Field</span><br><span class="line">......</span><br><span class="line"><span class="meta">#</span><span class="bash">instance 是对象的实例个数 </span></span><br><span class="line"><span class="meta">#</span><span class="bash">bytes 是总占用的字节数 </span></span><br><span class="line"><span class="meta">#</span><span class="bash">class name 对应的就是 Class 文件里的 class 的标识 </span></span><br><span class="line">B 代表 byte</span><br><span class="line">C 代表 char</span><br><span class="line">D 代表 double</span><br><span class="line">F 代表 float</span><br><span class="line">I 代表 int</span><br><span class="line">J 代表 long</span><br><span class="line">Z 代表 boolean</span><br><span class="line">前边有 [ 代表数组， [I 就相当于 int[]</span><br><span class="line">对象用 [L + 类名表示</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">补充常用指令配合使用</span></span><br><span class="line"><span class="meta">#</span><span class="bash">输出到a.log文件中，可以隔段时间输出并对比观察gc回收的情况</span></span><br><span class="line">jmap -histo:live pid&gt;a.log </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">只统计存活对象情况，ps：这个命令执行，JVM会先触发gc，然后再统计信息。</span></span><br><span class="line">jmap -histo:live pid </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">查看对象数最多的对象，并按降序排序输出：</span></span><br><span class="line">jmap -histo &lt;pid&gt;|grep alibaba|sort -k 2 -g -r|less #alibaba为需要搜索的对象</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">查看占用内存最多的最象，并按降序排序输出：</span></span><br><span class="line">jmap -histo &lt;pid&gt;|grep alibaba|sort -k 3 -g -r|less</span><br></pre></td></tr></table></figure>
+<h4 id="24-jmap-dumpliveformatbfilefilename-pid"><a class="markdownIt-Anchor" href="#24-jmap-dumpliveformatbfilefilename-pid"></a> 2.4 jmap -dump:live,format=b,file=filename pid</h4>
+<p>jmap -dump命令用于生成堆转储文件，其中的live、format指令均可选。一般生成MAT分析的文件以<code>.hprof</code>的后缀结尾。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">输出堆转储文件到dumpfile.hprof</span></span><br><span class="line">[app@VM_101_178_centos irps-uws]$ jmap -dump:live,format=b,file=dumpfile.hprof 65067</span><br><span class="line">Dumping heap to /data/appsystems/irps-uws/dumpfile.hprof ...</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这个命令执行，JVM会将整个heap的信息dump写入到一个文件，heap如果比较大的话，就会导致这个过程比较耗时，并且执行的过程中为了保证dump的信息是可靠的，所以会暂停应用。</p>
+</blockquote>
+<h2 id="三-利用mat检查内存泄露"><a class="markdownIt-Anchor" href="#三-利用mat检查内存泄露"></a> 三、利用MAT检查内存泄露</h2>
+<p>dump了文件到服务器上，使用scp或sz命令从Linux环境下载到本地环境。</p>
+<h3 id="1mat下载安装"><a class="markdownIt-Anchor" href="#1mat下载安装"></a> 1.MAT下载安装</h3>
+<ul>
+<li>
+<p>将MAT当做eclipse的插件进行安装：启动Eclipse --&gt; Help --&gt; Eclipse Marketplace，然后搜索Memory Analyzer，安装，重启eclipse即可。</p>
+</li>
+<li>
+<p>将MAT作为一个独立的软件进行安装：去官网<a href="http://www.eclipse.org/mat/downloads.php" target="_blank" rel="noopener">http://www.eclipse.org/mat/downloads.php</a>，根据操作系统版本下载最新的MAT。下载后解压就可以运行了。</p>
+</li>
+</ul>
+<p>推荐第二种方式哈 🍸</p>
+<h3 id="2mat配置"><a class="markdownIt-Anchor" href="#2mat配置"></a> 2.MAT配置</h3>
+<p>MAT 软件版本解压后目录内有个MemoryAnalyzer.ini文件，该文件里面有个Xmx参数，该参数表示最大内存占用量，默认为1024m，根据堆转储文件大小修改该参数即可。</p>
+<ul>
+<li>MemoryAnalyzer.ini中的参数一般默认为-vmargs– Xmx1024m，这就够用了。假如你机器的内存不大，改大该参数的值，会导致MemoryAnalyzer启动时，报错:Failed to create the Java Virtual Machine。</li>
+<li>当你导出的dump文件的大小大于你配置的1024m（说明1中，提到的配置：-vmargs– Xmx1024m），MAT输出分析报告的时候，会报错：An internal error occurred during: &quot;Parsing heap dump from XXX”。适当调大说明1中的参数即可。</li>
+</ul>
+<h3 id="3使用mat分析堆转储文件"><a class="markdownIt-Anchor" href="#3使用mat分析堆转储文件"></a> 3.使用MAT分析堆转储文件</h3>
+<p>打开mat后，选择File -&gt; Open Heap Dump找到下载到本地的dump文件打开。</p>
+<ul>
+<li>加载后首页如下，主要关注Leak Suspects功能-泄露分析。</li>
+</ul>
+<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/53428060.jpg" alt="MAT首页"></p>
+<ul>
+<li>点击Leak Suspects，.hprof文件所在文件夹 📁 会生成一个压缩包。如果需要和同事一起分析这个内存问题，只需要把这个小小的 zip 包发给他就可以了，不需要把整个堆文件发给他。并且整个报告是一个 HTML 格式的文件，用浏览器就可以打开。</li>
+</ul>
+<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/58536573.jpg" alt="MAT ZIP"></p>
+<ul>
+<li>进入suspects页面如下，MAT工具会列出来可能存在内存泄露的位置。现在看唯一的可能泄露是jar包中的并不是程序代码导致，所以程序不存在内存泄露的问题。</li>
+</ul>
+<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/37832446.jpg" alt="Leak Suspects"></p>
+<ul>
+<li>假如存在内存泄露我们可以点击Details进一步分析，参考网上的blog如下。这个截图其实就说明是系统代码的问题了。</li>
+</ul>
+<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/40088292.jpg" alt="suspect"></p>
+<ul>
+<li>在详情页面<strong>Shortest Paths To the Accumulation Point</strong>表示GC root到内存消耗聚集点的最短路径，如果某个内存消耗聚集点有路径到达GC root，则该内存消耗聚集点不会被当做垃圾被回收。（所以重点关注哦）</li>
+</ul>
+<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/76005603.jpg" alt="内存泄露~"></p>
+<ul>
+<li>
+<p>在All Accumulated Objects by Class列举了该对象所存储的所有内容。其实从这个地方已经可以大概分析出问题了，EventInfo这个对象数量不太正常。</p>
+<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/81909733.jpg" alt="EventInfo"></p>
+</li>
+<li>
+<p>为了更精确的定位，可以抓取间隔一段时间的两个dump文件进行对比分析，更加容易定位内存泄露的位置。</p>
+</li>
+</ul>
+<blockquote>
+<p>MAT同时打开两个堆转储文件，分别打开Histogram，如下图。在下图中方框1按钮用于对比两个Histogram，对比后在方框2处选择Group By package，然后对比各对象的变化。不难发现heap3.hprof比heap6.hprof少了64个eventInfo对象</p>
+</blockquote>
+<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/29004956.jpg" alt="compare dump file"></p>
+<ul>
+<li>最终分析结果如下：</li>
+</ul>
+<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-7/97387390.jpg" alt="result"></p>
+<blockquote>
+<p>参考文章：</p>
+<p><a href="https://blog.csdn.net/wanghuiqi2008/article/details/50724676" target="_blank" rel="noopener">使用 Eclipse Memory Analyzer 进行堆转储文件分析</a></p>
+<p><a href="https://www.ibm.com/developerworks/cn/opensource/os-cn-ecl-ma/index.html" target="_blank" rel="noopener">利用内存分析工具（Memory Analyzer Tool，MAT）分析java项目内存泄露</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>赏一瓶冰阔落</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatPay.jpg" alt="Martin 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/aliPay.jpg" alt="Martin 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/tools/" rel="tag"># tools</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/29/Docker安装&常用指令/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/11/jvm性能调优&监控-jps jstat jstack jmap jinfo/" rel="prev" title="jvm性能调优&监控-jps jstat jstack jmap jinfo">
+                jvm性能调优&监控-jps jstat jstack jmap jinfo <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Martin" />
+            
+              <p class="site-author-name" itemprop="name">Martin</p>
+              <p class="site-description motion-element" itemprop="description">每天进步一点点</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/mz320220" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#jmap命令配合mat工具分析java内存泄露情况"><span class="nav-text"> jmap命令配合MAT工具分析java内存泄露情况</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-内存监控检视"><span class="nav-text"> 一. 内存监控检视</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-jmap命令"><span class="nav-text"> 二、jmap命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1命令概述"><span class="nav-text"> 1.命令概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2详细说明"><span class="nav-text"> 2.详细说明</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#21-jmap-heap-pid"><span class="nav-text"> 2.1 jmap -heap pid</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#22-jmap-finalizerinfo-pid"><span class="nav-text"> 2.2 jmap -finalizerinfo pid</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#23-jmap-histo-pid"><span class="nav-text"> 2.3 jmap -histo pid</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#24-jmap-dumpliveformatbfilefilename-pid"><span class="nav-text"> 2.4 jmap -dump:live,format=b,file=filename pid</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-利用mat检查内存泄露"><span class="nav-text"> 三、利用MAT检查内存泄露</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1mat下载安装"><span class="nav-text"> 1.MAT下载安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2mat配置"><span class="nav-text"> 2.MAT配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3使用mat分析堆转储文件"><span class="nav-text"> 3.使用MAT分析堆转储文件</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Martin</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">站点总字数：</span>
+    
+    <span title="站点总字数">35k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    
+    <span title="站点阅读时长">32 分钟</span>
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a> v6.4.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "vpRfmVsqk26a6zPEWPN3KDOt-gzGzoHsz")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "vpRfmVsqk26a6zPEWPN3KDOt-gzGzoHsz",
+                'X-LC-Key': "NohlYvLGNnsY1zprFbx7YOoy",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

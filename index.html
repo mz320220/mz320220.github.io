@@ -322,6 +322,1180 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/18/Git及intellij-idea设置代理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin">
+      <meta itemprop="description" content="每天进步一点点">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Martin's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/18/Git及intellij-idea设置代理/" itemprop="url">
+                  git及intellij idea设置代理
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-18 15:56:05 / 修改时间：17:12:52" itemprop="dateCreated datePublished" datetime="2019-04-18T15:56:05+08:00">2019-04-18</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/git/IDE/" itemprop="url" rel="index"><span itemprop="name">IDE</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/04/18/Git及intellij-idea设置代理/" class="leancloud_visitors" data-flag-title="git及intellij idea设置代理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">1.4k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">1 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="git及intellij-idea设置代理"><a class="markdownIt-Anchor" href="#git及intellij-idea设置代理"></a> Git及intellij idea设置代理</h1>
+<p>除了在某些情况需要在天朝科学上网之外，各大公司普遍推动使用VDI云桌面也是全局性的走代理上网。那么从github上拉取代码就必须要对git和IDE单独配置代理服务器。</p>
+<h2 id="1-git设置代理"><a class="markdownIt-Anchor" href="#1-git设置代理"></a> 1. Git设置代理</h2>
+<ul>
+<li>
+<p>使用 <code>git协议</code> 时，设置代理需要配置 <code>core.gitproxy</code></p>
+</li>
+<li>
+<p>使用 <code>HTTP协议</code> 时，设置代理需要配置 <code>http.proxy</code></p>
+</li>
+<li>
+<p>而是用 <code>ssh协议</code> 时，代理需要配置ssh的 <code>ProxyCommand</code> 参数</p>
+</li>
+</ul>
+<p>在windows环境下，配置http方式的代理是最为简单方便的了。公司的vdi代理一般也是提供http协议address + port的形式。下面说明<code>http.proxy</code>的配置命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">针对单个项目进行代理配置：（进入到项目目录）</span></span><br><span class="line">git config http.proxy http://127.0.0.1:8088  #URL:PORT 或 URI:PORT的形式</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">需要鉴权的代理：添加username、password信息</span></span><br><span class="line">git config http.proxy http://username:password@127.0.0.1:8088</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">启用全局代理（公司的VDI环境直接全局配置比较合适） --global指令</span></span><br><span class="line">git config --global http.proxy http://127.0.0.1:8088</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">查看代理配置情况</span></span><br><span class="line">git config --get --global http.proxy</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">删除原有代理配置 --<span class="built_in">unset</span>指令</span></span><br><span class="line">git config --global --unset http.proxy</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">如果https协议出现证书错误的情况，比如提示： SSL certificate problem</span></span><br><span class="line"><span class="meta">#</span><span class="bash">可以尝试将sslVerify设置为<span class="literal">false</span></span></span><br><span class="line">git config --global http.sslVerify false</span><br></pre></td></tr></table></figure>
+<p>几点说明：</p>
+<ul>
+<li>
+<p>如果非必要，一般不使用 <code>--global</code> 的方式来设置代理，毕竟代理有的时候访问一些项目比直接访问还慢，特别是当代理在国外，项目源在国内的时候，按需使用才是王道。</p>
+</li>
+<li>
+<p>不要多次使用不同的参数来设置代理， <code>--global</code> ， <code>--system</code> ， <code>--local</code> 各级设置后，可能会给自己带来不必要的麻烦。git默认是先到git Repository的配置文件中查找配置文件，如果没有才会到 <code>--global</code> 设置的文件中查找，因此，单个项目文件中的设置会覆盖 <code>--global</code> 的设置。</p>
+</li>
+<li>
+<p>使用 <code>--global</code> 来配置的信息保存在当前用户的根目录下的 <code>.config</code> 文件中，而仓库中的配置保存在项目仓库的根目录下的 <code>.git/config</code> 文件中。</p>
+</li>
+</ul>
+<h2 id="2-intellij-idea设置代理"><a class="markdownIt-Anchor" href="#2-intellij-idea设置代理"></a> 2. intellij idea设置代理</h2>
+<p>同样的问题，在VDI环境下所有软件都是需要自己手动配置代理信息，否则也无法拉去代码使用IDE的代码管理功能。以Intellij idea举例，快捷键 <code>Ctrl + Alt + S</code>打开设置窗口，输入<code>http</code>进入如下代理设置页面：</p>
+<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/19-4-18/intellij%E4%BB%A3%E7%90%86.png?Expires=1555582022&amp;OSSAccessKeyId=TMP.AgHyuUNIJaNN5_913dyKrg-GhAE6NCPDN6o2x-MgsVpJxo7nTf175B8NTrXKADAtAhRm3eG6rtWyCoOxwQpOHH49v6U2KgIVAMcBjCxr3zYBCcLqOI_TRaXQaMoM&amp;Signature=AyN4EpzuYhow97Rt%2Fh30t8rS%2Br8%3D" alt="intellij代理"></p>
+<p>按要求配置后重启IDE即可登录配置git账号，拉取项目代码。</p>
+<blockquote>
+<p>参考：</p>
+<p><a href="https://blog.csdn.net/lenglong110/article/details/52411230" target="_blank" rel="noopener">windows下设置git代理</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/11/jvm性能调优&监控-jps jstat jstack jmap jinfo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin">
+      <meta itemprop="description" content="每天进步一点点">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Martin's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/11/jvm性能调优&监控-jps jstat jstack jmap jinfo/" itemprop="url">
+                  jvm性能调优&监控-jps jstat jstack jmap jinfo
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-12-11 16:14:05" itemprop="dateCreated datePublished" datetime="2018-12-11T16:14:05+08:00">2018-12-11</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-12-12 10:50:11" itemprop="dateModified" datetime="2018-12-12T10:50:11+08:00">2018-12-12</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux-Learning/" itemprop="url" rel="index"><span itemprop="name">Linux Learning</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/12/11/jvm性能调优&监控-jps jstat jstack jmap jinfo/" class="leancloud_visitors" data-flag-title="jvm性能调优&监控-jps jstat jstack jmap jinfo">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">3.8k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">3 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-11/28660764.jpg" alt=""></p>
+<h1 id="jvm性能调优监控-jps-jstat-jstack-jmap-jinfo"><a class="markdownIt-Anchor" href="#jvm性能调优监控-jps-jstat-jstack-jmap-jinfo"></a> jvm性能调优&amp;监控-jps jstat jstack jmap jinfo</h1>
+<p>上一份工作其实几乎不怎么接触这些，生产环境的权限控制严格，大部分是由运维来做的。这段时间看了一些jvm性能调优、内存异常监控排查的blog，大部分也是东抄西抄，是时候系统的小结一波，大概归纳下jdk自带的常用命令，本文只简单介绍各个命令基本语法和最常用的功能，详细内容再单独开篇学习吧。</p>
+<p>ps：除了标题列举的命令之外其实还有jhat、jconsole等命令，只不过jhat对比mat工具实在不够直观，jconsole图形化界面在服务器上也不一定能用。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/12/11/jvm性能调优&监控-jps jstat jstack jmap jinfo/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/07/jmap命令配合MAT工具分析java内存泄露情况/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin">
+      <meta itemprop="description" content="每天进步一点点">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Martin's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/07/jmap命令配合MAT工具分析java内存泄露情况/" itemprop="url">
+                  jmap命令配合MAT工具分析java内存泄露情况
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-12-07 11:14:05" itemprop="dateCreated datePublished" datetime="2018-12-07T11:14:05+08:00">2018-12-07</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-12-12 10:08:57" itemprop="dateModified" datetime="2018-12-12T10:08:57+08:00">2018-12-12</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux-Learning/" itemprop="url" rel="index"><span itemprop="name">Linux Learning</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/12/07/jmap命令配合MAT工具分析java内存泄露情况/" class="leancloud_visitors" data-flag-title="jmap命令配合MAT工具分析java内存泄露情况">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">8.2k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">7 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="jmap命令配合mat工具分析java内存泄露情况"><a class="markdownIt-Anchor" href="#jmap命令配合mat工具分析java内存泄露情况"></a> jmap命令配合MAT工具分析java内存泄露情况</h1>
+<p>今天测试同学压测的时候又反馈内存有0.4%个百分点的上浮，其实之前用top命令观察了一段时间没什么问题。如果存在内存泄露的问题内存使用率应该会持续增加，而不是压了一个晚上也可以保持稳定。 😓 不过两台服务器上一个项目的进程内存占用的确有一点点差别，保险起见dump堆转储文件分析看看，也学习一下。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/12/07/jmap命令配合MAT工具分析java内存泄露情况/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/29/Docker安装&常用指令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin">
+      <meta itemprop="description" content="每天进步一点点">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Martin's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/29/Docker安装&常用指令/" itemprop="url">
+                  未命名
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-29 22:20:40 / 修改时间：20:09:07" itemprop="dateCreated datePublished" datetime="2018-11-29T22:20:40+08:00">2018-11-29</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/11/29/Docker安装&常用指令/" class="leancloud_visitors" data-flag-title="">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">3.3k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">3 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="docker安装常用指令"><a class="markdownIt-Anchor" href="#docker安装常用指令"></a> Docker安装&amp;常用指令</h1>
+<h2 id="1安装后启动报错"><a class="markdownIt-Anchor" href="#1安装后启动报错"></a> 1.安装后启动报错</h2>
+<p>安装docker完毕后启动报错，提示“Hardware assisted vitrualization and data execution protection must be enabled in the BIOS”</p>
+<p>这个错误大概率是由于磁盘没有开启虚拟化功能导致的。解决：</p>
+<p>1、开机时按F2进入BIOS（不同机器可能会略有区别）</p>
+<p>2、进入Security --&gt; Virtualization</p>
+<p>3、调整Intel VT-Virtualization-Technology：<strong>Enabled</strong></p>
+<h2 id="2docker常用命令"><a class="markdownIt-Anchor" href="#2docker常用命令"></a> 2.Docker常用命令</h2>
+<h3 id="21-docker镜像操作命令"><a class="markdownIt-Anchor" href="#21-docker镜像操作命令"></a> 2.1 docker镜像操作命令</h3>
+<ol>
+<li>查看docker版本信息</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker -v</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>docker镜像搜索（或在docker hub网页搜索）</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search 'image-name'</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>镜像下载</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull 'image-name'</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>镜像删除</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi 'image-name'</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>删除所有镜像</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi $(docker images -q)</span><br></pre></td></tr></table></figure>
+<h3 id="22-docker容器命令"><a class="markdownIt-Anchor" href="#22-docker容器命令"></a> 2.2 docker容器命令</h3>
+<ol>
+<li>启动一个镜像为容器</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run --name 'container-name' -d 'image-name'</span><br><span class="line">docker run --help //查看run命令参数</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>
+<p>查看docker中容器列表</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker ps	//查看运行中的容器</span><br><span class="line">docker ps -a //查看运行、停止状态的容器</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>停止&amp;启动容器</p>
+</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker stop 'container-name/id'</span><br><span class="line">docker start 'container-name/id'</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>容器端口映射</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//启动一个叫port-redis的容器，映射容器6379端口到本机6378</span><br><span class="line">docker run -d -p 6378:6379 --name port-redis redis</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>windows下运行的docker实际上是在虚拟机中，上述的端口映射是docker–&gt;虚拟机，如果想在本地开发环境使用，还需要一次映射：虚拟机–&gt;开发机</p>
+</blockquote>
+<ol start="5">
+<li>删除容器</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker rm 'container-name/id'</span><br><span class="line">docker rm $(docker ps -a -q)	//删除所有容器</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>容器日志</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker logs 'container-name/id'</span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>登录容器</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it 'container-name/id' bash</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>运行中的容器实际上相当于一个完备的Linux系统，可以登录后进行常规Linux命令操作</p>
+</blockquote>
+<ol start="8">
+<li>登录后查看容器信息</li>
+</ol>
+<p>按上述登录到容器中后就可以按Linux的命令如hostname、env、ip addr等进行查看容器的信息。补充另外另种方式：</p>
+<ul>
+<li>不用进入容器，直接通过命令查看</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker exec 'container-name/id' hostname</span><br><span class="line">docker exec 'container-name/id' env</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用<strong>inspect</strong>命令，可以获得全部内容</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker inspect 'container-name/id'</span><br><span class="line">docker inspect -f &#123;&#123;.NetworkSettings.IPAddress&#125;&#125; 'container-name/id'</span><br><span class="line">docker inspect 'container-name/id'| grep IPAddress</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>-f：format指令可以设定具体的属性内容 🙂</p>
+<p>inspect命令结合grep使用快速查询容器属性！</p>
+</blockquote>
+<h2 id="3-虚拟机端口映射配置"><a class="markdownIt-Anchor" href="#3-虚拟机端口映射配置"></a> 3. 虚拟机端口映射配置</h2>
+<p>上面介绍了docker容器的端口映射，在windows下还要进行虚拟机到一般开发环境的端口映射才可以正常访问容器。以redis为例说明：</p>
+<h3 id="31虚拟机端口映射到容器端口"><a class="markdownIt-Anchor" href="#31虚拟机端口映射到容器端口"></a> 3.1虚拟机端口映射到容器端口</h3>
+<ol>
+<li>开启容器并映射<strong>虚拟机port：容器port</strong></li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 6379:6379 --name test-redis redis</span><br><span class="line">-p：小写表示指示具体的端口映射</span><br><span class="line">-P：大写表示随机分配主机端口映射到容器开放的网络端口上。</span><br></pre></td></tr></table></figure>
+<p>将虚拟机的6379端口映射到容器6379端口</p>
+<ol start="2">
+<li>映射时指定ip地址</li>
+</ol>
+<p>一般不需要特别指定虚拟机ip地址，默认0.0.0.0，也可以在绑定时指定：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 127.0.0.1:6379:6379 --name test-redis redis</span><br><span class="line"><span class="meta">#</span><span class="bash">启动结果如下</span></span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             </span><br><span class="line">2aedbac0a984        redis               "docker-entrypoint.s…"   4 seconds ago       </span><br><span class="line"></span><br><span class="line">STATUS              PORTS                      NAMES	</span><br><span class="line">Up 3 seconds        127.0.0.1:6379-&gt;6379/tcp   test-redis</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>映射时可以指定通信协议tcp、udp</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 127.0.0.1:6379:6379/tcp --name test-redis redis</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>查看容器端口绑定&amp;IP地址</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker port test-redis</span><br><span class="line"><span class="meta">#</span><span class="bash">结果：容器端口映射到虚拟机127.0.0.1:6379</span></span><br><span class="line">6379/tcp -&gt; 127.0.0.1:6379</span><br><span class="line"></span><br><span class="line">docker inspect test-redis|grep 'IPAddress'</span><br><span class="line"><span class="meta">#</span><span class="bash">结果</span></span><br><span class="line">"SecondaryIPAddresses": null,</span><br><span class="line">"IPAddress": "172.17.0.2",</span><br><span class="line">"IPAddress": "172.17.0.2",</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果想要同时绑定多个端口，则使用多个-p指令即可</p>
+<p>除了启动容器时绑定port，也可以通过宿主机的iptables进行nat转发实现，详见：<a href="https://blog.csdn.net/mnasd/article/details/83087881" target="_blank" rel="noopener">docker-redis</a></p>
+</blockquote>
+<h3 id="32映射本机端口到虚拟机端口"><a class="markdownIt-Anchor" href="#32映射本机端口到虚拟机端口"></a> 3.2映射本机端口到虚拟机端口</h3>
+<p>如果想要在本机上使用，还需要进行本机端口–&gt;虚拟机端口映射的操作。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">1.查看目前端口的映射情况</span></span><br><span class="line">netsh interface portproxy show v4tov4</span><br><span class="line">netsh interface portproxy show v4tov4 | find "127.0.0.1"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">2.增加一个端口映射,listen主机IP&amp;port --&gt; connect 虚拟机IP&amp;port</span></span><br><span class="line">netsh interface portproxy add v4tov4 listenaddress=127.0.0.1 listenport=6379 connectaddress=127.0.0.1 connectport=6379</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">3.删除一个端口映射</span></span><br><span class="line">netsh interface portproxy delete v4tov4 listenaddress=/address listenport=/port</span><br></pre></td></tr></table></figure>
+<h2 id="4-docker中使用redis"><a class="markdownIt-Anchor" href="#4-docker中使用redis"></a> 4. Docker中使用redis</h2>
+<p>经过以上的操作我们直接通过127.0.0.1:6379即可连接redis。我们也可以直接登录容器操作redis数据库。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">1.进入docker的redis-cli环境</span></span><br><span class="line">docker exec -it 'container-name/id' redis-cli</span><br><span class="line"><span class="meta">#</span><span class="bash">例如：</span></span><br><span class="line">docker exec -it test-redis redis-cli</span><br><span class="line"><span class="meta">#</span><span class="bash">进入如下界面即可使用redis命令，如：keys、get、ttl等，退出使用<span class="built_in">exit</span>即可</span></span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/22/Linux环境内存分析和问题排查/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin">
+      <meta itemprop="description" content="每天进步一点点">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Martin's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/22/Linux环境内存分析和问题排查/" itemprop="url">
+                  Linux环境性能优化和问题排查
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-22 00:14:05" itemprop="dateCreated datePublished" datetime="2018-11-22T00:14:05+08:00">2018-11-22</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-12-07 11:45:05" itemprop="dateModified" datetime="2018-12-07T11:45:05+08:00">2018-12-07</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux-Learning/" itemprop="url" rel="index"><span itemprop="name">Linux Learning</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/11/22/Linux环境内存分析和问题排查/" class="leancloud_visitors" data-flag-title="Linux环境性能优化和问题排查">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">5.7k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">5 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="linux环境性能优化和问题排查"><a class="markdownIt-Anchor" href="#linux环境性能优化和问题排查"></a> Linux环境性能优化和问题排查</h1>
+<p>今天测试反馈了压测时内存占用较高，两个实例内存占用百分比有一定差距。看了下内存占用不一致估计是openApi调用的时候负载均衡的问题。之前的工作遇到类似的其实大部分都是运维处理的，今天自己去跳板机上排查了一遍，也学习了下内存分析的一些命令，学习了Linux环境下系统性能优化的大致思路，做一下记录。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/22/Linux环境内存分析和问题排查/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/20/正则表达式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -368,7 +1542,7 @@
                 
               
 
-              <time title="创建时间：2018-11-20 00:14:05 / 修改时间：00:33:42" itemprop="dateCreated datePublished" datetime="2018-11-20T00:14:05+08:00">2018-11-20</time>
+              <time title="创建时间：2018-11-20 00:14:05 / 修改时间：10:22:51" itemprop="dateCreated datePublished" datetime="2018-11-20T00:14:05+08:00">2018-11-20</time>
             
 
             
@@ -1153,7 +2327,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1172,7 +2346,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1191,7 +2371,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1240,7 +2424,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
@@ -1254,7 +2438,7 @@
     
       <span class="post-meta-item-text">站点总字数：</span>
     
-    <span title="站点总字数">12k</span>
+    <span title="站点总字数">35k</span>
   
 
   
@@ -1265,7 +2449,7 @@
     
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
     
-    <span title="站点阅读时长">11 分钟</span>
+    <span title="站点阅读时长">32 分钟</span>
   
 </div>
 

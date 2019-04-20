@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Linux环境性能优化和问题排查 今天测试反馈了压测时内存占用较高，两个实例内存占用百分比有一定差距。看了下内存占用不一致估计是openApi调用的时候负载均衡的问题。之前的工作遇到类似的其实大部分都是运维处理的，今天自己去跳板机上排查了一遍，也学习了下内存分析的一些命令，学习了Linux环境下系统性能优化的大致思路，做一下记录。">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux环境性能优化和问题排查">
+<meta property="og:url" content="http://yoursite.com/2018/11/22/Linux环境内存分析和问题排查/index.html">
+<meta property="og:site_name" content="Martin&#39;s Blog">
+<meta property="og:description" content="Linux环境性能优化和问题排查 今天测试反馈了压测时内存占用较高，两个实例内存占用百分比有一定差距。看了下内存占用不一致估计是openApi调用的时候负载均衡的问题。之前的工作遇到类似的其实大部分都是运维处理的，今天自己去跳板机上排查了一遍，也学习了下内存分析的一些命令，学习了Linux环境下系统性能优化的大致思路，做一下记录。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-07T03:45:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux环境性能优化和问题排查">
+<meta name="twitter:description" content="Linux环境性能优化和问题排查 今天测试反馈了压测时内存占用较高，两个实例内存占用百分比有一定差距。看了下内存占用不一致估计是openApi调用的时候负载均衡的问题。之前的工作遇到类似的其实大部分都是运维处理的，今天自己去跳板机上排查了一遍，也学习了下内存分析的一些命令，学习了Linux环境下系统性能优化的大致思路，做一下记录。">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/22/Linux环境内存分析和问题排查/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Linux环境性能优化和问题排查 | Martin's Blog</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?59458f30de7753dfe18291111bfe4417";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Martin's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Hello World</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/22/Linux环境内存分析和问题排查/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Martin">
+      <meta itemprop="description" content="每天进步一点点">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Martin's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux环境性能优化和问题排查
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-22 00:14:05" itemprop="dateCreated datePublished" datetime="2018-11-22T00:14:05+08:00">2018-11-22</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-12-07 11:45:05" itemprop="dateModified" datetime="2018-12-07T11:45:05+08:00">2018-12-07</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux-Learning/" itemprop="url" rel="index"><span itemprop="name">Linux Learning</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/11/22/Linux环境内存分析和问题排查/" class="leancloud_visitors" data-flag-title="Linux环境性能优化和问题排查">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">5.7k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">5 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="linux环境性能优化和问题排查"><a class="markdownIt-Anchor" href="#linux环境性能优化和问题排查"></a> Linux环境性能优化和问题排查</h1>
+<p>今天测试反馈了压测时内存占用较高，两个实例内存占用百分比有一定差距。看了下内存占用不一致估计是openApi调用的时候负载均衡的问题。之前的工作遇到类似的其实大部分都是运维处理的，今天自己去跳板机上排查了一遍，也学习了下内存分析的一些命令，学习了Linux环境下系统性能优化的大致思路，做一下记录。</p>
+<a id="more"></a>
+<p>性能优化的核心是找出系统的瓶颈点，问题找到了，优化的工作也就完成了大半。主要从两个层面来追踪：</p>
+<p>系统层面&amp;程序层面；</p>
+<p><strong>本文只介绍处理思路，更具体的命令使用和分析另行记录。</strong></p>
+<h2 id="1分析系统瓶颈"><a class="markdownIt-Anchor" href="#1分析系统瓶颈"></a> 1.分析系统瓶颈</h2>
+<p>首先得定位大致的问题出在哪里，是IO瓶颈、CPU瓶颈、内存瓶颈还是程序导致的系统问题；</p>
+<p>使用top命令分析可以有一个较为全面的分析：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[app@VM_104_105_centos appsystems]$ top -M</span><br><span class="line">top - 21:14:39 up 579 days,  1:12, 10 users,  load average: 0.00, 0.03, 0.06</span><br><span class="line">Tasks: 245 total,   1 running, 177 sleeping,  67 stopped,   0 zombie</span><br><span class="line">Cpu(s):  1.1%us,  1.6%sy,  3.6%ni, 93.6%id,  0.1%wa,  0.0%hi,  0.0%si,  0.0%st</span><br><span class="line">Mem:  7870.285M total, 7548.094M used,  322.191M free,   75.156M buffers</span><br><span class="line">Swap:    0.000k total,    0.000k used,    0.000k free, 1831.695M cached</span><br><span class="line"></span><br><span class="line">   PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND                   184164 root      26   6  654m  23m 6312 T 16.0  0.3 656:56.92 agent                     278926 root      20   0  432m  11m 2196 S  1.7  0.1  30:37.51 barad_agent                 3821 root      20   0  715m  17m 2760 S  1.3  0.2   1378:45 falcon-agent              70612 root      20   0  7144 6120  536 S  1.0  0.1 408:03.19 sap1002                    21269 root       7 -13  463m  19m 4588 S  0.7  0.3 183:23.85 daemon                    70617 root      20   0 39016  22m 5224 S  0.7  0.3 682:36.47 sap1009                    71929 root      20   0  577m 6996 2984 S  0.7  0.1   0:25.98 YDService                  92222 telegraf  20   0  507m  28m  10m S  0.7  0.4   4:59.52 telegraf                  70615 root      20   0 31464  13m  860 S  0.3  0.2 633:06.40 sap1005                    79110 influxdb  20   0  640m  64m 8768 S  0.3  0.8   0:43.95 influxd                   239464 app       20   0 5817m 2.3g  18m S  0.3 29.5   0:37.90 java</span><br></pre></td></tr></table></figure>
+<p><code>-M</code>: 该命令选项可以使用MB为单位展示内存使用情况。（部分版本不支持）</p>
+<p><strong>进入交互模式后：</strong></p>
+<ul>
+<li>输入M：进程列表按内存占用降序排序（<strong>%MEM字段</strong>），便于观察最大内存使用者是否有问题，可以进一步跟踪确认是否有内存泄露的问题。</li>
+<li>输入P：进程列表按CPU占用降序排序（<strong>%CPU字段</strong>），便于观察最耗CPU资源的使用则是否有问题。</li>
+</ul>
+<p><strong>第三行Cpu(s),显示当前cpu处理工作的情况，重点关注：</strong></p>
+<ul>
+<li>%id：空闲CPU的时间百分比，如果这个值过低说明CPU存在瓶颈。</li>
+<li>%wa：等待I/O的CPU时间百分比，这个值过高说明IO存在瓶颈。</li>
+</ul>
+<h2 id="2分析内存瓶颈"><a class="markdownIt-Anchor" href="#2分析内存瓶颈"></a> 2.分析内存瓶颈</h2>
+<p>top命令显示的内容较多，分析内存可以使用free命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[app@VM_104_105_centos appsystems]$ free -m</span><br><span class="line">             total       used       free     shared    buffers     cached</span><br><span class="line">Mem:          7870       7572        297          0         86       1805</span><br><span class="line">-/+ buffers/cache:       5680       2189</span><br><span class="line">Swap:            0          0          0</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><code>-m</code>表示以mb为单位展示内存使用情况，否则默认是KB单位；-g：表示以GB为单位；-s 2：表示每两秒更新一次内存情况，打印到控制台。</p>
+</li>
+<li>
+<p>Mem：内存使用情况</p>
+<ul>
+<li>total：物理内存总大小</li>
+<li>used：总的分配给缓存的（包含buffers&amp;cache），可以部分缓存并未使用，所以不能拿这个数据当做实际的内存占用大小</li>
+<li>free：未分配的内存</li>
+<li>shared：共享内存一般系统都没有</li>
+<li>cached：系统分配的但未被使用的cache大小。</li>
+<li><strong>total（Mem） = used（Mem） + free（Mem）</strong></li>
+</ul>
+</li>
+<li>
+<p>buffers/cache：物理内存的缓存统计情况</p>
+<ul>
+<li>used：去除buffers和cached的后<strong>实际的内存占用量。=Mem_used - buffers - cached</strong></li>
+<li>free：可以视为<strong>真正空闲的内存大小。</strong></li>
+</ul>
+</li>
+<li>
+<p>Swap：交换区使用情况。</p>
+</li>
+</ul>
+<h2 id="3分析io瓶颈"><a class="markdownIt-Anchor" href="#3分析io瓶颈"></a> 3.分析IO瓶颈</h2>
+<p>根据top命令，当%wa偏高时，系统的IO性能存在瓶颈，使用iostat命令分析：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[app@VM_104_105_centos logs]$ iostat -x -m</span><br><span class="line">Linux 2.6.32-642.6.2.el6.x86_64 (VM_104_105_centos)  11/23/2018  _x86_64_ (4 CPU)</span><br><span class="line"></span><br><span class="line">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span><br><span class="line">           0.53    0.02    0.31    0.08    0.00   99.06</span><br><span class="line"></span><br><span class="line">Device:rrqm/s  wrqm/s   r/s   w/s  rMB/s  wMB/s avgrq-sz avgqu-sz   await  svctm  %util</span><br><span class="line">vda    0.00    8.57    0.00  2.03  0.00    0.04    41.75     0.04   20.59   1.74   0.35</span><br><span class="line">vdb    0.00    0.65    0.01  0.34  0.00    0.00    24.88     0.00    5.47   1.96   0.07</span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果**%iowait**的值过高，表示硬盘存在I/O瓶颈。</li>
+<li>如果 %util 接近 100%，说明产生的I/O请求太多，I/O系统已经满负荷，该磁盘可能存在瓶颈。</li>
+<li>如果 svctm 比较接近 await，说明 I/O 几乎没有等待时间；</li>
+<li>如果 await 远大于 svctm，说明I/O 队列太长，io响应太慢，则需要进行必要优化。</li>
+<li>如果avgqu-sz比较大，也表示有大量io在等待。</li>
+</ul>
+<h2 id="4分析进程调用"><a class="markdownIt-Anchor" href="#4分析进程调用"></a> 4.分析进程调用</h2>
+<p>通过top等工具发现系统性能问题是由某个进程导致的之后，接下来我们就需要分析这个进程,查询问题在哪；</p>
+<p>这里我们有两个好用的工具： <strong>pstack和pstrace</strong></p>
+<p>pstack用来跟踪进程栈，这个命令在排查进程问题时非常有用，比如我们发现一个服务一直处于work状态（如假死状态，好似死循环），使用这个命令就能轻松定位问题所在；可以在一段时间内，多执行几次pstack，若发现代码栈总是停在同一个位置，那个位置就需要重点关注，很可能就是出问题的地方；</p>
+<p>示例：查看bash程序进程栈:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/opt/app/tdev1$ps -fe| grep bash</span><br><span class="line">tdev1   7013  7012  0 19:42 pts/1    00:00:00 -bash</span><br><span class="line">tdev1  11402 11401  0 20:31 pts/2    00:00:00 -bash</span><br><span class="line">tdev1  11474 11402  0 20:32 pts/2    00:00:00 grep bash</span><br><span class="line">/opt/app/tdev1$pstack 7013</span><br><span class="line"><span class="meta">#</span><span class="bash">0  0x00000039958c5620 <span class="keyword">in</span> __read_nocancel () from /lib64/libc.so.6</span></span><br><span class="line"><span class="meta">#</span><span class="bash">1  0x000000000047dafe <span class="keyword">in</span> rl_getc ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">2  0x000000000047def6 <span class="keyword">in</span> rl_read_key ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">3  0x000000000046d0f5 <span class="keyword">in</span> readline_internal_char ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">4  0x000000000046d4e5 <span class="keyword">in</span> readline ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">5  0x00000000004213cf <span class="keyword">in</span> ?? ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">6  0x000000000041d685 <span class="keyword">in</span> ?? ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">7  0x000000000041e89e <span class="keyword">in</span> ?? ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">8  0x00000000004218dc <span class="keyword">in</span> yyparse ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">9  0x000000000041b507 <span class="keyword">in</span> parse_command ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">10 0x000000000041b5c6 <span class="keyword">in</span> read_command ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">11 0x000000000041b74e <span class="keyword">in</span> reader_loop ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">12 0x000000000041b2aa <span class="keyword">in</span> main ()</span></span><br></pre></td></tr></table></figure>
+<p>strace用来跟踪进程中的系统调用；这个工具能够动态的跟踪进程执行时的系统调用和所接收的信号。是一个非常有效的检测、指导和调试工具。系统管理员可以通过该命令容易地解决程序问题。</p>
+<h2 id="tips什么是内存"><a class="markdownIt-Anchor" href="#tips什么是内存"></a> Tips.什么是内存</h2>
+<p>内存是计算机中重要的部件之一，它是与CPU进行沟通的桥梁。计算机中所有程序的运行都是在内存中进行的，因此内存的性能对计算机的影响非常大。</p>
+<p>内存(Memory)也被称为内存储器，其作用是用于暂时存放CPU中的运算数据，以及与硬盘等外部存储器交换的数据。</p>
+<h3 id="物理内存"><a class="markdownIt-Anchor" href="#物理内存"></a> 物理内存</h3>
+<p><strong>物理内存</strong>指通过物理内存条而获得的内存空间。即随机存取存储器（random access memory，RAM），是与CPU直接交换数据的内部存储器，也叫主存(内存)。</p>
+<h3 id="虚拟内存"><a class="markdownIt-Anchor" href="#虚拟内存"></a> 虚拟内存</h3>
+<p><strong>虚拟内存</strong>是计算机系统内存管理的一种技术。它使得应用程序认为它拥有连续可用的内存（一个连续完整的地址空间），而实际上，它通常是被分隔成多个物理内存碎片，还有部分暂时存储在外部磁盘存储器上，在需要时进行数据交换（也就是说，当物理内存不足时，可能会借用硬盘空间来充当内存使用）。与没有使用虚拟内存技术的系统相比，使用这种技术的系统使得大型程序的编写变得更容易，对真正的物理内存（例如RAM）的使用也更有效率。</p>
+<h3 id="swap分区"><a class="markdownIt-Anchor" href="#swap分区"></a> Swap分区</h3>
+<p>Swap分区（即交换区）在系统的物理内存不够用的时候，把硬盘空间中的一部分空间释放出来，以供当前运行的程序使用。那些被释放的空间可能来自一些很长时间没有什么操作的程序，这些被释放的空间被临时保存到Swap分区中，等到那些程序要运行时，再从Swap分区中恢复保存的数据到内存中。</p>
+<h3 id="buffer与cache的区别"><a class="markdownIt-Anchor" href="#buffer与cache的区别"></a> buffer与cache的区别</h3>
+<p>1.cache：高速缓存，是位于CPU与主内存之间的一种容量较小但是速度较高的存储器，由于CPU的速度远高于主内存，CPU直接从内存中存取数据需要等待一定的时间周期。cache中保存着CPU刚用过或循环使用的一部分数据，当CPU再次使用该部分数据时可从cache中直接调用，这样就减少了CPU的等待时间，提高了系统的效率。<br>
+cache又分为一级cache(L1 cache)和二级cache(L2 cache),L1集成在CPU内部，L2早期一般时焊在主板上的，现在也都即成在CPU内部，常见L2 cache的容量有256KB或512KB。<br>
+2.buffer:缓冲区，一个用于存储速度不同步的设备或优先级不同的设备之间传输数据的区域。通过缓冲区，可以使进程之间的相互等待变少。速度快的设备可以利用buffer不间断的进行写操作，速度慢的设备可以直接从buffer中读取数据，减少速度快的设备的等待时间，提高效率。</p>
+<ul>
+<li>cache：文件系统的缓冲(page cache)，将常用的数据缓存起来供CPU使用。</li>
+<li>buffers:块设备的读写缓冲区(buffer cache)，缓冲满了一次写，提高IO性能。</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>赏一瓶冰阔落</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatPay.jpg" alt="Martin 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/aliPay.jpg" alt="Martin 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/20/正则表达式/" rel="next" title="正则表达式">
+                <i class="fa fa-chevron-left"></i> 正则表达式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/29/Docker安装&常用指令/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Martin" />
+            
+              <p class="site-author-name" itemprop="name">Martin</p>
+              <p class="site-description motion-element" itemprop="description">每天进步一点点</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/mz320220" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#linux环境性能优化和问题排查"><span class="nav-text"> Linux环境性能优化和问题排查</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1分析系统瓶颈"><span class="nav-text"> 1.分析系统瓶颈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2分析内存瓶颈"><span class="nav-text"> 2.分析内存瓶颈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3分析io瓶颈"><span class="nav-text"> 3.分析IO瓶颈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4分析进程调用"><span class="nav-text"> 4.分析进程调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tips什么是内存"><span class="nav-text"> Tips.什么是内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#物理内存"><span class="nav-text"> 物理内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟内存"><span class="nav-text"> 虚拟内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#swap分区"><span class="nav-text"> Swap分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#buffer与cache的区别"><span class="nav-text"> buffer与cache的区别</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Martin</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">站点总字数：</span>
+    
+    <span title="站点总字数">35k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    
+    <span title="站点阅读时长">32 分钟</span>
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a> v6.4.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "vpRfmVsqk26a6zPEWPN3KDOt-gzGzoHsz")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "vpRfmVsqk26a6zPEWPN3KDOt-gzGzoHsz",
+                'X-LC-Key': "NohlYvLGNnsY1zprFbx7YOoy",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
