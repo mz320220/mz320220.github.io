@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>正则表达式 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Q：正则表达式是什么？ A：在编写处理字符串，经常会有查找符合某些复杂规则的字符串的需要。正则表达式就是用于描述这些规则的工具，也即记录文本规则的代码。例如：匹配符合规则的邮箱地址、手机号码等等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="正则表达式">
+<meta property="og:url" content="http://example.com/2018/11/20/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Q：正则表达式是什么？ A：在编写处理字符串，经常会有查找符合某些复杂规则的字符串的需要。正则表达式就是用于描述这些规则的工具，也即记录文本规则的代码。例如：匹配符合规则的邮箱地址、手机号码等等。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-11-20/7400407.jpg">
+<meta property="article:published_time" content="2018-11-19T16:14:05.000Z">
+<meta property="article:modified_time" content="2018-11-20T02:22:51.000Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="基础知识">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-11-20/7400407.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-正则表达式" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/11/20/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" class="article-date">
+  <time class="dt-published" datetime="2018-11-19T16:14:05.000Z" itemprop="datePublished">2018-11-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      正则表达式
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-11-20/7400407.jpg" alt="某一天的公司看去"></p>
+<p>Q：正则表达式是什么？</p>
+<p>A：在编写处理字符串，经常会有查找符合某些复杂规则的字符串的需要。正则表达式就是用于描述这些规则的工具，也即记录文本规则的代码。例如：匹配符合规则的邮箱地址、手机号码等等。</p>
+<span id="more"></span>
+
+<h2 id="1-从例子开始"><a href="#1-从例子开始" class="headerlink" title="1.从例子开始"></a>1.从例子开始</h2><p>假设你在一篇英文小说里查找hi，你可以使用正则表达式hi。但是很多单词里包含hi这两个连续的字符，比如him,history,high等等。用hi来查找的话，这里边的hi也会被找出来。如果要精确地查找hi这个单词的话，我们应该使用<code>\bhi\b</code></p>
+<ul>
+<li><code>\b</code> 是正则表达式规定的一个特殊代码（元字符）,代表着单词的开头或结尾，也就是单词的分界处。通常英文的单词是由空格，标点符号或者换行来分隔的，但是\b并不匹配这些分隔字符，它<strong>只匹配一个位置</strong>。</li>
+</ul>
+<p>假如你要找的是hi后面不远处跟着一个Lucy，应该用<code>\bhi\b.*\bLucy\b</code></p>
+<ul>
+<li><code>.</code>是另一个元字符，匹配除了换行符以外的任意字符。</li>
+<li><code>*</code>也是元字符，它代表数量：*前边的内容可以连续重复使用任意次以使整个表达式得到匹配。</li>
+</ul>
+<p>所以两者结合使用 **.***：代表任意数量的不包含换行的字符。</p>
+<p><strong><code>^[0-9]+abc$</code></strong></p>
+<ul>
+<li>^ 为匹配输入字符串的开始位置。</li>
+<li>[0-9]+匹配多个数字， [0-9] 匹配单个数字，+ 匹配一个或者多个。</li>
+<li>abc$匹配字母 abc 并以 abc 结尾，$ 为匹配输入字符串的结束位置。</li>
+<li>可以匹配<strong>1232xyzabc、32eabc</strong>等。</li>
+</ul>
+<p><strong><code>^[a-z0-9_-]&#123;3,15&#125;$</code></strong></p>
+<ul>
+<li>^ 为匹配输入字符串的开始位置。</li>
+<li>[a-z0-9_-]匹配字母a-z、数字0-9、下划线、连字符。</li>
+<li>{3,15}匹配3-15个字符长度</li>
+<li>$结束标记</li>
+<li>可以匹配 <strong>runoob、runoob1、run-oob、run_oob</strong>， 但不匹配 <strong>ru</strong>，因为它包含了小写的字母而且太短了，也不匹配 <strong>runoob$</strong>, 因为它包含特殊字符。</li>
+</ul>
+<h2 id="2-正则表达式的语法"><a href="#2-正则表达式的语法" class="headerlink" title="2.正则表达式的语法"></a>2.正则表达式的语法</h2><h3 id="2-1普通字符"><a href="#2-1普通字符" class="headerlink" title="2.1普通字符"></a>2.1普通字符</h3><p>普通字符也就是一般的字符类，包括没有显式指定为元字符的所有可打印和不可打印字符。这包括<strong>所有大写和小写字母、所有数字、所有标点符号和一些其他符号</strong> .举例如下：</p>
+<ul>
+<li>[aeiou]就匹配任何一个英文元音字母，[.?!]匹配标点符号(.或?或!)。</li>
+<li>[0-9]代表的含意与\d就是完全一致的：一位数字；(用来指定范围)</li>
+<li><code>\(?0\d&#123;2&#125;[) -]?\d&#123;8&#125;</code>：这个复杂的表达式由几个部分组成，<code>\(</code>一个转义字符，可以出现<code>?</code>零次或一次；然后是一个数字<code>0</code>,后面跟着两个数字<code>\d&#123;2&#125;</code>;接下来是一个方括号表达式<code>[) -]?</code>表示括号、空格或连接符中的任何一个，出现零次或一次；最后为八个数字<code>\d&#123;8&#125;</code>。从以上分析可知，该正则表达式可以匹配：(010)88886666，或022-22334455，或02912345678等</li>
+</ul>
+<h3 id="2-2常用元字符"><a href="#2-2常用元字符" class="headerlink" title="2.2常用元字符"></a>2.2常用元字符</h3><p>非打印字符也可以是正则表达式的组成部分。如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>.</strong></td>
+<td>匹配除换行符 \n 之外的任何单字符。要匹配 . ，请使用 <code>\.</code> 。</td>
+</tr>
+<tr>
+<td>\w</td>
+<td>匹配<strong>字母、数字、下划线</strong>。等价于’[A-Za-z0-9_]’。</td>
+</tr>
+<tr>
+<td>\d</td>
+<td>匹配一个<strong>数字</strong>字符。等价于 [0-9]。</td>
+</tr>
+<tr>
+<td>\s</td>
+<td>匹配任何<strong>空白字符</strong>，包括空格、制表符、换页符等等 Unicode 正则表达式会匹配全角空格符。</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>匹配一个<strong>单词边界</strong>，也就是指单词和空格间的位置。例如， ‘er\b’ 可以匹配”never” 中的 ‘er’，但不能匹配 “verb” 中的 ‘er’。</td>
+</tr>
+<tr>
+<td>^</td>
+<td>匹配输入字符串的<strong>开始位置</strong>。如果设置了 RegExp 对象的 Multiline 属性，^ 也匹配 ‘\n’ 或 ‘\r’ 之后的位置。</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配输入字符串的<strong>结束位置</strong>。如果设置了RegExp 对象的 Multiline 属性，$ 也匹配 ‘\n’ 或 ‘\r’ 之前的位置。</td>
+</tr>
+</tbody></table>
+<h3 id="2-3特殊字符"><a href="#2-3特殊字符" class="headerlink" title="2.3特殊字符"></a>2.3特殊字符</h3><p>所谓特殊字符，就是一些有特殊含义的字符，也就是一般所说的元字符。如上面例子中的<code>*</code>等。如果需要查找字符串中的元字符，则需要在字符前加<code>\</code>进行转义。</p>
+<p>例如：<code>deerchao\.net匹配deerchao.net，C:\\Windows匹配C:\Windows</code>。</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>( )</td>
+<td>标记一个子表达式的开始和结束位置。子表达式可以获取供以后使用。</td>
+</tr>
+<tr>
+<td>[</td>
+<td>标记一个中括号表达式的开始。要匹配 [，请使用<code> \[</code>。</td>
+</tr>
+<tr>
+<td>\</td>
+<td>将下一个字符标记为或特殊字符、或原义字符、或向后引用、或八进制转义符。例如，<code> &#39;n&#39;</code> 匹配字符 ‘n’。<code>&#39;\n&#39;</code> 匹配换行符。序列 <code>&#39;\\&#39;</code> 匹配 <code>&quot;\&quot;</code>，而<code> &#39;\(&#39;</code> 则匹配 <code>&quot;(&quot;</code>。</td>
+</tr>
+<tr>
+<td>{</td>
+<td>标记限定符表达式的开始。要匹配 {，请使用 <code>\&#123;</code>。</td>
+</tr>
+<tr>
+<td>|</td>
+<td>指明两项之间的一个选择。要匹配 |，请使用 <code>|</code>。</td>
+</tr>
+</tbody></table>
+<h3 id="2-4限定符-重复表示"><a href="#2-4限定符-重复表示" class="headerlink" title="2.4限定符 | 重复表示"></a>2.4限定符 | 重复表示</h3><p>限定符用来指定正则表达式的一个给定组件必须要出现多少次才能满足匹配。如下表：</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*</td>
+<td>匹配前面的子表达式<strong>零次或多次</strong>。例如，zo* 能匹配 “z” 以及 “zoo”。* 等价于{0,}。</td>
+</tr>
+<tr>
+<td>+</td>
+<td>匹配前面的子表达式<strong>一次或多次</strong>。例如，’zo+’ 能匹配 “zo” 以及 “zoo”，但不能匹配 “z”。+ 等价于 {1,}。</td>
+</tr>
+<tr>
+<td>?</td>
+<td>匹配前面的子表达式<strong>零次或一次</strong>。例如，”do(es)?” 可以匹配 “do” 、 “does” 中的 “does” 、 “doxy” 中的 “do” 。? 等价于 {0,1}。</td>
+</tr>
+<tr>
+<td>{n}</td>
+<td>n 是一个非负整数。<strong>匹配确定的 n 次</strong>。例如，’o{2}’ 不能匹配 “Bob” 中的 ‘o’，但是能匹配 “food” 中的两个 o。</td>
+</tr>
+<tr>
+<td>{n,}</td>
+<td>n 是一个非负整数。<strong>至少</strong>匹配n 次。例如，’o{2,}’ 不能匹配 “Bob” 中的 ‘o’，但能匹配 “foooood” 中的所有 o。’o{1,}’ 等价于 ‘o+’。’o{0,}’ 则等价于 ‘o*’。</td>
+</tr>
+<tr>
+<td>{n,m}</td>
+<td>m 和 n 均为非负整数，其中n &lt;= m。<strong>最少匹配 n 次且最多匹配 m 次</strong>。例如，”o{1,3}” 将匹配 “fooooood” 中的前三个 o。’o{0,1}’ 等价于 ‘o?’。请注意在逗号和两个数之间不能有空格。</td>
+</tr>
+</tbody></table>
+<h3 id="2-5反义"><a href="#2-5反义" class="headerlink" title="2.5反义"></a>2.5反义</h3><p>有时需要查找不属于某个能简单定义的字符类的字符。比如想查找除了数字以外，其它任意字符都行的情况，这时需要用到反义：</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>\W</td>
+<td>匹配任意不是字母，数字，下划线，汉字的字符</td>
+</tr>
+<tr>
+<td>\S</td>
+<td>匹配任意<strong>不是空白符</strong>的字符</td>
+</tr>
+<tr>
+<td>\D</td>
+<td>匹配任意<strong>非数字</strong>的字符</td>
+</tr>
+<tr>
+<td>\B</td>
+<td>匹配<strong>不是单词开头或结束</strong>的位置</td>
+</tr>
+<tr>
+<td>[^x]</td>
+<td>匹配<strong>除了x以外</strong>的任意字符</td>
+</tr>
+<tr>
+<td>[^aeiou]</td>
+<td>匹配除了aeiou这几个字母以外的任意字符</td>
+</tr>
+</tbody></table>
+<p>举例：</p>
+<ul>
+<li><code>\S+</code>：匹配不包含空白字符的字符串</li>
+<li><code>&lt;a[^&gt;]+&gt;</code>：匹配用尖括号括起来的，以a开头的字符串。（方括号中表示不包含<code>&gt;</code>）</li>
+</ul>
+<h3 id="2-6分支条件"><a href="#2-6分支条件" class="headerlink" title="2.6分支条件"></a>2.6分支条件</h3><p>分枝条件指的是有几种规则，如果满足其中任意一种规则都应该当成匹配。具体方法是使用<code>|</code>把不同的规则分开。举例如下：</p>
+<ul>
+<li><p><code>0\d&#123;2&#125;-\d&#123;8&#125;|0\d&#123;3&#125;-\d&#123;7&#125;</code>：可以匹配到两种电话号码，如：012-23456433，或0233-3345329。</p>
+</li>
+<li><p><code>\(0\d&#123;2&#125;\)[- ]?\d&#123;8&#125;|0\d&#123;2&#125;[- ]?\d&#123;8&#125;</code>：可以匹配(023)-34553432,或023-84957362,且区号和本地号码间可以不存在连接符。</p>
+</li>
+</ul>
+<p><strong>TIPS：使用分支条件时，需要注意各个条件之间的顺序。</strong></p>
+<ul>
+<li><code>\d&#123;5&#125;-\d&#123;4&#125;|\d&#123;5&#125;</code>：表示美国的邮政编码，5位数字或者使用连接符拼接的9位数字。然而当分支条件顺序调换：</li>
+<li><code>\d&#123;5&#125;|\d&#123;5&#125;-\d&#123;4&#125;</code>：那么只能匹配到5位数字了，永远不会匹配到9位的编码，因为匹配顺序从左到右，满足了前面的分支后就不会再处理其他条件了。</li>
+</ul>
+<h3 id="2-7分组"><a href="#2-7分组" class="headerlink" title="2.7分组"></a>2.7分组</h3><p>我们已经提到了怎么重复单个字符（直接在字符后面加上限定符就行了）；但如果想要重复多个字符又该怎么办？可以用<strong>小括号</strong>来指定**子表达式(也叫做分组)**，然后指定这个子表达式的重复次数。举例：</p>
+<p><code>(\d&#123;1,3&#125;\.)&#123;3&#125;\d&#123;1,3&#125;</code>：一个简单的IP地址匹配。<code>\d&#123;1,3&#125;\.</code>匹配三个数字加上一个英文句号，被括号括起来表示一个分组后面接上<code>&#123;3&#125;</code>表示这个分组重复三次，最后再加上一个三位的数字。不过以上的匹配没有限制IP地址不可以大于255，更进一步：</p>
+<p><code>((2[0-4]\d|25[0-5]|[01]?\d\d?)\.)&#123;3&#125;(2[0-4]\d|25[0-5]|[01]?\d\d?)</code></p>
+<p>focus on:<code>2[0-4]\d|25[0-5]|[01]?\d\d?</code></p>
+<h2 id="3-拓展学习"><a href="#3-拓展学习" class="headerlink" title="3.拓展学习"></a>3.拓展学习</h2><h3 id="3-1运算符优先级"><a href="#3-1运算符优先级" class="headerlink" title="3.1运算符优先级"></a>3.1运算符优先级</h3><p>正则表达式从左到右进行计算，并遵循优先级顺序，这与算术表达式非常类似。</p>
+<p>相同优先级的从左到右进行运算，不同优先级的运算先高后低。如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>\</td>
+<td>转义符</td>
+</tr>
+<tr>
+<td><code>(), (?:), (?=), []</code></td>
+<td>圆括号和方括号</td>
+</tr>
+<tr>
+<td>*, +, ?, {n}, {n,}, {n,m}</td>
+<td>限定符</td>
+</tr>
+<tr>
+<td>^, $, \任何元字符、任何字符</td>
+<td>定位点和序列（即：位置和顺序）</td>
+</tr>
+<tr>
+<td>|</td>
+<td>替换，”或”操作 字符具有高于替换运算符的优先级，使得”m|food”匹配”m”或”food”。若要匹配”mood”或”food”，请使用括号创建子表达式，从而产生”(m|f)ood”。</td>
+</tr>
+</tbody></table>
+<h3 id="3-2匹配规则"><a href="#3-2匹配规则" class="headerlink" title="3.2匹配规则"></a>3.2匹配规则</h3><h4 id="3-2-1基本模式匹配"><a href="#3-2-1基本模式匹配" class="headerlink" title="3.2.1基本模式匹配"></a>3.2.1基本模式匹配</h4><p>模式，是正则表达式最基本的元素，它们是一组描述字符串特征的字符。模式可以很简单，由普通的字符串组成，也可以非常复杂，往往用特殊的字符表示一个范围内的字符、重复出现，或表示上下文。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^once</span><br></pre></td></tr></table></figure>
+
+<p>这个模式包含一个特殊的字符^，表示该模式只匹配那些以once开头的字符串。例如该模式与字符串”once upon a time”匹配，与”There once was a man from NewYork”不匹配。正如如^符号表示开头一样，$符号用来匹配那些以给定模式结尾的字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bucket$</span><br></pre></td></tr></table></figure>
+
+<p>这个模式与”Who kept all of this cash in a bucket”匹配，与”buckets”不匹配。字符^和$同时使用时，表示精确匹配（字符串与模式一样）。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^bucket$</span><br></pre></td></tr></table></figure>
+
+<p>只匹配字符串”bucket”。如果一个模式不包括^和$，那么它与任何包含该模式的字符串匹配。例如：模式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">once</span><br></pre></td></tr></table></figure>
+
+<p>与字符串</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">There once was a man from NewYork</span><br><span class="line">Who kept all of his cash in a bucket.</span><br></pre></td></tr></table></figure>
+
+<p>是匹配的。</p>
+<p>在该模式中的字母(o-n-c-e)是字面的字符，也就是说，他们表示该字母本身，数字也是一样的。其他一些稍微复杂的字符，如标点符号和白字符（空格、制表符等），要用到转义序列。所有的转义序列都用反斜杠()打头。制表符的转义序列是：\t。所以如果我们要检测一个字符串是否以制表符开头，可以用这个模式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^\t </span><br></pre></td></tr></table></figure>
+
+<p>类似的，用\n表示”新行”，\r表示回车。其他的特殊符号，可以用在前面加上反斜杠，如反斜杠本身用\表示，句号.用.表示，以此类推。</p>
+<h4 id="3-2-2字符簇"><a href="#3-2-2字符簇" class="headerlink" title="3.2.2字符簇"></a>3.2.2字符簇</h4><p>在INTERNET的程序中，正则表达式通常用来验证用户的输入。当用户提交一个FORM以后，要判断输入的电话号码、地址、EMAIL地址、信用卡号码等是否有效，用普通的基于字面的字符是不够的。所以要用一种更自由的描述我们要的模式的办法，它就是字符簇。</p>
+<p>下面这个例子与任何元音字符匹配，但只能表示一个字符：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[AaEeIiOoUu]</span><br></pre></td></tr></table></figure>
+
+<p>用连字号可以表示一个字符的范围，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[a-z] //匹配所有的小写字母 </span><br><span class="line">[A-Z] //匹配所有的大写字母 </span><br><span class="line">[a-zA-Z] //匹配所有的字母 </span><br><span class="line">[0-9] //匹配所有的数字 </span><br><span class="line">[0-9\.\-] //匹配所有的数字，句号和减号 </span><br><span class="line">[ \f\r\t\n] //匹配所有的白字符</span><br></pre></td></tr></table></figure>
+
+<p>同样的，<strong>这些也只表示一个字符</strong>。如果要匹配一个由一个小写字母和一位数字组成的字符串，比如”z2”、”t6”或”g7”，但不是”ab2”、”r2d3” 或”b52”的话，用这个模式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[a-z][0-9]$</span><br></pre></td></tr></table></figure>
+
+<p>尽管[a-z]代表26个字母的范围，但在这里它只能与第一个字符是小写字母的字符串匹配。</p>
+<p>前面曾经提到<code>^</code>表示字符串的开头，但它还有另外一个含义。**当在一组方括号里使用^，它表示”非”或”排除”**的意思，常常用来剔除某个字符。前面的例子中，如果我们要求第一个字符不能是数字：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[^0-9][0-9]$</span><br></pre></td></tr></table></figure>
+
+<p>这个模式与”&amp;5”、”g7”及”-2”是匹配的，但与”12”、”66”是不匹配的。下面是几个排除特定字符的例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[^a-z] //除了小写字母以外的所有字符 </span><br><span class="line">[^\\\/\^] //除了(\)(/)(^)之外的所有字符 </span><br><span class="line">[^\&quot;\&#x27;] //除了双引号(&quot;)和单引号(&#x27;)之外的所有字符</span><br></pre></td></tr></table></figure>
+
+<p>特殊字符”.” (点，句号)在正则表达式中用来表示除了”新行”之外的所有字符。所以模式”^.5$”与任何两个字符的、以数字5结尾和以其他非”新行”字符开头的字符串匹配。模式”.”可以匹配任何字符串，除了空串和只包括一个”新行”的字符串。</p>
+<h4 id="3-2-3确定重复出现"><a href="#3-2-3确定重复出现" class="headerlink" title="3.2.3确定重复出现"></a>3.2.3确定重复出现</h4><p>以上两种匹配已经可以解决很多问题，但某些情况下，可能要匹配一个单词或一组数字。一个单词有若干个字母组成，一组数字有若干个单数组成。跟在字符或字符簇后面的花括号({})用来确定前面的内容的重复出现的次数。</p>
+<table>
+<thead>
+<tr>
+<th>字符簇</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>^[a-zA-Z_]$</code></td>
+<td>所有的字母和下划线</td>
+</tr>
+<tr>
+<td><code>^[[:alpha:]]&#123;3&#125;$</code></td>
+<td>所有的3个字母的单词</td>
+</tr>
+<tr>
+<td>^a$</td>
+<td>字母a</td>
+</tr>
+<tr>
+<td>^a{4}$</td>
+<td>aaaa</td>
+</tr>
+<tr>
+<td>^a{2,4}$</td>
+<td>aa,aaa或aaaa</td>
+</tr>
+<tr>
+<td>^a{1,3}$</td>
+<td>a,aa或aaa</td>
+</tr>
+<tr>
+<td>^a{2,}$</td>
+<td>包含多于两个a的字符串</td>
+</tr>
+<tr>
+<td>^a{2,}</td>
+<td>如：aardvark和aaab，但apple不行</td>
+</tr>
+<tr>
+<td>a{2,}</td>
+<td>如：baad和aaa，但Nantucket不行</td>
+</tr>
+<tr>
+<td>\t{2}</td>
+<td>两个制表符</td>
+</tr>
+<tr>
+<td>.{2}</td>
+<td>所有的两个字符</td>
+</tr>
+</tbody></table>
+<p>这些例子描述了花括号的三种不同的用法。一个数字 {x} 的意思是<strong>前面的字符或字符簇只出现x次</strong> ；一个数字加逗号 {x,} 的意思是<strong>前面的内容出现x或更多的次数</strong> ；两个数字用逗号分隔的数字 {x,y} 表示 <strong>前面的内容至少出现x次，但不超过y次</strong>。我们可以把模式扩展到更多的单词或数字：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">^[a-zA-Z0-9_]&#123;1,&#125;$      // 所有包含一个以上的字母、数字或下划线的字符串 </span><br><span class="line">^[1-9][0-9]&#123;0,&#125;$        // 所有的正整数 </span><br><span class="line">^\-&#123;0,1&#125;[0-9]&#123;1,&#125;$      // 所有的整数 </span><br><span class="line">^[-]?[0-9]+\.?[0-9]+$   // 所有的浮点数</span><br></pre></td></tr></table></figure>
+
+<p>特殊字符 ? 与 {0,1} 是相等的，它们都代表着： <strong>0个或1个前面的内容</strong> 或 <strong>前面的内容是可选的</strong> 。</p>
+<p>特殊字符 * 与 {0,} 是相等的，它们都代表着 <strong>0 个或多个前面的内容</strong> 。</p>
+<p>特殊字符 + 与 {1,} 是相等的，表示 <strong>1 个或多个前面的内容</strong> ，所以上面的4个例子可以写成：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">^[a-zA-Z0-9_]+$      // 所有包含一个以上的字母、数字或下划线的字符串 </span><br><span class="line">^[1-9][0-9]*$        // 所有的正整数 </span><br><span class="line">^\-?[0-9]+$          // 所有的整数 </span><br><span class="line">^[-]?[0-9]+(\.[0-9]+)?$ // 所有的浮点数</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-java中的正则表达式"><a href="#3-3-java中的正则表达式" class="headerlink" title="3.3 java中的正则表达式"></a>3.3 java中的正则表达式</h3><p>在其他语言中，<code>\\ </code>表示：<strong>我想要在正则表达式中插入一个普通的（字面上的）反斜杠，没有任何特殊的意义。</strong></p>
+<p>在 Java 中，<code>\\</code> 表示：<strong>我要插入一个正则表达式的反斜线，所以其后的字符具有特殊的意义。</strong></p>
+<p>所以，在其他的语言中（如Perl），一个反斜杠 \ 就足以具有转义的作用，而在 Java 中正则表达式中则需要有两个反斜杠才能被解析为其他语言中的转义作用。也可以简单的理解在 Java 的正则表达式中，两个 <code>\\</code> 代表其他语言中的一个 \，所以在Java语言中**表示一位数字的正则表达式是 <code>\\d</code>，而表示一个普通的反斜杠是 <code>\\\\</code>**。</p>
+<h4 id="3-4-高级语法"><a href="#3-4-高级语法" class="headerlink" title="3.4 高级语法"></a>3.4 高级语法</h4><p>一些不太常用的不再详细列举，参考文末的正则表达式30分钟入门。</p>
+<ul>
+<li>后向引用</li>
+<li>零宽断言 &amp; 负向零宽断言</li>
+<li>贪婪与懒惰</li>
+</ul>
+<h2 id="4-元字符集合"><a href="#4-元字符集合" class="headerlink" title="4.元字符集合"></a>4.元字符集合</h2><p>正则表达式的完整元字符整理参考下方链接：</p>
+<p><a target="_blank" rel="noopener" href="http://www.runoob.com/regexp/regexp-metachar.html">正则表达式元字符</a></p>
+<blockquote>
+<p>本文参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://deerchao.net/tutorials/regex/regex.htm#mission">正则表达四30分钟入门</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.runoob.com/regexp/regexp-tutorial.html">菜鸟正则表达式教程</a></p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/11/20/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" data-id="ckwiyxcpt000g9lzjduad748v" data-title="正则表达式" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" rel="tag">基础知识</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/11/22/Linux%E7%8E%AF%E5%A2%83%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%92%8C%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Linux环境性能优化和问题排查
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/10/18/Docker%E5%AE%89%E8%A3%85&%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Docker安装&amp;常用指令</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/JDK%E6%BA%90%E7%A0%81/">JDK源码</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-Learning/">Linux Learning</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Markdown/">Markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/git/IDE/">IDE</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo%E5%BB%BA%E7%AB%99/">hexo建站</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Github/" rel="tag">Github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/" rel="tag">tools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" rel="tag">基础知识</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">基础知识</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/04/22/java.io%E5%8C%85%E4%B9%8BBits%E7%B1%BB%E6%BA%90%E7%A0%81/">java.io包之Bits类源码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/18/Git%E5%8F%8Aintellij-idea%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/">git及intellij idea设置代理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/17/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BBJDK%E6%BA%90%E7%A0%81/">如何阅读JDK源码</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/11/jvm%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98&%E7%9B%91%E6%8E%A7-jps%20jstat%20jstack%20jmap%20jinfo/">jvm性能调优&amp;监控-jps jstat jstack jmap jinfo</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/07/jmap%E5%91%BD%E4%BB%A4%E9%85%8D%E5%90%88MAT%E5%B7%A5%E5%85%B7%E5%88%86%E6%9E%90java%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%83%85%E5%86%B5/">jmap命令配合MAT工具分析java内存泄露情况</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

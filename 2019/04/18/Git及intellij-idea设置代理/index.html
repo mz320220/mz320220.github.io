@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>git及intellij idea设置代理 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="除了在某些情况需要在天朝科学上网之外，各大公司普遍推动使用VDI云桌面也是全局性的走代理上网。那么从github上拉取代码就必须要对git和IDE单独配置代理服务器。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git及intellij idea设置代理">
+<meta property="og:url" content="http://example.com/2019/04/18/Git%E5%8F%8Aintellij-idea%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="除了在某些情况需要在天朝科学上网之外，各大公司普遍推动使用VDI云桌面也是全局性的走代理上网。那么从github上拉取代码就必须要对git和IDE单独配置代理服务器。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/19-4-18/intellij%E4%BB%A3%E7%90%86.png?Expires=1555582022&OSSAccessKeyId=TMP.AgHyuUNIJaNN5_913dyKrg-GhAE6NCPDN6o2x-MgsVpJxo7nTf175B8NTrXKADAtAhRm3eG6rtWyCoOxwQpOHH49v6U2KgIVAMcBjCxr3zYBCcLqOI_TRaXQaMoM&Signature=AyN4EpzuYhow97Rt/h30t8rS+r8=">
+<meta property="article:published_time" content="2019-04-18T07:56:05.000Z">
+<meta property="article:modified_time" content="2019-04-22T02:04:18.000Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/19-4-18/intellij%E4%BB%A3%E7%90%86.png?Expires=1555582022&OSSAccessKeyId=TMP.AgHyuUNIJaNN5_913dyKrg-GhAE6NCPDN6o2x-MgsVpJxo7nTf175B8NTrXKADAtAhRm3eG6rtWyCoOxwQpOHH49v6U2KgIVAMcBjCxr3zYBCcLqOI_TRaXQaMoM&Signature=AyN4EpzuYhow97Rt/h30t8rS+r8=">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Git及intellij-idea设置代理" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/04/18/Git%E5%8F%8Aintellij-idea%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/" class="article-date">
+  <time class="dt-published" datetime="2019-04-18T07:56:05.000Z" itemprop="datePublished">2019-04-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/git/">git</a>►<a class="article-category-link" href="/categories/git/IDE/">IDE</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      git及intellij idea设置代理
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>除了在某些情况需要在天朝科学上网之外，各大公司普遍推动使用VDI云桌面也是全局性的走代理上网。那么从github上拉取代码就必须要对git和IDE单独配置代理服务器。</p>
+<span id="more"></span>
+
+<h2 id="1-Git设置代理"><a href="#1-Git设置代理" class="headerlink" title="1. Git设置代理"></a>1. Git设置代理</h2><ul>
+<li><p>使用 <code>git协议</code> 时，设置代理需要配置 <code>core.gitproxy</code></p>
+</li>
+<li><p>使用 <code>HTTP协议</code> 时，设置代理需要配置 <code>http.proxy</code></p>
+</li>
+<li><p>而是用 <code>ssh协议</code> 时，代理需要配置ssh的 <code>ProxyCommand</code> 参数</p>
+</li>
+</ul>
+<p>在windows环境下，配置http方式的代理是最为简单方便的了。公司的vdi代理一般也是提供http协议address + port的形式。下面说明<code>http.proxy</code>的配置命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">针对单个项目进行代理配置：（进入到项目目录）</span></span><br><span class="line">git config http.proxy http://127.0.0.1:8088  #URL:PORT 或 URI:PORT的形式</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">需要鉴权的代理：添加username、password信息</span></span><br><span class="line">git config http.proxy http://username:password@127.0.0.1:8088</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">启用全局代理（公司的VDI环境直接全局配置比较合适） --global指令</span></span><br><span class="line">git config --global http.proxy http://127.0.0.1:8088</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看代理配置情况</span></span><br><span class="line">git config --get --global http.proxy</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">删除原有代理配置 --<span class="built_in">unset</span>指令</span></span><br><span class="line">git config --global --unset http.proxy</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">如果https协议出现证书错误的情况，比如提示： SSL certificate problem</span></span><br><span class="line"><span class="meta">#</span><span class="bash">可以尝试将sslVerify设置为<span class="literal">false</span></span></span><br><span class="line">git config --global http.sslVerify false</span><br></pre></td></tr></table></figure>
+
+<p>几点说明：</p>
+<ul>
+<li><p>如果非必要，一般不使用 <code>--global</code> 的方式来设置代理，毕竟代理有的时候访问一些项目比直接访问还慢，特别是当代理在国外，项目源在国内的时候，按需使用才是王道。</p>
+</li>
+<li><p>不要多次使用不同的参数来设置代理， <code>--global</code> ， <code>--system</code> ， <code>--local</code> 各级设置后，可能会给自己带来不必要的麻烦。git默认是先到git Repository的配置文件中查找配置文件，如果没有才会到 <code>--global</code> 设置的文件中查找，因此，单个项目文件中的设置会覆盖 <code>--global</code> 的设置。</p>
+</li>
+<li><p>使用 <code>--global</code> 来配置的信息保存在当前用户的根目录下的 <code>.config</code> 文件中，而仓库中的配置保存在项目仓库的根目录下的 <code>.git/config</code> 文件中。</p>
+</li>
+</ul>
+<h2 id="2-intellij-idea设置代理"><a href="#2-intellij-idea设置代理" class="headerlink" title="2. intellij idea设置代理"></a>2. intellij idea设置代理</h2><p>同样的问题，在VDI环境下所有软件都是需要自己手动配置代理信息，否则也无法拉去代码使用IDE的代码管理功能。以Intellij idea举例，快捷键 <code>Ctrl + Alt + S</code>打开设置窗口，输入<code>http</code>进入如下代理设置页面：</p>
+<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/19-4-18/intellij%E4%BB%A3%E7%90%86.png?Expires=1555582022&OSSAccessKeyId=TMP.AgHyuUNIJaNN5_913dyKrg-GhAE6NCPDN6o2x-MgsVpJxo7nTf175B8NTrXKADAtAhRm3eG6rtWyCoOxwQpOHH49v6U2KgIVAMcBjCxr3zYBCcLqOI_TRaXQaMoM&Signature=AyN4EpzuYhow97Rt/h30t8rS+r8=" alt="intellij代理"></p>
+<p>按要求配置后重启IDE即可登录配置git账号，拉取项目代码。</p>
+<blockquote>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lenglong110/article/details/52411230">windows下设置git代理</a></p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/04/18/Git%E5%8F%8Aintellij-idea%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/" data-id="ckwiyxcpo00019lzj0m00a7wq" data-title="git及intellij idea设置代理" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/04/22/java.io%E5%8C%85%E4%B9%8BBits%E7%B1%BB%E6%BA%90%E7%A0%81/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          java.io包之Bits类源码
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/04/17/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BBJDK%E6%BA%90%E7%A0%81/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">如何阅读JDK源码</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/JDK%E6%BA%90%E7%A0%81/">JDK源码</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-Learning/">Linux Learning</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Markdown/">Markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/git/IDE/">IDE</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo%E5%BB%BA%E7%AB%99/">hexo建站</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Github/" rel="tag">Github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/" rel="tag">tools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" rel="tag">基础知识</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">基础知识</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/04/22/java.io%E5%8C%85%E4%B9%8BBits%E7%B1%BB%E6%BA%90%E7%A0%81/">java.io包之Bits类源码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/18/Git%E5%8F%8Aintellij-idea%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/">git及intellij idea设置代理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/17/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BBJDK%E6%BA%90%E7%A0%81/">如何阅读JDK源码</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/11/jvm%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98&%E7%9B%91%E6%8E%A7-jps%20jstat%20jstack%20jmap%20jinfo/">jvm性能调优&amp;监控-jps jstat jstack jmap jinfo</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/07/jmap%E5%91%BD%E4%BB%A4%E9%85%8D%E5%90%88MAT%E5%B7%A5%E5%85%B7%E5%88%86%E6%9E%90java%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%83%85%E5%86%B5/">jmap命令配合MAT工具分析java内存泄露情况</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

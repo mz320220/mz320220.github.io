@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>jvm性能调优&amp;监控-jps jstat jstack jmap jinfo | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="上一份工作其实几乎不怎么接触这些，生产环境的权限控制严格，大部分是由运维来做的。这段时间看了一些jvm性能调优、内存异常监控排查的blog，大部分也是东抄西抄，是时候系统的小结一波，大概归纳下jdk自带的常用命令，本文只简单介绍各个命令基本语法和最常用的功能，详细内容再单独开篇学习吧。 ps：除了标题列举的命令之外其实还有jhat、jconsole等命令，只不过jhat对比mat工具实在不够直观">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jvm性能调优&amp;监控-jps jstat jstack jmap jinfo">
+<meta property="og:url" content="http://example.com/2018/12/11/jvm%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98&%E7%9B%91%E6%8E%A7-jps%20jstat%20jstack%20jmap%20jinfo/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="上一份工作其实几乎不怎么接触这些，生产环境的权限控制严格，大部分是由运维来做的。这段时间看了一些jvm性能调优、内存异常监控排查的blog，大部分也是东抄西抄，是时候系统的小结一波，大概归纳下jdk自带的常用命令，本文只简单介绍各个命令基本语法和最常用的功能，详细内容再单独开篇学习吧。 ps：除了标题列举的命令之外其实还有jhat、jconsole等命令，只不过jhat对比mat工具实在不够直观">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-11/28660764.jpg">
+<meta property="article:published_time" content="2018-12-11T08:14:05.000Z">
+<meta property="article:modified_time" content="2019-04-22T02:02:13.000Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-11/28660764.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-jvm性能调优&amp;监控-jps jstat jstack jmap jinfo" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/12/11/jvm%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98&%E7%9B%91%E6%8E%A7-jps%20jstat%20jstack%20jmap%20jinfo/" class="article-date">
+  <time class="dt-published" datetime="2018-12-11T08:14:05.000Z" itemprop="datePublished">2018-12-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux-Learning/">Linux Learning</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      jvm性能调优&amp;监控-jps jstat jstack jmap jinfo
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-11/28660764.jpg"></p>
+<p>上一份工作其实几乎不怎么接触这些，生产环境的权限控制严格，大部分是由运维来做的。这段时间看了一些jvm性能调优、内存异常监控排查的blog，大部分也是东抄西抄，是时候系统的小结一波，大概归纳下jdk自带的常用命令，本文只简单介绍各个命令基本语法和最常用的功能，详细内容再单独开篇学习吧。</p>
+<p>ps：除了标题列举的命令之外其实还有jhat、jconsole等命令，只不过jhat对比mat工具实在不够直观，jconsole图形化界面在服务器上也不一定能用。</p>
+<span id="more"></span>
+
+<h2 id="1-jps"><a href="#1-jps" class="headerlink" title="1.jps"></a>1.jps</h2><p>jps=JVM Process Status Tool，用于显示当前系统(未指定hostid时)内HotSpot虚拟机中的进程情况。常用命令：</p>
+<ul>
+<li><p>jps -m：输出传递给main方法的参数。</p>
+</li>
+<li><p>jps -v：输出传递给JVM的参数。举例如下：</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[app@VM_104_20_centos irps-chs]$ jps -m</span><br><span class="line">216635 JMap -histo 125676</span><br><span class="line">81530 JMap -dump:format=b,file=/tmp/irps-chs.hprof</span><br><span class="line">215688 Jps -m</span><br><span class="line">216765 JConsole</span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jps -v</span><br><span class="line">215744 Jps -Dapplication.home=/nemo/jdk1.8.0_152 -Xms8m</span><br><span class="line">216635 JMap -Dapplication.home=/nemo/jdk1.8.0_152 -Xms8m -Dsun.jvm.hotspot.debugger.useProcDebugger -Dsun.jvm.hotspot.debugger.useWindbgDebugger</span><br><span class="line">81530 JMap -Dapplication.home=/nemo/jdk1.8.0_152 -Xms8m -Dsun.jvm.hotspot.debugger.useProcDebugger -Dsun.jvm.hotspot.debugger.useWindbgDebugger</span><br></pre></td></tr></table></figure>
+
+<p>Oracle官方文档：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jps.html">jps说明</a></p>
+<h2 id="2-jstat"><a href="#2-jstat" class="headerlink" title="2.jstat"></a>2.jstat</h2><p>jstat=JVM statistics Monitoring，用于监视虚拟机运行时状态信息的命令，它可以显示出虚拟机进程中的类装载、内存、垃圾收集、JIT编译等运行数据。注意使用时需要加上进程id、所选参数。</p>
+<p>语法结构为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">jstat [option] LVMID [interval] [count]</span><br><span class="line"><span class="meta">#</span><span class="bash">option:可选操作参数</span></span><br><span class="line"><span class="meta">#</span><span class="bash">LVMID：本地虚拟机进程ID</span></span><br><span class="line"><span class="meta">#</span><span class="bash">interval：输出间隔，默认单位ms</span></span><br><span class="line"><span class="meta">#</span><span class="bash">count：输出次数</span></span><br></pre></td></tr></table></figure>
+
+<p>常用命令：</p>
+<ul>
+<li>jstat -class LVMID：监视类装载数量、消耗空间，时间等。</li>
+<li>jstat -compiler LVMID：输入JIT编译的方法数量、失败数量、耗时、编译失败类型及方法等。</li>
+<li>jstat -gcutil LVMID interval count：统计程序gc情况(已用空间占总空间百分比)</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[app@VM_104_20_centos irps-chs]$ jstat -class 125676</span><br><span class="line">Loaded  Bytes  Unloaded  Bytes     Time   </span><br><span class="line"> 11825 22520.2        0     0.0    2509.31</span><br><span class="line"> </span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jstat -compiler 125676</span><br><span class="line">Compiled Failed Invalid   Time   FailedType FailedMethod</span><br><span class="line">   14442      4       0   103.53          1 com/alibaba/druid/filter/FilterChainImpl connection_prepareStatement</span><br><span class="line">   </span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jstat -gcutil 125676 3000 2 #每3s输出，一共输出两次</span><br><span class="line">  S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT   </span><br><span class="line">  0.37   0.00   7.33  45.04  98.17  96.25  11884  110.109     4    0.382  110.492</span><br><span class="line">  0.37   0.00   7.33  45.04  98.17  96.25  11884  110.109     4    0.382  110.492</span><br></pre></td></tr></table></figure>
+
+<p>Oracle官方文档：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jstat.html">jstat说明</a></p>
+<h2 id="3-jstack"><a href="#3-jstack" class="headerlink" title="3.jstack"></a>3.jstack</h2><p>jstack用于生成java虚拟机当前时刻的线程快照，即当前java虚拟机内<strong>所有线程</strong>正在执行的方法堆栈的集合。</p>
+<p>所以jstack可以用于观察jvm中当前所有线程的运行情况和线程当前状态，定位线程出现长时间停顿的原因，如<strong>线程间死锁、死循环、请求外部资源导致的长时间等待</strong>等。 </p>
+<blockquote>
+<p>系统崩溃了？如果java程序崩溃生成core文件，jstack工具可以用来获得core文件的java stack和native stack的信息，从而可以轻松地知道java程序是如何崩溃和在程序何处发生问题。</p>
+<p>系统hung住了？jstack工具还可以附属到正在运行的java程序中，看到当时运行的java程序的java stack和native stack的信息, 如果现在运行的java程序呈现hung的状态。</p>
+</blockquote>
+<p>语法格式及说明：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">jstack [option] LVMID</span><br><span class="line"><span class="meta">#</span><span class="bash">option可选参数有：</span></span><br><span class="line">-F : 当正常输出请求不被响应时，强制输出线程堆栈</span><br><span class="line">-l : 除堆栈外，显示关于锁的附加信息</span><br><span class="line">-m : 如果调用到本地方法的话，可以显示C/C++的堆栈</span><br></pre></td></tr></table></figure>
+
+<p>Oracle官方文档：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jstack.html">jstack说明</a></p>
+<h2 id="4-jmap"><a href="#4-jmap" class="headerlink" title="4.jmap"></a>4.jmap</h2><p>jmap=JVM Memory Map，用于生成dump文件、查询finalize执行队列、Java堆和永久代的详细信息，如当前使用率、当前使用的是哪种收集器等。</p>
+<p>语法格式如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">jmap [option] LVMID</span><br><span class="line"><span class="meta">#</span><span class="bash">option参数：</span></span><br><span class="line">-dump : 生成堆转储快照</span><br><span class="line">-finalizerinfo : 显示在F-Queue队列等待Finalizer线程执行finalizer方法的对象</span><br><span class="line">-heap : 显示Java堆详细信息</span><br><span class="line">-histo : 显示堆中对象的统计信息</span><br><span class="line">-permstat : to print permanent generation statistics</span><br><span class="line">-F : 当-dump没有响应时，强制生成dump快照</span><br></pre></td></tr></table></figure>
+
+<p>Oracle官方文档：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jmap.html">jmap说明</a></p>
+<h2 id="5-jinfo"><a href="#5-jinfo" class="headerlink" title="5.jinfo"></a>5.jinfo</h2><p>jinfo=Java Configuration Info，相比于其他命令jinfo用法比较简单，主要用于实时查看或调整当前JVM配置的系统属性。常用命令如下：</p>
+<ul>
+<li>jinfo pid：打印指定process id的系统属性、jvm配置</li>
+<li>jinfo -flag [MaxHeapSize] pid：查看pid具体的参数值。举例如下：</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[app@VM_104_20_centos irps-chs]$ jinfo 62316</span><br><span class="line">Attaching to process ID 62316, please wait...</span><br><span class="line">Debugger attached successfully.</span><br><span class="line"><span class="meta">#</span><span class="bash">先展示系统相关属性</span></span><br><span class="line">Server compiler detected.</span><br><span class="line">JVM version is 25.152-b16</span><br><span class="line">Java System Properties:</span><br><span class="line"></span><br><span class="line">java.vendor = Oracle Corporation</span><br><span class="line">sun.java.launcher = SUN_STANDARD</span><br><span class="line">catalina.base = /irps-chs</span><br><span class="line">......</span><br><span class="line"><span class="meta">#</span><span class="bash">然后是jvm相关参数</span></span><br><span class="line">VM Flags:</span><br><span class="line">Non-default VM flags: -XX:+AlwaysPreTouch -XX:AutoBoxCacheMax=20000 -XX:CICompilerCount=3 -XX:CMSInitiatingOccupancyFraction=75 -XX:ErrorFile=null -XX:+ExplicitGCInvokesConcurrent</span><br><span class="line">......</span><br><span class="line"><span class="meta">#</span><span class="bash">指定查看MaxHeapSize大小</span></span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jinfo -flag MaxHeapSize  62316</span><br><span class="line">-XX:MaxHeapSize=2147483648</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>jinfo命令也可以实时配置一些jvm参数，使用的不太多，具体可参考：</p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c321d0808a1b">jinfo调整jvm参数</a></p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/12/11/jvm%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98&%E7%9B%91%E6%8E%A7-jps%20jstat%20jstack%20jmap%20jinfo/" data-id="ckwiyxcps00079lzjhmhbbaho" data-title="jvm性能调优&amp;监控-jps jstat jstack jmap jinfo" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/04/17/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BBJDK%E6%BA%90%E7%A0%81/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          如何阅读JDK源码
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/12/07/jmap%E5%91%BD%E4%BB%A4%E9%85%8D%E5%90%88MAT%E5%B7%A5%E5%85%B7%E5%88%86%E6%9E%90java%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%83%85%E5%86%B5/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">jmap命令配合MAT工具分析java内存泄露情况</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/JDK%E6%BA%90%E7%A0%81/">JDK源码</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-Learning/">Linux Learning</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Markdown/">Markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/git/IDE/">IDE</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo%E5%BB%BA%E7%AB%99/">hexo建站</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Github/" rel="tag">Github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/" rel="tag">tools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" rel="tag">基础知识</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">基础知识</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/04/22/java.io%E5%8C%85%E4%B9%8BBits%E7%B1%BB%E6%BA%90%E7%A0%81/">java.io包之Bits类源码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/18/Git%E5%8F%8Aintellij-idea%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/">git及intellij idea设置代理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/17/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BBJDK%E6%BA%90%E7%A0%81/">如何阅读JDK源码</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/11/jvm%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98&%E7%9B%91%E6%8E%A7-jps%20jstat%20jstack%20jmap%20jinfo/">jvm性能调优&amp;监控-jps jstat jstack jmap jinfo</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/07/jmap%E5%91%BD%E4%BB%A4%E9%85%8D%E5%90%88MAT%E5%B7%A5%E5%85%B7%E5%88%86%E6%9E%90java%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%83%85%E5%86%B5/">jmap命令配合MAT工具分析java内存泄露情况</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
