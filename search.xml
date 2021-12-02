@@ -1,6 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Docker安装&amp;常用指令</title>
+    <url>/2018/10/18/Docker%E5%AE%89%E8%A3%85&amp;%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/</url>
+    <content><![CDATA[<p>学习docker容器基本指令，以及尝试在docker中使用redis数据库。</p>
+<span id="more"></span>
+
+<h2 id="1-安装后启动报错"><a href="#1-安装后启动报错" class="headerlink" title="1.安装后启动报错"></a>1.安装后启动报错</h2><p>安装docker完毕后启动报错，提示“Hardware assisted vitrualization and data execution protection must be enabled in the BIOS”</p>
+<p>这个错误大概率是由于磁盘没有开启虚拟化功能导致的。解决：</p>
+<p>1、开机时按F2进入BIOS（不同机器可能会略有区别）</p>
+<p>2、进入Security –&gt; Virtualization</p>
+<p>3、调整Intel VT-Virtualization-Technology：<strong>Enabled</strong></p>
+<h2 id="2-Docker常用命令"><a href="#2-Docker常用命令" class="headerlink" title="2.Docker常用命令"></a>2.Docker常用命令</h2><h3 id="2-1-docker镜像操作命令"><a href="#2-1-docker镜像操作命令" class="headerlink" title="2.1 docker镜像操作命令"></a>2.1 docker镜像操作命令</h3><ol>
+<li>查看docker版本信息</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker -v</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>docker镜像搜索（或在docker hub网页搜索）</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker search &#x27;image-name&#x27;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>镜像下载</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker pull &#x27;image-name&#x27;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>镜像删除</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rmi &#x27;image-name&#x27;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>删除所有镜像</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rmi $(docker images -q)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-2-docker容器命令"><a href="#2-2-docker容器命令" class="headerlink" title="2.2 docker容器命令"></a>2.2 docker容器命令</h3><ol>
+<li>启动一个镜像为容器</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run --name &#x27;container-name&#x27; -d &#x27;image-name&#x27;</span><br><span class="line">docker run --help //查看run命令参数</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>查看docker中容器列表</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker ps	//查看运行中的容器</span><br><span class="line">docker ps -a //查看运行、停止状态的容器</span><br></pre></td></tr></table></figure></li>
+<li><p>停止&amp;启动容器</p>
+</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker stop &#x27;container-name/id&#x27;</span><br><span class="line">docker start &#x27;container-name/id&#x27;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>容器端口映射</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">//启动一个叫port-redis的容器，映射容器6379端口到本机6378</span><br><span class="line">docker run -d -p 6378:6379 --name port-redis redis</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>windows下运行的docker实际上是在虚拟机中，上述的端口映射是docker–&gt;虚拟机，如果想在本地开发环境使用，还需要一次映射：虚拟机–&gt;开发机</p>
+</blockquote>
+<ol start="5">
+<li>删除容器</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rm &#x27;container-name/id&#x27;</span><br><span class="line">docker rm $(docker ps -a -q)	//删除所有容器</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>容器日志</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker logs &#x27;container-name/id&#x27;</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>登录容器</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker exec -it &#x27;container-name/id&#x27; bash</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>运行中的容器实际上相当于一个完备的Linux系统，可以登录后进行常规Linux命令操作</p>
+</blockquote>
+<ol start="8">
+<li>登录后查看容器信息</li>
+</ol>
+<p>按上述登录到容器中后就可以按Linux的命令如hostname、env、ip addr等进行查看容器的信息。补充另外另种方式：</p>
+<ul>
+<li>不用进入容器，直接通过命令查看</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker exec &#x27;container-name/id&#x27; hostname</span><br><span class="line">docker exec &#x27;container-name/id&#x27; env</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用<strong>inspect</strong>命令，可以获得全部内容</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker inspect &#x27;container-name/id&#x27;</span><br><span class="line">docker inspect -f &#123;&#123;.NetworkSettings.IPAddress&#125;&#125; &#x27;container-name/id&#x27;</span><br><span class="line">docker inspect &#x27;container-name/id&#x27;| grep IPAddress</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>-f：format指令可以设定具体的属性内容 :slightly_smiling_face:</p>
+<p>inspect命令结合grep使用快速查询容器属性！</p>
+</blockquote>
+<h2 id="3-虚拟机端口映射配置"><a href="#3-虚拟机端口映射配置" class="headerlink" title="3. 虚拟机端口映射配置"></a>3. 虚拟机端口映射配置</h2><p>上面介绍了docker容器的端口映射，在windows下还要进行虚拟机到一般开发环境的端口映射才可以正常访问容器。以redis为例说明：</p>
+<h3 id="3-1虚拟机端口映射到容器端口"><a href="#3-1虚拟机端口映射到容器端口" class="headerlink" title="3.1虚拟机端口映射到容器端口"></a>3.1虚拟机端口映射到容器端口</h3><ol>
+<li>开启容器并映射<strong>虚拟机port：容器port</strong></li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -d -p 6379:6379 --name test-redis redis</span><br><span class="line">-p：小写表示指示具体的端口映射</span><br><span class="line">-P：大写表示随机分配主机端口映射到容器开放的网络端口上。</span><br></pre></td></tr></table></figure>
+
+<p>将虚拟机的6379端口映射到容器6379端口</p>
+<ol start="2">
+<li>映射时指定ip地址</li>
+</ol>
+<p>一般不需要特别指定虚拟机ip地址，默认0.0.0.0，也可以在绑定时指定：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -d -p 127.0.0.1:6379:6379 --name test-redis redis</span><br><span class="line"><span class="meta">#</span><span class="bash">启动结果如下</span></span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             </span><br><span class="line">2aedbac0a984        redis               &quot;docker-entrypoint.s…&quot;   4 seconds ago       </span><br><span class="line"></span><br><span class="line">STATUS              PORTS                      NAMES	</span><br><span class="line">Up 3 seconds        127.0.0.1:6379-&gt;6379/tcp   test-redis</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>映射时可以指定通信协议tcp、udp</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -d -p 127.0.0.1:6379:6379/tcp --name test-redis redis</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>查看容器端口绑定&amp;IP地址</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker port test-redis</span><br><span class="line"><span class="meta">#</span><span class="bash">结果：容器端口映射到虚拟机127.0.0.1:6379</span></span><br><span class="line">6379/tcp -&gt; 127.0.0.1:6379</span><br><span class="line"></span><br><span class="line">docker inspect test-redis|grep &#x27;IPAddress&#x27;</span><br><span class="line"><span class="meta">#</span><span class="bash">结果</span></span><br><span class="line">&quot;SecondaryIPAddresses&quot;: null,</span><br><span class="line">&quot;IPAddress&quot;: &quot;172.17.0.2&quot;,</span><br><span class="line">&quot;IPAddress&quot;: &quot;172.17.0.2&quot;,</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果想要同时绑定多个端口，则使用多个-p指令即可</p>
+<p>除了启动容器时绑定port，也可以通过宿主机的iptables进行nat转发实现，详见：<a href="https://blog.csdn.net/mnasd/article/details/83087881">docker-redis</a></p>
+</blockquote>
+<h3 id="3-2映射本机端口到虚拟机端口"><a href="#3-2映射本机端口到虚拟机端口" class="headerlink" title="3.2映射本机端口到虚拟机端口"></a>3.2映射本机端口到虚拟机端口</h3><p>如果想要在本机上使用，还需要进行本机端口–&gt;虚拟机端口映射的操作。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">1.查看目前端口的映射情况</span></span><br><span class="line">netsh interface portproxy show v4tov4</span><br><span class="line">netsh interface portproxy show v4tov4 | find &quot;127.0.0.1&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">2.增加一个端口映射,listen主机IP&amp;port --&gt; connect 虚拟机IP&amp;port</span></span><br><span class="line">netsh interface portproxy add v4tov4 listenaddress=127.0.0.1 listenport=6379 connectaddress=127.0.0.1 connectport=6379</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">3.删除一个端口映射</span></span><br><span class="line">netsh interface portproxy delete v4tov4 listenaddress=/address listenport=/port</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-Docker中使用redis"><a href="#4-Docker中使用redis" class="headerlink" title="4. Docker中使用redis"></a>4. Docker中使用redis</h2><p>经过以上的操作我们直接通过127.0.0.1:6379即可连接redis。我们也可以直接登录容器操作redis数据库。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">1.进入docker的redis-cli环境</span></span><br><span class="line">docker exec -it &#x27;container-name/id&#x27; redis-cli</span><br><span class="line"><span class="meta">#</span><span class="bash">例如：</span></span><br><span class="line">docker exec -it test-redis redis-cli</span><br><span class="line"><span class="meta">#</span><span class="bash">进入如下界面即可使用redis命令，如：keys、get、ttl等，退出使用<span class="built_in">exit</span>即可</span></span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Github+hexo搭建博客指南</title>
     <url>/2018/03/19/Github-hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E6%8C%87%E5%8D%97/</url>
     <content><![CDATA[<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-9-22/51716129.jpg" alt="17.11.27-花莲"></p>
@@ -73,6 +206,129 @@
       <tags>
         <tag>Github</tag>
         <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>git及intellij idea设置代理</title>
+    <url>/2019/04/18/Git%E5%8F%8Aintellij-idea%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[<p>除了在某些情况需要在天朝科学上网之外，各大公司普遍推动使用VDI云桌面也是全局性的走代理上网。那么从github上拉取代码就必须要对git和IDE单独配置代理服务器。</p>
+<span id="more"></span>
+
+<h2 id="1-Git设置代理"><a href="#1-Git设置代理" class="headerlink" title="1. Git设置代理"></a>1. Git设置代理</h2><ul>
+<li><p>使用 <code>git协议</code> 时，设置代理需要配置 <code>core.gitproxy</code></p>
+</li>
+<li><p>使用 <code>HTTP协议</code> 时，设置代理需要配置 <code>http.proxy</code></p>
+</li>
+<li><p>而是用 <code>ssh协议</code> 时，代理需要配置ssh的 <code>ProxyCommand</code> 参数</p>
+</li>
+</ul>
+<p>在windows环境下，配置http方式的代理是最为简单方便的了。公司的vdi代理一般也是提供http协议address + port的形式。下面说明<code>http.proxy</code>的配置命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">针对单个项目进行代理配置：（进入到项目目录）</span></span><br><span class="line">git config http.proxy http://127.0.0.1:8088  #URL:PORT 或 URI:PORT的形式</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">需要鉴权的代理：添加username、password信息</span></span><br><span class="line">git config http.proxy http://username:password@127.0.0.1:8088</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">启用全局代理（公司的VDI环境直接全局配置比较合适） --global指令</span></span><br><span class="line">git config --global http.proxy http://127.0.0.1:8088</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看代理配置情况</span></span><br><span class="line">git config --get --global http.proxy</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">删除原有代理配置 --<span class="built_in">unset</span>指令</span></span><br><span class="line">git config --global --unset http.proxy</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">如果https协议出现证书错误的情况，比如提示： SSL certificate problem</span></span><br><span class="line"><span class="meta">#</span><span class="bash">可以尝试将sslVerify设置为<span class="literal">false</span></span></span><br><span class="line">git config --global http.sslVerify false</span><br></pre></td></tr></table></figure>
+
+<p>几点说明：</p>
+<ul>
+<li><p>如果非必要，一般不使用 <code>--global</code> 的方式来设置代理，毕竟代理有的时候访问一些项目比直接访问还慢，特别是当代理在国外，项目源在国内的时候，按需使用才是王道。</p>
+</li>
+<li><p>不要多次使用不同的参数来设置代理， <code>--global</code> ， <code>--system</code> ， <code>--local</code> 各级设置后，可能会给自己带来不必要的麻烦。git默认是先到git Repository的配置文件中查找配置文件，如果没有才会到 <code>--global</code> 设置的文件中查找，因此，单个项目文件中的设置会覆盖 <code>--global</code> 的设置。</p>
+</li>
+<li><p>使用 <code>--global</code> 来配置的信息保存在当前用户的根目录下的 <code>.config</code> 文件中，而仓库中的配置保存在项目仓库的根目录下的 <code>.git/config</code> 文件中。</p>
+</li>
+</ul>
+<h2 id="2-intellij-idea设置代理"><a href="#2-intellij-idea设置代理" class="headerlink" title="2. intellij idea设置代理"></a>2. intellij idea设置代理</h2><p>同样的问题，在VDI环境下所有软件都是需要自己手动配置代理信息，否则也无法拉去代码使用IDE的代码管理功能。以Intellij idea举例，快捷键 <code>Ctrl + Alt + S</code>打开设置窗口，输入<code>http</code>进入如下代理设置页面：</p>
+<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/19-4-18/intellij%E4%BB%A3%E7%90%86.png?Expires=1555582022&OSSAccessKeyId=TMP.AgHyuUNIJaNN5_913dyKrg-GhAE6NCPDN6o2x-MgsVpJxo7nTf175B8NTrXKADAtAhRm3eG6rtWyCoOxwQpOHH49v6U2KgIVAMcBjCxr3zYBCcLqOI_TRaXQaMoM&Signature=AyN4EpzuYhow97Rt/h30t8rS+r8=" alt="intellij代理"></p>
+<p>按要求配置后重启IDE即可登录配置git账号，拉取项目代码。</p>
+<blockquote>
+<p>参考：</p>
+<p><a href="https://blog.csdn.net/lenglong110/article/details/52411230">windows下设置git代理</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>git</category>
+        <category>IDE</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Linux环境性能优化和问题排查</title>
+    <url>/2018/11/22/Linux%E7%8E%AF%E5%A2%83%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%92%8C%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</url>
+    <content><![CDATA[<p>今天测试反馈了压测时内存占用较高，两个实例内存占用百分比有一定差距。看了下内存占用不一致估计是openApi调用的时候负载均衡的问题。之前的工作遇到类似的其实大部分都是运维处理的，今天自己去跳板机上排查了一遍，也学习了下内存分析的一些命令，学习了Linux环境下系统性能优化的大致思路，做一下记录。</p>
+<span id="more"></span>
+
+<p>性能优化的核心是找出系统的瓶颈点，问题找到了，优化的工作也就完成了大半。主要从两个层面来追踪：</p>
+<p>系统层面&amp;程序层面；</p>
+<p><strong>本文只介绍处理思路，更具体的命令使用和分析另行记录。</strong></p>
+<h2 id="1-分析系统瓶颈"><a href="#1-分析系统瓶颈" class="headerlink" title="1.分析系统瓶颈"></a>1.分析系统瓶颈</h2><p>首先得定位大致的问题出在哪里，是IO瓶颈、CPU瓶颈、内存瓶颈还是程序导致的系统问题；</p>
+<p>使用top命令分析可以有一个较为全面的分析：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[app@VM_104_105_centos appsystems]$ top -M</span><br><span class="line">top - 21:14:39 up 579 days,  1:12, 10 users,  load average: 0.00, 0.03, 0.06</span><br><span class="line">Tasks: 245 total,   1 running, 177 sleeping,  67 stopped,   0 zombie</span><br><span class="line">Cpu(s):  1.1%us,  1.6%sy,  3.6%ni, 93.6%id,  0.1%wa,  0.0%hi,  0.0%si,  0.0%st</span><br><span class="line">Mem:  7870.285M total, 7548.094M used,  322.191M free,   75.156M buffers</span><br><span class="line">Swap:    0.000k total,    0.000k used,    0.000k free, 1831.695M cached</span><br><span class="line"></span><br><span class="line">   PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND                   184164 root      26   6  654m  23m 6312 T 16.0  0.3 656:56.92 agent                     278926 root      20   0  432m  11m 2196 S  1.7  0.1  30:37.51 barad_agent                 3821 root      20   0  715m  17m 2760 S  1.3  0.2   1378:45 falcon-agent              70612 root      20   0  7144 6120  536 S  1.0  0.1 408:03.19 sap1002                    21269 root       7 -13  463m  19m 4588 S  0.7  0.3 183:23.85 daemon                    70617 root      20   0 39016  22m 5224 S  0.7  0.3 682:36.47 sap1009                    71929 root      20   0  577m 6996 2984 S  0.7  0.1   0:25.98 YDService                  92222 telegraf  20   0  507m  28m  10m S  0.7  0.4   4:59.52 telegraf                  70615 root      20   0 31464  13m  860 S  0.3  0.2 633:06.40 sap1005                    79110 influxdb  20   0  640m  64m 8768 S  0.3  0.8   0:43.95 influxd                   239464 app       20   0 5817m 2.3g  18m S  0.3 29.5   0:37.90 java        </span><br></pre></td></tr></table></figure>
+
+<p><code>-M</code>: 该命令选项可以使用MB为单位展示内存使用情况。（部分版本不支持）</p>
+<p><strong>进入交互模式后：</strong></p>
+<ul>
+<li>输入M：进程列表按内存占用降序排序（**%MEM字段**），便于观察最大内存使用者是否有问题，可以进一步跟踪确认是否有内存泄露的问题。</li>
+<li>输入P：进程列表按CPU占用降序排序（**%CPU字段**），便于观察最耗CPU资源的使用则是否有问题。</li>
+</ul>
+<p><strong>第三行Cpu(s),显示当前cpu处理工作的情况，重点关注：</strong></p>
+<ul>
+<li>%id：空闲CPU的时间百分比，如果这个值过低说明CPU存在瓶颈。</li>
+<li>%wa：等待I/O的CPU时间百分比，这个值过高说明IO存在瓶颈。</li>
+</ul>
+<h2 id="2-分析内存瓶颈"><a href="#2-分析内存瓶颈" class="headerlink" title="2.分析内存瓶颈"></a>2.分析内存瓶颈</h2><p>top命令显示的内容较多，分析内存可以使用free命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[app@VM_104_105_centos appsystems]$ free -m</span><br><span class="line">             total       used       free     shared    buffers     cached</span><br><span class="line">Mem:          7870       7572        297          0         86       1805</span><br><span class="line">-/+ buffers/cache:       5680       2189</span><br><span class="line">Swap:            0          0          0</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>-m</code>表示以mb为单位展示内存使用情况，否则默认是KB单位；-g：表示以GB为单位；-s 2：表示每两秒更新一次内存情况，打印到控制台。</p>
+</li>
+<li><p>Mem：内存使用情况</p>
+<ul>
+<li>total：物理内存总大小</li>
+<li>used：总的分配给缓存的（包含buffers&amp;cache），可以部分缓存并未使用，所以不能拿这个数据当做实际的内存占用大小</li>
+<li>free：未分配的内存</li>
+<li>shared：共享内存一般系统都没有</li>
+<li>cached：系统分配的但未被使用的cache大小。</li>
+<li><strong>total（Mem） = used（Mem） + free（Mem）</strong></li>
+</ul>
+</li>
+<li><p>buffers/cache：物理内存的缓存统计情况</p>
+<ul>
+<li>used：去除buffers和cached的后<strong>实际的内存占用量。=Mem_used - buffers - cached</strong></li>
+<li>free：可以视为<strong>真正空闲的内存大小。</strong></li>
+</ul>
+</li>
+<li><p>Swap：交换区使用情况。</p>
+</li>
+</ul>
+<h2 id="3-分析IO瓶颈"><a href="#3-分析IO瓶颈" class="headerlink" title="3.分析IO瓶颈"></a>3.分析IO瓶颈</h2><p>根据top命令，当%wa偏高时，系统的IO性能存在瓶颈，使用iostat命令分析：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[app@VM_104_105_centos logs]$ iostat -x -m</span><br><span class="line">Linux 2.6.32-642.6.2.el6.x86_64 (VM_104_105_centos)  11/23/2018  _x86_64_ (4 CPU)</span><br><span class="line"></span><br><span class="line">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span><br><span class="line">           0.53    0.02    0.31    0.08    0.00   99.06</span><br><span class="line"></span><br><span class="line">Device:rrqm/s  wrqm/s   r/s   w/s  rMB/s  wMB/s avgrq-sz avgqu-sz   await  svctm  %util</span><br><span class="line">vda    0.00    8.57    0.00  2.03  0.00    0.04    41.75     0.04   20.59   1.74   0.35</span><br><span class="line">vdb    0.00    0.65    0.01  0.34  0.00    0.00    24.88     0.00    5.47   1.96   0.07</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果**%iowait**的值过高，表示硬盘存在I/O瓶颈。</li>
+<li>如果 %util 接近 100%，说明产生的I/O请求太多，I/O系统已经满负荷，该磁盘可能存在瓶颈。</li>
+<li>如果 svctm 比较接近 await，说明 I/O 几乎没有等待时间；</li>
+<li>如果 await 远大于 svctm，说明I/O 队列太长，io响应太慢，则需要进行必要优化。</li>
+<li>如果avgqu-sz比较大，也表示有大量io在等待。</li>
+</ul>
+<h2 id="4-分析进程调用"><a href="#4-分析进程调用" class="headerlink" title="4.分析进程调用"></a>4.分析进程调用</h2><p>通过top等工具发现系统性能问题是由某个进程导致的之后，接下来我们就需要分析这个进程,查询问题在哪；</p>
+<p>这里我们有两个好用的工具： <strong>pstack和pstrace</strong></p>
+<p>pstack用来跟踪进程栈，这个命令在排查进程问题时非常有用，比如我们发现一个服务一直处于work状态（如假死状态，好似死循环），使用这个命令就能轻松定位问题所在；可以在一段时间内，多执行几次pstack，若发现代码栈总是停在同一个位置，那个位置就需要重点关注，很可能就是出问题的地方；</p>
+<p>示例：查看bash程序进程栈:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">/opt/app/tdev1$</span><span class="bash">ps -fe| grep bash</span></span><br><span class="line">tdev1   7013  7012  0 19:42 pts/1    00:00:00 -bash</span><br><span class="line">tdev1  11402 11401  0 20:31 pts/2    00:00:00 -bash</span><br><span class="line">tdev1  11474 11402  0 20:32 pts/2    00:00:00 grep bash</span><br><span class="line"><span class="meta">/opt/app/tdev1$</span><span class="bash">pstack 7013</span></span><br><span class="line"><span class="meta">#</span><span class="bash">0  0x00000039958c5620 <span class="keyword">in</span> __read_nocancel () from /lib64/libc.so.6</span></span><br><span class="line"><span class="meta">#</span><span class="bash">1  0x000000000047dafe <span class="keyword">in</span> rl_getc ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">2  0x000000000047def6 <span class="keyword">in</span> rl_read_key ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">3  0x000000000046d0f5 <span class="keyword">in</span> readline_internal_char ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">4  0x000000000046d4e5 <span class="keyword">in</span> readline ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">5  0x00000000004213cf <span class="keyword">in</span> ?? ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">6  0x000000000041d685 <span class="keyword">in</span> ?? ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">7  0x000000000041e89e <span class="keyword">in</span> ?? ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">8  0x00000000004218dc <span class="keyword">in</span> yyparse ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">9  0x000000000041b507 <span class="keyword">in</span> parse_command ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">10 0x000000000041b5c6 <span class="keyword">in</span> read_command ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">11 0x000000000041b74e <span class="keyword">in</span> reader_loop ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">12 0x000000000041b2aa <span class="keyword">in</span> main ()</span></span><br></pre></td></tr></table></figure>
+
+<p>strace用来跟踪进程中的系统调用；这个工具能够动态的跟踪进程执行时的系统调用和所接收的信号。是一个非常有效的检测、指导和调试工具。系统管理员可以通过该命令容易地解决程序问题。</p>
+<h2 id="Tips-什么是内存"><a href="#Tips-什么是内存" class="headerlink" title="Tips.什么是内存"></a>Tips.什么是内存</h2><p>内存是计算机中重要的部件之一，它是与CPU进行沟通的桥梁。计算机中所有程序的运行都是在内存中进行的，因此内存的性能对计算机的影响非常大。</p>
+<p>内存(Memory)也被称为内存储器，其作用是用于暂时存放CPU中的运算数据，以及与硬盘等外部存储器交换的数据。</p>
+<h3 id="物理内存"><a href="#物理内存" class="headerlink" title="物理内存"></a>物理内存</h3><p><strong>物理内存</strong>指通过物理内存条而获得的内存空间。即随机存取存储器（random access memory，RAM），是与CPU直接交换数据的内部存储器，也叫主存(内存)。</p>
+<h3 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h3><p><strong>虚拟内存</strong>是计算机系统内存管理的一种技术。它使得应用程序认为它拥有连续可用的内存（一个连续完整的地址空间），而实际上，它通常是被分隔成多个物理内存碎片，还有部分暂时存储在外部磁盘存储器上，在需要时进行数据交换（也就是说，当物理内存不足时，可能会借用硬盘空间来充当内存使用）。与没有使用虚拟内存技术的系统相比，使用这种技术的系统使得大型程序的编写变得更容易，对真正的物理内存（例如RAM）的使用也更有效率。</p>
+<h3 id="Swap分区"><a href="#Swap分区" class="headerlink" title="Swap分区"></a>Swap分区</h3><p>Swap分区（即交换区）在系统的物理内存不够用的时候，把硬盘空间中的一部分空间释放出来，以供当前运行的程序使用。那些被释放的空间可能来自一些很长时间没有什么操作的程序，这些被释放的空间被临时保存到Swap分区中，等到那些程序要运行时，再从Swap分区中恢复保存的数据到内存中。</p>
+<h3 id="buffer与cache的区别"><a href="#buffer与cache的区别" class="headerlink" title="buffer与cache的区别"></a>buffer与cache的区别</h3><p>1.cache：高速缓存，是位于CPU与主内存之间的一种容量较小但是速度较高的存储器，由于CPU的速度远高于主内存，CPU直接从内存中存取数据需要等待一定的时间周期。cache中保存着CPU刚用过或循环使用的一部分数据，当CPU再次使用该部分数据时可从cache中直接调用，这样就减少了CPU的等待时间，提高了系统的效率。<br>cache又分为一级cache(L1 cache)和二级cache(L2 cache),L1集成在CPU内部，L2早期一般时焊在主板上的，现在也都即成在CPU内部，常见L2 cache的容量有256KB或512KB。<br>2.buffer:缓冲区，一个用于存储速度不同步的设备或优先级不同的设备之间传输数据的区域。通过缓冲区，可以使进程之间的相互等待变少。速度快的设备可以利用buffer不间断的进行写操作，速度慢的设备可以直接从buffer中读取数据，减少速度快的设备的等待时间，提高效率。</p>
+<ul>
+<li>cache：文件系统的缓冲(page cache)，将常用的数据缓存起来供CPU使用。</li>
+<li>buffers:块设备的读写缓冲区(buffer cache)，缓冲满了一次写，提高IO性能。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Linux Learning</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -305,45 +561,6 @@
       </categories>
   </entry>
   <entry>
-    <title>git及intellij idea设置代理</title>
-    <url>/2019/04/18/Git%E5%8F%8Aintellij-idea%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/</url>
-    <content><![CDATA[<p>除了在某些情况需要在天朝科学上网之外，各大公司普遍推动使用VDI云桌面也是全局性的走代理上网。那么从github上拉取代码就必须要对git和IDE单独配置代理服务器。</p>
-<span id="more"></span>
-
-<h2 id="1-Git设置代理"><a href="#1-Git设置代理" class="headerlink" title="1. Git设置代理"></a>1. Git设置代理</h2><ul>
-<li><p>使用 <code>git协议</code> 时，设置代理需要配置 <code>core.gitproxy</code></p>
-</li>
-<li><p>使用 <code>HTTP协议</code> 时，设置代理需要配置 <code>http.proxy</code></p>
-</li>
-<li><p>而是用 <code>ssh协议</code> 时，代理需要配置ssh的 <code>ProxyCommand</code> 参数</p>
-</li>
-</ul>
-<p>在windows环境下，配置http方式的代理是最为简单方便的了。公司的vdi代理一般也是提供http协议address + port的形式。下面说明<code>http.proxy</code>的配置命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">针对单个项目进行代理配置：（进入到项目目录）</span></span><br><span class="line">git config http.proxy http://127.0.0.1:8088  #URL:PORT 或 URI:PORT的形式</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">需要鉴权的代理：添加username、password信息</span></span><br><span class="line">git config http.proxy http://username:password@127.0.0.1:8088</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">启用全局代理（公司的VDI环境直接全局配置比较合适） --global指令</span></span><br><span class="line">git config --global http.proxy http://127.0.0.1:8088</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看代理配置情况</span></span><br><span class="line">git config --get --global http.proxy</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">删除原有代理配置 --<span class="built_in">unset</span>指令</span></span><br><span class="line">git config --global --unset http.proxy</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">如果https协议出现证书错误的情况，比如提示： SSL certificate problem</span></span><br><span class="line"><span class="meta">#</span><span class="bash">可以尝试将sslVerify设置为<span class="literal">false</span></span></span><br><span class="line">git config --global http.sslVerify false</span><br></pre></td></tr></table></figure>
-
-<p>几点说明：</p>
-<ul>
-<li><p>如果非必要，一般不使用 <code>--global</code> 的方式来设置代理，毕竟代理有的时候访问一些项目比直接访问还慢，特别是当代理在国外，项目源在国内的时候，按需使用才是王道。</p>
-</li>
-<li><p>不要多次使用不同的参数来设置代理， <code>--global</code> ， <code>--system</code> ， <code>--local</code> 各级设置后，可能会给自己带来不必要的麻烦。git默认是先到git Repository的配置文件中查找配置文件，如果没有才会到 <code>--global</code> 设置的文件中查找，因此，单个项目文件中的设置会覆盖 <code>--global</code> 的设置。</p>
-</li>
-<li><p>使用 <code>--global</code> 来配置的信息保存在当前用户的根目录下的 <code>.config</code> 文件中，而仓库中的配置保存在项目仓库的根目录下的 <code>.git/config</code> 文件中。</p>
-</li>
-</ul>
-<h2 id="2-intellij-idea设置代理"><a href="#2-intellij-idea设置代理" class="headerlink" title="2. intellij idea设置代理"></a>2. intellij idea设置代理</h2><p>同样的问题，在VDI环境下所有软件都是需要自己手动配置代理信息，否则也无法拉去代码使用IDE的代码管理功能。以Intellij idea举例，快捷键 <code>Ctrl + Alt + S</code>打开设置窗口，输入<code>http</code>进入如下代理设置页面：</p>
-<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/19-4-18/intellij%E4%BB%A3%E7%90%86.png?Expires=1555582022&OSSAccessKeyId=TMP.AgHyuUNIJaNN5_913dyKrg-GhAE6NCPDN6o2x-MgsVpJxo7nTf175B8NTrXKADAtAhRm3eG6rtWyCoOxwQpOHH49v6U2KgIVAMcBjCxr3zYBCcLqOI_TRaXQaMoM&Signature=AyN4EpzuYhow97Rt/h30t8rS+r8=" alt="intellij代理"></p>
-<p>按要求配置后重启IDE即可登录配置git账号，拉取项目代码。</p>
-<blockquote>
-<p>参考：</p>
-<p><a href="https://blog.csdn.net/lenglong110/article/details/52411230">windows下设置git代理</a></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>git</category>
-        <category>IDE</category>
-      </categories>
-  </entry>
-  <entry>
     <title>jmap命令配合MAT工具分析java内存泄露情况</title>
     <url>/2018/12/07/jmap%E5%91%BD%E4%BB%A4%E9%85%8D%E5%90%88MAT%E5%B7%A5%E5%85%B7%E5%88%86%E6%9E%90java%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%83%85%E5%86%B5/</url>
     <content><![CDATA[<p>今天测试同学压测的时候又反馈内存有0.4%个百分点的上浮，其实之前用top命令观察了一段时间没什么问题。如果存在内存泄露的问题内存使用率应该会持续增加，而不是压了一个晚上也可以保持稳定。 :sweat: 不过两台服务器上一个项目的进程内存占用的确有一点点差别，保险起见dump堆转储文件分析看看，也学习一下。</p>
@@ -446,136 +663,130 @@
       </tags>
   </entry>
   <entry>
-    <title>Docker安装&amp;常用指令</title>
-    <url>/2018/10/18/Docker%E5%AE%89%E8%A3%85&amp;%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/</url>
-    <content><![CDATA[<p>学习docker容器基本指令，以及尝试在docker中使用redis数据库。</p>
+    <title>jvm性能调优&amp;监控-jps jstat jstack jmap jinfo</title>
+    <url>/2018/12/11/jvm%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98&amp;%E7%9B%91%E6%8E%A7-jps%20jstat%20jstack%20jmap%20jinfo/</url>
+    <content><![CDATA[<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-11/28660764.jpg"></p>
+<p>上一份工作其实几乎不怎么接触这些，生产环境的权限控制严格，大部分是由运维来做的。这段时间看了一些jvm性能调优、内存异常监控排查的blog，大部分也是东抄西抄，是时候系统的小结一波，大概归纳下jdk自带的常用命令，本文只简单介绍各个命令基本语法和最常用的功能，详细内容再单独开篇学习吧。</p>
+<p>ps：除了标题列举的命令之外其实还有jhat、jconsole等命令，只不过jhat对比mat工具实在不够直观，jconsole图形化界面在服务器上也不一定能用。</p>
 <span id="more"></span>
 
-<h2 id="1-安装后启动报错"><a href="#1-安装后启动报错" class="headerlink" title="1.安装后启动报错"></a>1.安装后启动报错</h2><p>安装docker完毕后启动报错，提示“Hardware assisted vitrualization and data execution protection must be enabled in the BIOS”</p>
-<p>这个错误大概率是由于磁盘没有开启虚拟化功能导致的。解决：</p>
-<p>1、开机时按F2进入BIOS（不同机器可能会略有区别）</p>
-<p>2、进入Security –&gt; Virtualization</p>
-<p>3、调整Intel VT-Virtualization-Technology：<strong>Enabled</strong></p>
-<h2 id="2-Docker常用命令"><a href="#2-Docker常用命令" class="headerlink" title="2.Docker常用命令"></a>2.Docker常用命令</h2><h3 id="2-1-docker镜像操作命令"><a href="#2-1-docker镜像操作命令" class="headerlink" title="2.1 docker镜像操作命令"></a>2.1 docker镜像操作命令</h3><ol>
-<li>查看docker版本信息</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker -v</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>docker镜像搜索（或在docker hub网页搜索）</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker search &#x27;image-name&#x27;</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>镜像下载</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker pull &#x27;image-name&#x27;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>镜像删除</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rmi &#x27;image-name&#x27;</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
-<li>删除所有镜像</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rmi $(docker images -q)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2-2-docker容器命令"><a href="#2-2-docker容器命令" class="headerlink" title="2.2 docker容器命令"></a>2.2 docker容器命令</h3><ol>
-<li>启动一个镜像为容器</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run --name &#x27;container-name&#x27; -d &#x27;image-name&#x27;</span><br><span class="line">docker run --help //查看run命令参数</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li><p>查看docker中容器列表</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker ps	//查看运行中的容器</span><br><span class="line">docker ps -a //查看运行、停止状态的容器</span><br></pre></td></tr></table></figure></li>
-<li><p>停止&amp;启动容器</p>
+<h2 id="1-jps"><a href="#1-jps" class="headerlink" title="1.jps"></a>1.jps</h2><p>jps=JVM Process Status Tool，用于显示当前系统(未指定hostid时)内HotSpot虚拟机中的进程情况。常用命令：</p>
+<ul>
+<li><p>jps -m：输出传递给main方法的参数。</p>
 </li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker stop &#x27;container-name/id&#x27;</span><br><span class="line">docker start &#x27;container-name/id&#x27;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>容器端口映射</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">//启动一个叫port-redis的容器，映射容器6379端口到本机6378</span><br><span class="line">docker run -d -p 6378:6379 --name port-redis redis</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>windows下运行的docker实际上是在虚拟机中，上述的端口映射是docker–&gt;虚拟机，如果想在本地开发环境使用，还需要一次映射：虚拟机–&gt;开发机</p>
-</blockquote>
-<ol start="5">
-<li>删除容器</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rm &#x27;container-name/id&#x27;</span><br><span class="line">docker rm $(docker ps -a -q)	//删除所有容器</span><br></pre></td></tr></table></figure>
-
-<ol start="6">
-<li>容器日志</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker logs &#x27;container-name/id&#x27;</span><br></pre></td></tr></table></figure>
-
-<ol start="7">
-<li>登录容器</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker exec -it &#x27;container-name/id&#x27; bash</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>运行中的容器实际上相当于一个完备的Linux系统，可以登录后进行常规Linux命令操作</p>
-</blockquote>
-<ol start="8">
-<li>登录后查看容器信息</li>
-</ol>
-<p>按上述登录到容器中后就可以按Linux的命令如hostname、env、ip addr等进行查看容器的信息。补充另外另种方式：</p>
-<ul>
-<li>不用进入容器，直接通过命令查看</li>
+<li><p>jps -v：输出传递给JVM的参数。举例如下：</p>
+</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker exec &#x27;container-name/id&#x27; hostname</span><br><span class="line">docker exec &#x27;container-name/id&#x27; env</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[app@VM_104_20_centos irps-chs]$ jps -m</span><br><span class="line">216635 JMap -histo 125676</span><br><span class="line">81530 JMap -dump:format=b,file=/tmp/irps-chs.hprof</span><br><span class="line">215688 Jps -m</span><br><span class="line">216765 JConsole</span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jps -v</span><br><span class="line">215744 Jps -Dapplication.home=/nemo/jdk1.8.0_152 -Xms8m</span><br><span class="line">216635 JMap -Dapplication.home=/nemo/jdk1.8.0_152 -Xms8m -Dsun.jvm.hotspot.debugger.useProcDebugger -Dsun.jvm.hotspot.debugger.useWindbgDebugger</span><br><span class="line">81530 JMap -Dapplication.home=/nemo/jdk1.8.0_152 -Xms8m -Dsun.jvm.hotspot.debugger.useProcDebugger -Dsun.jvm.hotspot.debugger.useWindbgDebugger</span><br></pre></td></tr></table></figure>
 
+<p>Oracle官方文档：<a href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jps.html">jps说明</a></p>
+<h2 id="2-jstat"><a href="#2-jstat" class="headerlink" title="2.jstat"></a>2.jstat</h2><p>jstat=JVM statistics Monitoring，用于监视虚拟机运行时状态信息的命令，它可以显示出虚拟机进程中的类装载、内存、垃圾收集、JIT编译等运行数据。注意使用时需要加上进程id、所选参数。</p>
+<p>语法结构为：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">jstat [option] LVMID [interval] [count]</span><br><span class="line"><span class="meta">#</span><span class="bash">option:可选操作参数</span></span><br><span class="line"><span class="meta">#</span><span class="bash">LVMID：本地虚拟机进程ID</span></span><br><span class="line"><span class="meta">#</span><span class="bash">interval：输出间隔，默认单位ms</span></span><br><span class="line"><span class="meta">#</span><span class="bash">count：输出次数</span></span><br></pre></td></tr></table></figure>
+
+<p>常用命令：</p>
 <ul>
-<li>使用<strong>inspect</strong>命令，可以获得全部内容</li>
+<li>jstat -class LVMID：监视类装载数量、消耗空间，时间等。</li>
+<li>jstat -compiler LVMID：输入JIT编译的方法数量、失败数量、耗时、编译失败类型及方法等。</li>
+<li>jstat -gcutil LVMID interval count：统计程序gc情况(已用空间占总空间百分比)</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker inspect &#x27;container-name/id&#x27;</span><br><span class="line">docker inspect -f &#123;&#123;.NetworkSettings.IPAddress&#125;&#125; &#x27;container-name/id&#x27;</span><br><span class="line">docker inspect &#x27;container-name/id&#x27;| grep IPAddress</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[app@VM_104_20_centos irps-chs]$ jstat -class 125676</span><br><span class="line">Loaded  Bytes  Unloaded  Bytes     Time   </span><br><span class="line"> 11825 22520.2        0     0.0    2509.31</span><br><span class="line"> </span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jstat -compiler 125676</span><br><span class="line">Compiled Failed Invalid   Time   FailedType FailedMethod</span><br><span class="line">   14442      4       0   103.53          1 com/alibaba/druid/filter/FilterChainImpl connection_prepareStatement</span><br><span class="line">   </span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jstat -gcutil 125676 3000 2 #每3s输出，一共输出两次</span><br><span class="line">  S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT   </span><br><span class="line">  0.37   0.00   7.33  45.04  98.17  96.25  11884  110.109     4    0.382  110.492</span><br><span class="line">  0.37   0.00   7.33  45.04  98.17  96.25  11884  110.109     4    0.382  110.492</span><br></pre></td></tr></table></figure>
+
+<p>Oracle官方文档：<a href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jstat.html">jstat说明</a></p>
+<h2 id="3-jstack"><a href="#3-jstack" class="headerlink" title="3.jstack"></a>3.jstack</h2><p>jstack用于生成java虚拟机当前时刻的线程快照，即当前java虚拟机内<strong>所有线程</strong>正在执行的方法堆栈的集合。</p>
+<p>所以jstack可以用于观察jvm中当前所有线程的运行情况和线程当前状态，定位线程出现长时间停顿的原因，如<strong>线程间死锁、死循环、请求外部资源导致的长时间等待</strong>等。 </p>
+<blockquote>
+<p>系统崩溃了？如果java程序崩溃生成core文件，jstack工具可以用来获得core文件的java stack和native stack的信息，从而可以轻松地知道java程序是如何崩溃和在程序何处发生问题。</p>
+<p>系统hung住了？jstack工具还可以附属到正在运行的java程序中，看到当时运行的java程序的java stack和native stack的信息, 如果现在运行的java程序呈现hung的状态。</p>
+</blockquote>
+<p>语法格式及说明：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">jstack [option] LVMID</span><br><span class="line"><span class="meta">#</span><span class="bash">option可选参数有：</span></span><br><span class="line">-F : 当正常输出请求不被响应时，强制输出线程堆栈</span><br><span class="line">-l : 除堆栈外，显示关于锁的附加信息</span><br><span class="line">-m : 如果调用到本地方法的话，可以显示C/C++的堆栈</span><br></pre></td></tr></table></figure>
+
+<p>Oracle官方文档：<a href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jstack.html">jstack说明</a></p>
+<h2 id="4-jmap"><a href="#4-jmap" class="headerlink" title="4.jmap"></a>4.jmap</h2><p>jmap=JVM Memory Map，用于生成dump文件、查询finalize执行队列、Java堆和永久代的详细信息，如当前使用率、当前使用的是哪种收集器等。</p>
+<p>语法格式如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">jmap [option] LVMID</span><br><span class="line"><span class="meta">#</span><span class="bash">option参数：</span></span><br><span class="line">-dump : 生成堆转储快照</span><br><span class="line">-finalizerinfo : 显示在F-Queue队列等待Finalizer线程执行finalizer方法的对象</span><br><span class="line">-heap : 显示Java堆详细信息</span><br><span class="line">-histo : 显示堆中对象的统计信息</span><br><span class="line">-permstat : to print permanent generation statistics</span><br><span class="line">-F : 当-dump没有响应时，强制生成dump快照</span><br></pre></td></tr></table></figure>
+
+<p>Oracle官方文档：<a href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jmap.html">jmap说明</a></p>
+<h2 id="5-jinfo"><a href="#5-jinfo" class="headerlink" title="5.jinfo"></a>5.jinfo</h2><p>jinfo=Java Configuration Info，相比于其他命令jinfo用法比较简单，主要用于实时查看或调整当前JVM配置的系统属性。常用命令如下：</p>
+<ul>
+<li>jinfo pid：打印指定process id的系统属性、jvm配置</li>
+<li>jinfo -flag [MaxHeapSize] pid：查看pid具体的参数值。举例如下：</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[app@VM_104_20_centos irps-chs]$ jinfo 62316</span><br><span class="line">Attaching to process ID 62316, please wait...</span><br><span class="line">Debugger attached successfully.</span><br><span class="line"><span class="meta">#</span><span class="bash">先展示系统相关属性</span></span><br><span class="line">Server compiler detected.</span><br><span class="line">JVM version is 25.152-b16</span><br><span class="line">Java System Properties:</span><br><span class="line"></span><br><span class="line">java.vendor = Oracle Corporation</span><br><span class="line">sun.java.launcher = SUN_STANDARD</span><br><span class="line">catalina.base = /irps-chs</span><br><span class="line">......</span><br><span class="line"><span class="meta">#</span><span class="bash">然后是jvm相关参数</span></span><br><span class="line">VM Flags:</span><br><span class="line">Non-default VM flags: -XX:+AlwaysPreTouch -XX:AutoBoxCacheMax=20000 -XX:CICompilerCount=3 -XX:CMSInitiatingOccupancyFraction=75 -XX:ErrorFile=null -XX:+ExplicitGCInvokesConcurrent</span><br><span class="line">......</span><br><span class="line"><span class="meta">#</span><span class="bash">指定查看MaxHeapSize大小</span></span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jinfo -flag MaxHeapSize  62316</span><br><span class="line">-XX:MaxHeapSize=2147483648</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>-f：format指令可以设定具体的属性内容 :slightly_smiling_face:</p>
-<p>inspect命令结合grep使用快速查询容器属性！</p>
+<p>jinfo命令也可以实时配置一些jvm参数，使用的不太多，具体可参考：</p>
+<p><a href="https://www.jianshu.com/p/c321d0808a1b">jinfo调整jvm参数</a></p>
 </blockquote>
-<h2 id="3-虚拟机端口映射配置"><a href="#3-虚拟机端口映射配置" class="headerlink" title="3. 虚拟机端口映射配置"></a>3. 虚拟机端口映射配置</h2><p>上面介绍了docker容器的端口映射，在windows下还要进行虚拟机到一般开发环境的端口映射才可以正常访问容器。以redis为例说明：</p>
-<h3 id="3-1虚拟机端口映射到容器端口"><a href="#3-1虚拟机端口映射到容器端口" class="headerlink" title="3.1虚拟机端口映射到容器端口"></a>3.1虚拟机端口映射到容器端口</h3><ol>
-<li>开启容器并映射<strong>虚拟机port：容器port</strong></li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -d -p 6379:6379 --name test-redis redis</span><br><span class="line">-p：小写表示指示具体的端口映射</span><br><span class="line">-P：大写表示随机分配主机端口映射到容器开放的网络端口上。</span><br></pre></td></tr></table></figure>
-
-<p>将虚拟机的6379端口映射到容器6379端口</p>
-<ol start="2">
-<li>映射时指定ip地址</li>
-</ol>
-<p>一般不需要特别指定虚拟机ip地址，默认0.0.0.0，也可以在绑定时指定：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -d -p 127.0.0.1:6379:6379 --name test-redis redis</span><br><span class="line"><span class="meta">#</span><span class="bash">启动结果如下</span></span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             </span><br><span class="line">2aedbac0a984        redis               &quot;docker-entrypoint.s…&quot;   4 seconds ago       </span><br><span class="line"></span><br><span class="line">STATUS              PORTS                      NAMES	</span><br><span class="line">Up 3 seconds        127.0.0.1:6379-&gt;6379/tcp   test-redis</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>映射时可以指定通信协议tcp、udp</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -d -p 127.0.0.1:6379:6379/tcp --name test-redis redis</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>查看容器端口绑定&amp;IP地址</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker port test-redis</span><br><span class="line"><span class="meta">#</span><span class="bash">结果：容器端口映射到虚拟机127.0.0.1:6379</span></span><br><span class="line">6379/tcp -&gt; 127.0.0.1:6379</span><br><span class="line"></span><br><span class="line">docker inspect test-redis|grep &#x27;IPAddress&#x27;</span><br><span class="line"><span class="meta">#</span><span class="bash">结果</span></span><br><span class="line">&quot;SecondaryIPAddresses&quot;: null,</span><br><span class="line">&quot;IPAddress&quot;: &quot;172.17.0.2&quot;,</span><br><span class="line">&quot;IPAddress&quot;: &quot;172.17.0.2&quot;,</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>如果想要同时绑定多个端口，则使用多个-p指令即可</p>
-<p>除了启动容器时绑定port，也可以通过宿主机的iptables进行nat转发实现，详见：<a href="https://blog.csdn.net/mnasd/article/details/83087881">docker-redis</a></p>
-</blockquote>
-<h3 id="3-2映射本机端口到虚拟机端口"><a href="#3-2映射本机端口到虚拟机端口" class="headerlink" title="3.2映射本机端口到虚拟机端口"></a>3.2映射本机端口到虚拟机端口</h3><p>如果想要在本机上使用，还需要进行本机端口–&gt;虚拟机端口映射的操作。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">1.查看目前端口的映射情况</span></span><br><span class="line">netsh interface portproxy show v4tov4</span><br><span class="line">netsh interface portproxy show v4tov4 | find &quot;127.0.0.1&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">2.增加一个端口映射,listen主机IP&amp;port --&gt; connect 虚拟机IP&amp;port</span></span><br><span class="line">netsh interface portproxy add v4tov4 listenaddress=127.0.0.1 listenport=6379 connectaddress=127.0.0.1 connectport=6379</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">3.删除一个端口映射</span></span><br><span class="line">netsh interface portproxy delete v4tov4 listenaddress=/address listenport=/port</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-Docker中使用redis"><a href="#4-Docker中使用redis" class="headerlink" title="4. Docker中使用redis"></a>4. Docker中使用redis</h2><p>经过以上的操作我们直接通过127.0.0.1:6379即可连接redis。我们也可以直接登录容器操作redis数据库。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">1.进入docker的redis-cli环境</span></span><br><span class="line">docker exec -it &#x27;container-name/id&#x27; redis-cli</span><br><span class="line"><span class="meta">#</span><span class="bash">例如：</span></span><br><span class="line">docker exec -it test-redis redis-cli</span><br><span class="line"><span class="meta">#</span><span class="bash">进入如下界面即可使用redis命令，如：keys、get、ttl等，退出使用<span class="built_in">exit</span>即可</span></span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
-
 ]]></content>
       <categories>
-        <category>docker</category>
+        <category>Linux Learning</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何阅读JDK源码</title>
+    <url>/2019/04/17/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BBJDK%E6%BA%90%E7%A0%81/</url>
+    <content><![CDATA[<p>从去年年中跳槽几次面试就已经意识到了阅读JDK源码的重要性。从最基础的List，Map衍生开去，各种数据结构的相关特性，是否线程安全？如何进行扩容？不同业务场景下选用何种数据类型？以及有的面试官会问String类型的哈希值，以及计算原理。。。(略坑)。不仅仅是JDK源码，学习Spring、Netty、Dubbo的源码对于个人提升都有好处。对于我来说克服畏难情绪固然重要，好的方法也是可以坚持下去的重要因素。</p>
+<span id="more"></span>
+
+<h2 id="How-to"><a href="#How-to" class="headerlink" title="How to"></a>How to</h2><p>开始前的准备工作~</p>
+<h3 id="搜索网上资料"><a href="#搜索网上资料" class="headerlink" title="搜索网上资料"></a>搜索网上资料</h3><p>阅读一个框架的源码，最基础的操作肯定是扫一遍网上的各种分析文章。通过这个操作，你可以对这个框架有个大致的了解。站在巨人的肩膀上，少走许多弯路。但如果你看的项目是公司内部的框架，那么你只能找公司内部的文档了，更甚者，有些连文档都没有。那么你可以略过这一步。</p>
+<h3 id="扫一遍源码"><a href="#扫一遍源码" class="headerlink" title="扫一遍源码"></a>扫一遍源码</h3><p>当你拿到框架的源码的时候，你可以大致把源码的每个包，以及每个包下面的文件扫读一遍。扫读并不需要你弄清楚每一行代码的意思，只需要让你知道源码每一部分的作用。</p>
+<p>如果一个开源框架足够标准，那么他的命名是非常语义化的。所以我们扫读的时候，通过包名、文件名就可以判断出这个包是用来干嘛的。例如 util 包是工具类，那我们可以直接跳过。vo 包是存放实体模型的，同样可以跳过。protocol 包是存放协议相关的等等。通过这么一个步骤，你会对整个项目有一个基本的印象，知道这个项目大概有哪些东西，哪些相对比较重要。</p>
+<h3 id="找到入口"><a href="#找到入口" class="headerlink" title="找到入口"></a>找到入口</h3><p>阅读任何一个框架的源码，首先就是要找到框架的入口。通过上面扫读源码，你应该能够发现一些入口的迹象，例如对于 Dubbo 来说，你会发现它有一个名为 dubbo-demo 的子模块，那么我们肯定重点看它。进一步发掘需求你会发现它的入口就是 dubbo-demo 中的 Provider 类、Consumer 类。我们可以直接接运行这两个类的 main 方法，并一步步跟踪代码的执行情况。</p>
+<h3 id="通读源码"><a href="#通读源码" class="headerlink" title="通读源码"></a>通读源码</h3><p>找到入口之后，下一步就是通读所有源码了，就是把源码的每个文件每一行都看一遍。在这个阶段不求完全弄懂细致的业务逻辑，但是要形成一个大概的框架，知道这个框架是如何设计的，有哪些大致的模块，这些模块是如何设计的。</p>
+<blockquote>
+<p>在通读源码的过程中最容易出现倦怠的情绪，通过系统给的统计和记录我觉得是一个比较有作用的方法。</p>
+<p>利用idea代码统计插件-Statistics，对需要阅读的代码进行整理统计，使用EXCEL进行记录。</p>
+</blockquote>
+<p> <img src="https://martintop-image.oss-cn-shenzhen.aliyuncs.com/19-4-24/20190424180707.png" alt="统计"></p>
+<p> <img src="https://martintop-image.oss-cn-shenzhen.aliyuncs.com/19-4-24/20190424180729.png" alt="总计"></p>
+<h3 id="梳理框架"><a href="#梳理框架" class="headerlink" title="梳理框架"></a>梳理框架</h3><p>在通读源码的过程中，你就会对框架有许多新的认识，会知道这个框架大致分为哪几个部分，每个部分的作用是什么，这个模块用了什么设计理念等等。</p>
+<p>如果说上个阶段是通读源码，那么这个阶段就是要把你在通读源码过程中的收获整理出来。在整理的过程中，你肯定会有更多的疑问，你会不断地细化，不断地精读。</p>
+<h3 id="批判性思考"><a href="#批判性思考" class="headerlink" title="批判性思考"></a>批判性思考</h3><p>通过了上面几个阶段，你会发现你对这个框架有了整体的认识，并且对每个模块的实现细节都有了比较深刻的认识。这个时候，你可以想一想为什么它要这么做，这么做有什么好处，那能用另一种方式做得更好吗？</p>
+<h2 id="What-to"><a href="#What-to" class="headerlink" title="What to"></a>What to</h2><h3 id="JDK部分"><a href="#JDK部分" class="headerlink" title="JDK部分"></a>JDK部分</h3><p>JDK其实就是Java SE Development Kit的缩写，要玩好这东西可不简单。JDK主要包含了三部分，第一部分就是 Java运行时环境 ，这其实就是JVM。此外，第二部分就是 Java的基础类库 ，这个类库的数量还是非常可观的。最后，第三部分就是 Java的开发工具 ，它们都是辅助你更好的使用Java的利器。</p>
+<p>那么很显然，要玩好JDK，就是要玩好JDK的这三部分。接下来，咱们就逐个的来说一下，每一个部分要学什么，学到什么程度。</p>
+<h4 id="第一部分：Java运行时环境"><a href="#第一部分：Java运行时环境" class="headerlink" title="第一部分：Java运行时环境"></a>第一部分：Java运行时环境</h4><p>这一部分其实就是常说的jre，而它的核心其实就一个东西，就是JVM。</p>
+<p>JVM这个东西，它的重要性LZ不想再强调了，JVM那本书甚至比《Thinking in java》还重要，这已经足见LZ多么看重JVM了。</p>
+<p>当然了，只是LZ看重，当然没什么卵用，但只要Java稍微高级一点点的职位，这部分基本上都是面试必问内容，这更加说明了JVM的重要性。</p>
+<h4 id="第二部分：Java的基础类库"><a href="#第二部分：Java的基础类库" class="headerlink" title="第二部分：Java的基础类库"></a>第二部分：Java的基础类库</h4><ol>
+<li><p><strong>精读源码</strong></p>
+<ul>
+<li><p>java.io</p>
+</li>
+<li><p>java.lang</p>
+</li>
+<li><p>java.uti</p>
+</li>
+</ul>
+</li>
+<li><p><strong>深刻理解</strong></p>
+<ul>
+<li>java.lang.reflect</li>
+<li>java.netjavax.net.</li>
+<li>java.nio.</li>
+<li>java.util.concurrent.*</li>
+</ul>
+</li>
+<li><p><strong>会用即可</strong></p>
+</li>
+</ol>
+<p>  java.lang.annotation<br>  javax.annotation.*<br>  java.lang.refjava.mathjava.rmi.*<br>  javax.rmi.*<br>  java.security.*<br>  javax.security.*<br>  java.sqljavax.sql.*<br>  javax.transaction.*<br>  java.textjavax.xml.*<br>  org.w3c.dom.*<br>  org.xml.sax.*<br>  javax.crypto.*<br>  javax.imageio.*<br>  javax.jws.*<br>  java.util.*</p>
+<p>  剩下的诸如swing、awt稍微了解一下即可，已经很少使用了。更加详细的顺序可以参考这篇博客的内容： <a href="https://blog.csdn.net/qq_21033663/article/details/79571506">JDK源码阅读顺序</a></p>
+<h3 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h3><p><a href="https://www.zhihu.com/question/61539640">有哪些值得一读的Java源码-知乎问答</a></p>
+<p><a href="https://www.cnblogs.com/chanshuyi/p/take_about_my_java_tech_system.html#%E5%B9%B6%E5%8F%91%E9%9B%86%E5%90%88%E6%BA%90%E7%A0%81">聊聊我的知识体系</a></p>
+<p>参考文章：</p>
+<blockquote>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzA3ODg3OTk4OA==&mid=2651087534&idx=1&sn=93f5bd700af1de2f193062b2fd991994&chksm=844ccf35b33b46231892b82bf6aa86b5fb89120a319fec1602a6e74cabff9d5c8e3b9b4e2436&mpshare=1&scene=23&srcid=0430tGrNDhqZlXzixAqH8xxp#rd">扎实的java基础</a></p>
+<p><a href="https://www.cnblogs.com/chanshuyi/p/how_to_read_source_code.html">面对枯燥的源码如何阅读下去</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Java</category>
       </categories>
   </entry>
   <entry>
@@ -981,216 +1192,5 @@
         <category>Java</category>
         <category>JDK源码</category>
       </categories>
-  </entry>
-  <entry>
-    <title>jvm性能调优&amp;监控-jps jstat jstack jmap jinfo</title>
-    <url>/2018/12/11/jvm%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98&amp;%E7%9B%91%E6%8E%A7-jps%20jstat%20jstack%20jmap%20jinfo/</url>
-    <content><![CDATA[<p><img src="http://martintop-image.oss-cn-shenzhen.aliyuncs.com/18-12-11/28660764.jpg"></p>
-<p>上一份工作其实几乎不怎么接触这些，生产环境的权限控制严格，大部分是由运维来做的。这段时间看了一些jvm性能调优、内存异常监控排查的blog，大部分也是东抄西抄，是时候系统的小结一波，大概归纳下jdk自带的常用命令，本文只简单介绍各个命令基本语法和最常用的功能，详细内容再单独开篇学习吧。</p>
-<p>ps：除了标题列举的命令之外其实还有jhat、jconsole等命令，只不过jhat对比mat工具实在不够直观，jconsole图形化界面在服务器上也不一定能用。</p>
-<span id="more"></span>
-
-<h2 id="1-jps"><a href="#1-jps" class="headerlink" title="1.jps"></a>1.jps</h2><p>jps=JVM Process Status Tool，用于显示当前系统(未指定hostid时)内HotSpot虚拟机中的进程情况。常用命令：</p>
-<ul>
-<li><p>jps -m：输出传递给main方法的参数。</p>
-</li>
-<li><p>jps -v：输出传递给JVM的参数。举例如下：</p>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[app@VM_104_20_centos irps-chs]$ jps -m</span><br><span class="line">216635 JMap -histo 125676</span><br><span class="line">81530 JMap -dump:format=b,file=/tmp/irps-chs.hprof</span><br><span class="line">215688 Jps -m</span><br><span class="line">216765 JConsole</span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jps -v</span><br><span class="line">215744 Jps -Dapplication.home=/nemo/jdk1.8.0_152 -Xms8m</span><br><span class="line">216635 JMap -Dapplication.home=/nemo/jdk1.8.0_152 -Xms8m -Dsun.jvm.hotspot.debugger.useProcDebugger -Dsun.jvm.hotspot.debugger.useWindbgDebugger</span><br><span class="line">81530 JMap -Dapplication.home=/nemo/jdk1.8.0_152 -Xms8m -Dsun.jvm.hotspot.debugger.useProcDebugger -Dsun.jvm.hotspot.debugger.useWindbgDebugger</span><br></pre></td></tr></table></figure>
-
-<p>Oracle官方文档：<a href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jps.html">jps说明</a></p>
-<h2 id="2-jstat"><a href="#2-jstat" class="headerlink" title="2.jstat"></a>2.jstat</h2><p>jstat=JVM statistics Monitoring，用于监视虚拟机运行时状态信息的命令，它可以显示出虚拟机进程中的类装载、内存、垃圾收集、JIT编译等运行数据。注意使用时需要加上进程id、所选参数。</p>
-<p>语法结构为：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">jstat [option] LVMID [interval] [count]</span><br><span class="line"><span class="meta">#</span><span class="bash">option:可选操作参数</span></span><br><span class="line"><span class="meta">#</span><span class="bash">LVMID：本地虚拟机进程ID</span></span><br><span class="line"><span class="meta">#</span><span class="bash">interval：输出间隔，默认单位ms</span></span><br><span class="line"><span class="meta">#</span><span class="bash">count：输出次数</span></span><br></pre></td></tr></table></figure>
-
-<p>常用命令：</p>
-<ul>
-<li>jstat -class LVMID：监视类装载数量、消耗空间，时间等。</li>
-<li>jstat -compiler LVMID：输入JIT编译的方法数量、失败数量、耗时、编译失败类型及方法等。</li>
-<li>jstat -gcutil LVMID interval count：统计程序gc情况(已用空间占总空间百分比)</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[app@VM_104_20_centos irps-chs]$ jstat -class 125676</span><br><span class="line">Loaded  Bytes  Unloaded  Bytes     Time   </span><br><span class="line"> 11825 22520.2        0     0.0    2509.31</span><br><span class="line"> </span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jstat -compiler 125676</span><br><span class="line">Compiled Failed Invalid   Time   FailedType FailedMethod</span><br><span class="line">   14442      4       0   103.53          1 com/alibaba/druid/filter/FilterChainImpl connection_prepareStatement</span><br><span class="line">   </span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jstat -gcutil 125676 3000 2 #每3s输出，一共输出两次</span><br><span class="line">  S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT   </span><br><span class="line">  0.37   0.00   7.33  45.04  98.17  96.25  11884  110.109     4    0.382  110.492</span><br><span class="line">  0.37   0.00   7.33  45.04  98.17  96.25  11884  110.109     4    0.382  110.492</span><br></pre></td></tr></table></figure>
-
-<p>Oracle官方文档：<a href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jstat.html">jstat说明</a></p>
-<h2 id="3-jstack"><a href="#3-jstack" class="headerlink" title="3.jstack"></a>3.jstack</h2><p>jstack用于生成java虚拟机当前时刻的线程快照，即当前java虚拟机内<strong>所有线程</strong>正在执行的方法堆栈的集合。</p>
-<p>所以jstack可以用于观察jvm中当前所有线程的运行情况和线程当前状态，定位线程出现长时间停顿的原因，如<strong>线程间死锁、死循环、请求外部资源导致的长时间等待</strong>等。 </p>
-<blockquote>
-<p>系统崩溃了？如果java程序崩溃生成core文件，jstack工具可以用来获得core文件的java stack和native stack的信息，从而可以轻松地知道java程序是如何崩溃和在程序何处发生问题。</p>
-<p>系统hung住了？jstack工具还可以附属到正在运行的java程序中，看到当时运行的java程序的java stack和native stack的信息, 如果现在运行的java程序呈现hung的状态。</p>
-</blockquote>
-<p>语法格式及说明：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">jstack [option] LVMID</span><br><span class="line"><span class="meta">#</span><span class="bash">option可选参数有：</span></span><br><span class="line">-F : 当正常输出请求不被响应时，强制输出线程堆栈</span><br><span class="line">-l : 除堆栈外，显示关于锁的附加信息</span><br><span class="line">-m : 如果调用到本地方法的话，可以显示C/C++的堆栈</span><br></pre></td></tr></table></figure>
-
-<p>Oracle官方文档：<a href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jstack.html">jstack说明</a></p>
-<h2 id="4-jmap"><a href="#4-jmap" class="headerlink" title="4.jmap"></a>4.jmap</h2><p>jmap=JVM Memory Map，用于生成dump文件、查询finalize执行队列、Java堆和永久代的详细信息，如当前使用率、当前使用的是哪种收集器等。</p>
-<p>语法格式如下：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">jmap [option] LVMID</span><br><span class="line"><span class="meta">#</span><span class="bash">option参数：</span></span><br><span class="line">-dump : 生成堆转储快照</span><br><span class="line">-finalizerinfo : 显示在F-Queue队列等待Finalizer线程执行finalizer方法的对象</span><br><span class="line">-heap : 显示Java堆详细信息</span><br><span class="line">-histo : 显示堆中对象的统计信息</span><br><span class="line">-permstat : to print permanent generation statistics</span><br><span class="line">-F : 当-dump没有响应时，强制生成dump快照</span><br></pre></td></tr></table></figure>
-
-<p>Oracle官方文档：<a href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jmap.html">jmap说明</a></p>
-<h2 id="5-jinfo"><a href="#5-jinfo" class="headerlink" title="5.jinfo"></a>5.jinfo</h2><p>jinfo=Java Configuration Info，相比于其他命令jinfo用法比较简单，主要用于实时查看或调整当前JVM配置的系统属性。常用命令如下：</p>
-<ul>
-<li>jinfo pid：打印指定process id的系统属性、jvm配置</li>
-<li>jinfo -flag [MaxHeapSize] pid：查看pid具体的参数值。举例如下：</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[app@VM_104_20_centos irps-chs]$ jinfo 62316</span><br><span class="line">Attaching to process ID 62316, please wait...</span><br><span class="line">Debugger attached successfully.</span><br><span class="line"><span class="meta">#</span><span class="bash">先展示系统相关属性</span></span><br><span class="line">Server compiler detected.</span><br><span class="line">JVM version is 25.152-b16</span><br><span class="line">Java System Properties:</span><br><span class="line"></span><br><span class="line">java.vendor = Oracle Corporation</span><br><span class="line">sun.java.launcher = SUN_STANDARD</span><br><span class="line">catalina.base = /irps-chs</span><br><span class="line">......</span><br><span class="line"><span class="meta">#</span><span class="bash">然后是jvm相关参数</span></span><br><span class="line">VM Flags:</span><br><span class="line">Non-default VM flags: -XX:+AlwaysPreTouch -XX:AutoBoxCacheMax=20000 -XX:CICompilerCount=3 -XX:CMSInitiatingOccupancyFraction=75 -XX:ErrorFile=null -XX:+ExplicitGCInvokesConcurrent</span><br><span class="line">......</span><br><span class="line"><span class="meta">#</span><span class="bash">指定查看MaxHeapSize大小</span></span><br><span class="line">[app@VM_104_20_centos irps-chs]$ jinfo -flag MaxHeapSize  62316</span><br><span class="line">-XX:MaxHeapSize=2147483648</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>jinfo命令也可以实时配置一些jvm参数，使用的不太多，具体可参考：</p>
-<p><a href="https://www.jianshu.com/p/c321d0808a1b">jinfo调整jvm参数</a></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>Linux Learning</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>如何阅读JDK源码</title>
-    <url>/2019/04/17/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BBJDK%E6%BA%90%E7%A0%81/</url>
-    <content><![CDATA[<p>从去年年中跳槽几次面试就已经意识到了阅读JDK源码的重要性。从最基础的List，Map衍生开去，各种数据结构的相关特性，是否线程安全？如何进行扩容？不同业务场景下选用何种数据类型？以及有的面试官会问String类型的哈希值，以及计算原理。。。(略坑)。不仅仅是JDK源码，学习Spring、Netty、Dubbo的源码对于个人提升都有好处。对于我来说克服畏难情绪固然重要，好的方法也是可以坚持下去的重要因素。</p>
-<span id="more"></span>
-
-<h2 id="How-to"><a href="#How-to" class="headerlink" title="How to"></a>How to</h2><p>开始前的准备工作~</p>
-<h3 id="搜索网上资料"><a href="#搜索网上资料" class="headerlink" title="搜索网上资料"></a>搜索网上资料</h3><p>阅读一个框架的源码，最基础的操作肯定是扫一遍网上的各种分析文章。通过这个操作，你可以对这个框架有个大致的了解。站在巨人的肩膀上，少走许多弯路。但如果你看的项目是公司内部的框架，那么你只能找公司内部的文档了，更甚者，有些连文档都没有。那么你可以略过这一步。</p>
-<h3 id="扫一遍源码"><a href="#扫一遍源码" class="headerlink" title="扫一遍源码"></a>扫一遍源码</h3><p>当你拿到框架的源码的时候，你可以大致把源码的每个包，以及每个包下面的文件扫读一遍。扫读并不需要你弄清楚每一行代码的意思，只需要让你知道源码每一部分的作用。</p>
-<p>如果一个开源框架足够标准，那么他的命名是非常语义化的。所以我们扫读的时候，通过包名、文件名就可以判断出这个包是用来干嘛的。例如 util 包是工具类，那我们可以直接跳过。vo 包是存放实体模型的，同样可以跳过。protocol 包是存放协议相关的等等。通过这么一个步骤，你会对整个项目有一个基本的印象，知道这个项目大概有哪些东西，哪些相对比较重要。</p>
-<h3 id="找到入口"><a href="#找到入口" class="headerlink" title="找到入口"></a>找到入口</h3><p>阅读任何一个框架的源码，首先就是要找到框架的入口。通过上面扫读源码，你应该能够发现一些入口的迹象，例如对于 Dubbo 来说，你会发现它有一个名为 dubbo-demo 的子模块，那么我们肯定重点看它。进一步发掘需求你会发现它的入口就是 dubbo-demo 中的 Provider 类、Consumer 类。我们可以直接接运行这两个类的 main 方法，并一步步跟踪代码的执行情况。</p>
-<h3 id="通读源码"><a href="#通读源码" class="headerlink" title="通读源码"></a>通读源码</h3><p>找到入口之后，下一步就是通读所有源码了，就是把源码的每个文件每一行都看一遍。在这个阶段不求完全弄懂细致的业务逻辑，但是要形成一个大概的框架，知道这个框架是如何设计的，有哪些大致的模块，这些模块是如何设计的。</p>
-<blockquote>
-<p>在通读源码的过程中最容易出现倦怠的情绪，通过系统给的统计和记录我觉得是一个比较有作用的方法。</p>
-<p>利用idea代码统计插件-Statistics，对需要阅读的代码进行整理统计，使用EXCEL进行记录。</p>
-</blockquote>
-<p> <img src="https://martintop-image.oss-cn-shenzhen.aliyuncs.com/19-4-24/20190424180707.png" alt="统计"></p>
-<p> <img src="https://martintop-image.oss-cn-shenzhen.aliyuncs.com/19-4-24/20190424180729.png" alt="总计"></p>
-<h3 id="梳理框架"><a href="#梳理框架" class="headerlink" title="梳理框架"></a>梳理框架</h3><p>在通读源码的过程中，你就会对框架有许多新的认识，会知道这个框架大致分为哪几个部分，每个部分的作用是什么，这个模块用了什么设计理念等等。</p>
-<p>如果说上个阶段是通读源码，那么这个阶段就是要把你在通读源码过程中的收获整理出来。在整理的过程中，你肯定会有更多的疑问，你会不断地细化，不断地精读。</p>
-<h3 id="批判性思考"><a href="#批判性思考" class="headerlink" title="批判性思考"></a>批判性思考</h3><p>通过了上面几个阶段，你会发现你对这个框架有了整体的认识，并且对每个模块的实现细节都有了比较深刻的认识。这个时候，你可以想一想为什么它要这么做，这么做有什么好处，那能用另一种方式做得更好吗？</p>
-<h2 id="What-to"><a href="#What-to" class="headerlink" title="What to"></a>What to</h2><h3 id="JDK部分"><a href="#JDK部分" class="headerlink" title="JDK部分"></a>JDK部分</h3><p>JDK其实就是Java SE Development Kit的缩写，要玩好这东西可不简单。JDK主要包含了三部分，第一部分就是 Java运行时环境 ，这其实就是JVM。此外，第二部分就是 Java的基础类库 ，这个类库的数量还是非常可观的。最后，第三部分就是 Java的开发工具 ，它们都是辅助你更好的使用Java的利器。</p>
-<p>那么很显然，要玩好JDK，就是要玩好JDK的这三部分。接下来，咱们就逐个的来说一下，每一个部分要学什么，学到什么程度。</p>
-<h4 id="第一部分：Java运行时环境"><a href="#第一部分：Java运行时环境" class="headerlink" title="第一部分：Java运行时环境"></a>第一部分：Java运行时环境</h4><p>这一部分其实就是常说的jre，而它的核心其实就一个东西，就是JVM。</p>
-<p>JVM这个东西，它的重要性LZ不想再强调了，JVM那本书甚至比《Thinking in java》还重要，这已经足见LZ多么看重JVM了。</p>
-<p>当然了，只是LZ看重，当然没什么卵用，但只要Java稍微高级一点点的职位，这部分基本上都是面试必问内容，这更加说明了JVM的重要性。</p>
-<h4 id="第二部分：Java的基础类库"><a href="#第二部分：Java的基础类库" class="headerlink" title="第二部分：Java的基础类库"></a>第二部分：Java的基础类库</h4><ol>
-<li><p><strong>精读源码</strong></p>
-<ul>
-<li><p>java.io</p>
-</li>
-<li><p>java.lang</p>
-</li>
-<li><p>java.uti</p>
-</li>
-</ul>
-</li>
-<li><p><strong>深刻理解</strong></p>
-<ul>
-<li>java.lang.reflect</li>
-<li>java.netjavax.net.</li>
-<li>java.nio.</li>
-<li>java.util.concurrent.*</li>
-</ul>
-</li>
-<li><p><strong>会用即可</strong></p>
-</li>
-</ol>
-<p>  java.lang.annotation<br>  javax.annotation.*<br>  java.lang.refjava.mathjava.rmi.*<br>  javax.rmi.*<br>  java.security.*<br>  javax.security.*<br>  java.sqljavax.sql.*<br>  javax.transaction.*<br>  java.textjavax.xml.*<br>  org.w3c.dom.*<br>  org.xml.sax.*<br>  javax.crypto.*<br>  javax.imageio.*<br>  javax.jws.*<br>  java.util.*</p>
-<p>  剩下的诸如swing、awt稍微了解一下即可，已经很少使用了。更加详细的顺序可以参考这篇博客的内容： <a href="https://blog.csdn.net/qq_21033663/article/details/79571506">JDK源码阅读顺序</a></p>
-<h3 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h3><p><a href="https://www.zhihu.com/question/61539640">有哪些值得一读的Java源码-知乎问答</a></p>
-<p><a href="https://www.cnblogs.com/chanshuyi/p/take_about_my_java_tech_system.html#%E5%B9%B6%E5%8F%91%E9%9B%86%E5%90%88%E6%BA%90%E7%A0%81">聊聊我的知识体系</a></p>
-<p>参考文章：</p>
-<blockquote>
-<p><a href="https://mp.weixin.qq.com/s?__biz=MzA3ODg3OTk4OA==&mid=2651087534&idx=1&sn=93f5bd700af1de2f193062b2fd991994&chksm=844ccf35b33b46231892b82bf6aa86b5fb89120a319fec1602a6e74cabff9d5c8e3b9b4e2436&mpshare=1&scene=23&srcid=0430tGrNDhqZlXzixAqH8xxp#rd">扎实的java基础</a></p>
-<p><a href="https://www.cnblogs.com/chanshuyi/p/how_to_read_source_code.html">面对枯燥的源码如何阅读下去</a></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Linux环境性能优化和问题排查</title>
-    <url>/2018/11/22/Linux%E7%8E%AF%E5%A2%83%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90%E5%92%8C%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</url>
-    <content><![CDATA[<p>今天测试反馈了压测时内存占用较高，两个实例内存占用百分比有一定差距。看了下内存占用不一致估计是openApi调用的时候负载均衡的问题。之前的工作遇到类似的其实大部分都是运维处理的，今天自己去跳板机上排查了一遍，也学习了下内存分析的一些命令，学习了Linux环境下系统性能优化的大致思路，做一下记录。</p>
-<span id="more"></span>
-
-<p>性能优化的核心是找出系统的瓶颈点，问题找到了，优化的工作也就完成了大半。主要从两个层面来追踪：</p>
-<p>系统层面&amp;程序层面；</p>
-<p><strong>本文只介绍处理思路，更具体的命令使用和分析另行记录。</strong></p>
-<h2 id="1-分析系统瓶颈"><a href="#1-分析系统瓶颈" class="headerlink" title="1.分析系统瓶颈"></a>1.分析系统瓶颈</h2><p>首先得定位大致的问题出在哪里，是IO瓶颈、CPU瓶颈、内存瓶颈还是程序导致的系统问题；</p>
-<p>使用top命令分析可以有一个较为全面的分析：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[app@VM_104_105_centos appsystems]$ top -M</span><br><span class="line">top - 21:14:39 up 579 days,  1:12, 10 users,  load average: 0.00, 0.03, 0.06</span><br><span class="line">Tasks: 245 total,   1 running, 177 sleeping,  67 stopped,   0 zombie</span><br><span class="line">Cpu(s):  1.1%us,  1.6%sy,  3.6%ni, 93.6%id,  0.1%wa,  0.0%hi,  0.0%si,  0.0%st</span><br><span class="line">Mem:  7870.285M total, 7548.094M used,  322.191M free,   75.156M buffers</span><br><span class="line">Swap:    0.000k total,    0.000k used,    0.000k free, 1831.695M cached</span><br><span class="line"></span><br><span class="line">   PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND                   184164 root      26   6  654m  23m 6312 T 16.0  0.3 656:56.92 agent                     278926 root      20   0  432m  11m 2196 S  1.7  0.1  30:37.51 barad_agent                 3821 root      20   0  715m  17m 2760 S  1.3  0.2   1378:45 falcon-agent              70612 root      20   0  7144 6120  536 S  1.0  0.1 408:03.19 sap1002                    21269 root       7 -13  463m  19m 4588 S  0.7  0.3 183:23.85 daemon                    70617 root      20   0 39016  22m 5224 S  0.7  0.3 682:36.47 sap1009                    71929 root      20   0  577m 6996 2984 S  0.7  0.1   0:25.98 YDService                  92222 telegraf  20   0  507m  28m  10m S  0.7  0.4   4:59.52 telegraf                  70615 root      20   0 31464  13m  860 S  0.3  0.2 633:06.40 sap1005                    79110 influxdb  20   0  640m  64m 8768 S  0.3  0.8   0:43.95 influxd                   239464 app       20   0 5817m 2.3g  18m S  0.3 29.5   0:37.90 java        </span><br></pre></td></tr></table></figure>
-
-<p><code>-M</code>: 该命令选项可以使用MB为单位展示内存使用情况。（部分版本不支持）</p>
-<p><strong>进入交互模式后：</strong></p>
-<ul>
-<li>输入M：进程列表按内存占用降序排序（**%MEM字段**），便于观察最大内存使用者是否有问题，可以进一步跟踪确认是否有内存泄露的问题。</li>
-<li>输入P：进程列表按CPU占用降序排序（**%CPU字段**），便于观察最耗CPU资源的使用则是否有问题。</li>
-</ul>
-<p><strong>第三行Cpu(s),显示当前cpu处理工作的情况，重点关注：</strong></p>
-<ul>
-<li>%id：空闲CPU的时间百分比，如果这个值过低说明CPU存在瓶颈。</li>
-<li>%wa：等待I/O的CPU时间百分比，这个值过高说明IO存在瓶颈。</li>
-</ul>
-<h2 id="2-分析内存瓶颈"><a href="#2-分析内存瓶颈" class="headerlink" title="2.分析内存瓶颈"></a>2.分析内存瓶颈</h2><p>top命令显示的内容较多，分析内存可以使用free命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[app@VM_104_105_centos appsystems]$ free -m</span><br><span class="line">             total       used       free     shared    buffers     cached</span><br><span class="line">Mem:          7870       7572        297          0         86       1805</span><br><span class="line">-/+ buffers/cache:       5680       2189</span><br><span class="line">Swap:            0          0          0</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><code>-m</code>表示以mb为单位展示内存使用情况，否则默认是KB单位；-g：表示以GB为单位；-s 2：表示每两秒更新一次内存情况，打印到控制台。</p>
-</li>
-<li><p>Mem：内存使用情况</p>
-<ul>
-<li>total：物理内存总大小</li>
-<li>used：总的分配给缓存的（包含buffers&amp;cache），可以部分缓存并未使用，所以不能拿这个数据当做实际的内存占用大小</li>
-<li>free：未分配的内存</li>
-<li>shared：共享内存一般系统都没有</li>
-<li>cached：系统分配的但未被使用的cache大小。</li>
-<li><strong>total（Mem） = used（Mem） + free（Mem）</strong></li>
-</ul>
-</li>
-<li><p>buffers/cache：物理内存的缓存统计情况</p>
-<ul>
-<li>used：去除buffers和cached的后<strong>实际的内存占用量。=Mem_used - buffers - cached</strong></li>
-<li>free：可以视为<strong>真正空闲的内存大小。</strong></li>
-</ul>
-</li>
-<li><p>Swap：交换区使用情况。</p>
-</li>
-</ul>
-<h2 id="3-分析IO瓶颈"><a href="#3-分析IO瓶颈" class="headerlink" title="3.分析IO瓶颈"></a>3.分析IO瓶颈</h2><p>根据top命令，当%wa偏高时，系统的IO性能存在瓶颈，使用iostat命令分析：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[app@VM_104_105_centos logs]$ iostat -x -m</span><br><span class="line">Linux 2.6.32-642.6.2.el6.x86_64 (VM_104_105_centos)  11/23/2018  _x86_64_ (4 CPU)</span><br><span class="line"></span><br><span class="line">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span><br><span class="line">           0.53    0.02    0.31    0.08    0.00   99.06</span><br><span class="line"></span><br><span class="line">Device:rrqm/s  wrqm/s   r/s   w/s  rMB/s  wMB/s avgrq-sz avgqu-sz   await  svctm  %util</span><br><span class="line">vda    0.00    8.57    0.00  2.03  0.00    0.04    41.75     0.04   20.59   1.74   0.35</span><br><span class="line">vdb    0.00    0.65    0.01  0.34  0.00    0.00    24.88     0.00    5.47   1.96   0.07</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>如果**%iowait**的值过高，表示硬盘存在I/O瓶颈。</li>
-<li>如果 %util 接近 100%，说明产生的I/O请求太多，I/O系统已经满负荷，该磁盘可能存在瓶颈。</li>
-<li>如果 svctm 比较接近 await，说明 I/O 几乎没有等待时间；</li>
-<li>如果 await 远大于 svctm，说明I/O 队列太长，io响应太慢，则需要进行必要优化。</li>
-<li>如果avgqu-sz比较大，也表示有大量io在等待。</li>
-</ul>
-<h2 id="4-分析进程调用"><a href="#4-分析进程调用" class="headerlink" title="4.分析进程调用"></a>4.分析进程调用</h2><p>通过top等工具发现系统性能问题是由某个进程导致的之后，接下来我们就需要分析这个进程,查询问题在哪；</p>
-<p>这里我们有两个好用的工具： <strong>pstack和pstrace</strong></p>
-<p>pstack用来跟踪进程栈，这个命令在排查进程问题时非常有用，比如我们发现一个服务一直处于work状态（如假死状态，好似死循环），使用这个命令就能轻松定位问题所在；可以在一段时间内，多执行几次pstack，若发现代码栈总是停在同一个位置，那个位置就需要重点关注，很可能就是出问题的地方；</p>
-<p>示例：查看bash程序进程栈:</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">/opt/app/tdev1$</span><span class="bash">ps -fe| grep bash</span></span><br><span class="line">tdev1   7013  7012  0 19:42 pts/1    00:00:00 -bash</span><br><span class="line">tdev1  11402 11401  0 20:31 pts/2    00:00:00 -bash</span><br><span class="line">tdev1  11474 11402  0 20:32 pts/2    00:00:00 grep bash</span><br><span class="line"><span class="meta">/opt/app/tdev1$</span><span class="bash">pstack 7013</span></span><br><span class="line"><span class="meta">#</span><span class="bash">0  0x00000039958c5620 <span class="keyword">in</span> __read_nocancel () from /lib64/libc.so.6</span></span><br><span class="line"><span class="meta">#</span><span class="bash">1  0x000000000047dafe <span class="keyword">in</span> rl_getc ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">2  0x000000000047def6 <span class="keyword">in</span> rl_read_key ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">3  0x000000000046d0f5 <span class="keyword">in</span> readline_internal_char ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">4  0x000000000046d4e5 <span class="keyword">in</span> readline ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">5  0x00000000004213cf <span class="keyword">in</span> ?? ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">6  0x000000000041d685 <span class="keyword">in</span> ?? ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">7  0x000000000041e89e <span class="keyword">in</span> ?? ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">8  0x00000000004218dc <span class="keyword">in</span> yyparse ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">9  0x000000000041b507 <span class="keyword">in</span> parse_command ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">10 0x000000000041b5c6 <span class="keyword">in</span> read_command ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">11 0x000000000041b74e <span class="keyword">in</span> reader_loop ()</span></span><br><span class="line"><span class="meta">#</span><span class="bash">12 0x000000000041b2aa <span class="keyword">in</span> main ()</span></span><br></pre></td></tr></table></figure>
-
-<p>strace用来跟踪进程中的系统调用；这个工具能够动态的跟踪进程执行时的系统调用和所接收的信号。是一个非常有效的检测、指导和调试工具。系统管理员可以通过该命令容易地解决程序问题。</p>
-<h2 id="Tips-什么是内存"><a href="#Tips-什么是内存" class="headerlink" title="Tips.什么是内存"></a>Tips.什么是内存</h2><p>内存是计算机中重要的部件之一，它是与CPU进行沟通的桥梁。计算机中所有程序的运行都是在内存中进行的，因此内存的性能对计算机的影响非常大。</p>
-<p>内存(Memory)也被称为内存储器，其作用是用于暂时存放CPU中的运算数据，以及与硬盘等外部存储器交换的数据。</p>
-<h3 id="物理内存"><a href="#物理内存" class="headerlink" title="物理内存"></a>物理内存</h3><p><strong>物理内存</strong>指通过物理内存条而获得的内存空间。即随机存取存储器（random access memory，RAM），是与CPU直接交换数据的内部存储器，也叫主存(内存)。</p>
-<h3 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h3><p><strong>虚拟内存</strong>是计算机系统内存管理的一种技术。它使得应用程序认为它拥有连续可用的内存（一个连续完整的地址空间），而实际上，它通常是被分隔成多个物理内存碎片，还有部分暂时存储在外部磁盘存储器上，在需要时进行数据交换（也就是说，当物理内存不足时，可能会借用硬盘空间来充当内存使用）。与没有使用虚拟内存技术的系统相比，使用这种技术的系统使得大型程序的编写变得更容易，对真正的物理内存（例如RAM）的使用也更有效率。</p>
-<h3 id="Swap分区"><a href="#Swap分区" class="headerlink" title="Swap分区"></a>Swap分区</h3><p>Swap分区（即交换区）在系统的物理内存不够用的时候，把硬盘空间中的一部分空间释放出来，以供当前运行的程序使用。那些被释放的空间可能来自一些很长时间没有什么操作的程序，这些被释放的空间被临时保存到Swap分区中，等到那些程序要运行时，再从Swap分区中恢复保存的数据到内存中。</p>
-<h3 id="buffer与cache的区别"><a href="#buffer与cache的区别" class="headerlink" title="buffer与cache的区别"></a>buffer与cache的区别</h3><p>1.cache：高速缓存，是位于CPU与主内存之间的一种容量较小但是速度较高的存储器，由于CPU的速度远高于主内存，CPU直接从内存中存取数据需要等待一定的时间周期。cache中保存着CPU刚用过或循环使用的一部分数据，当CPU再次使用该部分数据时可从cache中直接调用，这样就减少了CPU的等待时间，提高了系统的效率。<br>cache又分为一级cache(L1 cache)和二级cache(L2 cache),L1集成在CPU内部，L2早期一般时焊在主板上的，现在也都即成在CPU内部，常见L2 cache的容量有256KB或512KB。<br>2.buffer:缓冲区，一个用于存储速度不同步的设备或优先级不同的设备之间传输数据的区域。通过缓冲区，可以使进程之间的相互等待变少。速度快的设备可以利用buffer不间断的进行写操作，速度慢的设备可以直接从buffer中读取数据，减少速度快的设备的等待时间，提高效率。</p>
-<ul>
-<li>cache：文件系统的缓冲(page cache)，将常用的数据缓存起来供CPU使用。</li>
-<li>buffers:块设备的读写缓冲区(buffer cache)，缓冲满了一次写，提高IO性能。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Linux Learning</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
   </entry>
 </search>
